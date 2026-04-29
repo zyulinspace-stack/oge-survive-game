@@ -7,11 +7,11 @@
     { "src": "/logo.png", "dest": "/logo.png" },
     {
       "src": "/things/(.*)",
-      "dest": "https://stranger-quiz.vercel.app/things/$1"
+      "dest": "https://stranger-quiz.vercel.app/$1"
     },
     {
       "src": "/things",
-      "dest": "https://stranger-quiz.vercel.app/things"
+      "dest": "https://stranger-quiz.vercel.app/"
     },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
