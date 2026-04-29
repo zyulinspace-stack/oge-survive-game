@@ -1,0 +1,1127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Выживи до ОГЭ — Онлайн-колледж №1</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+:root {
+  --orange:#FB8023; --green:#2ECC71; --purple:#A855F7;
+  --teal:#14B8A6; --blue:#3B82F6; --dark:#1E1E1E;
+  --gray:#6B7280; --lgray:#E5E7EB; --lgray2:#F3F4F6;
+  --red:#EF4444; --yellow:#F59E0B;
+}
+body {
+  font-family:'Segoe UI',Arial,sans-serif;
+  background:#fff; overflow:hidden;
+  width:100vw; height:100vh;
+  display:flex; flex-direction:column;
+}
+
+/* ── NAVBAR ── */
+.navbar {
+  height:56px; background:#fff;
+  border-bottom:1px solid var(--lgray);
+  display:flex; align-items:center;
+  padding:0 24px; gap:0; flex-shrink:0; z-index:10;
+}
+.nav-logo { display:flex; align-items:center; gap:0; text-decoration:none; }
+.nav-logo svg { width:90px; height:auto; }
+.nav-menu { display:flex; gap:20px; margin-left:32px; flex:1; }
+.nav-menu a { text-decoration:none; color:var(--dark); font-size:13px; font-weight:600; }
+.nav-cta {
+  background:var(--orange); color:#fff; border:none;
+  border-radius:20px; padding:8px 20px; font-size:13px;
+  font-weight:700; cursor:pointer; text-decoration:none;
+}
+
+/* ── SCREENS ── */
+.screen {
+  display:none; flex:1; overflow:hidden;
+  flex-direction:column; align-items:center; justify-content:center;
+}
+.screen.active { display:flex; }
+
+/* ── START SCREEN ── */
+#startScreen {
+  background:linear-gradient(135deg,#f0fdf4 0%,#faf5ff 60%,#eff6ff 100%);
+  position:relative; overflow:hidden;
+}
+#startScreen::before {
+  content:''; position:absolute; top:-60px; right:-80px;
+  width:480px; height:480px;
+  background:rgba(168,85,247,.07); border-radius:60px; transform:rotate(20deg);
+}
+#startScreen::after {
+  content:''; position:absolute; bottom:-40px; right:60px;
+  width:320px; height:320px;
+  background:rgba(46,204,113,.09); border-radius:50%;
+}
+.start-inner {
+  display:grid; grid-template-columns:1fr 1fr;
+  gap:40px; align-items:center;
+  max-width:1100px; width:100%; padding:0 32px;
+  position:relative; z-index:1;
+}
+.start-tag {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--purple); color:#fff;
+  border-radius:20px; padding:5px 16px;
+  font-size:12px; font-weight:700; margin-bottom:18px;
+}
+.start-title {
+  font-size:clamp(44px,5vw,80px); font-weight:900;
+  line-height:1.05; color:var(--dark); margin-bottom:14px;
+}
+.start-title .row2 { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.badge {
+  display:inline-block; border-radius:14px;
+  padding:2px 18px; font-size:clamp(40px,4.5vw,74px);
+  font-weight:900; line-height:1.15;
+}
+.bg-green  { background:var(--green);  color:#fff; }
+.bg-orange { background:var(--orange); color:#fff; }
+.start-sub { font-size:16px; color:var(--gray); font-weight:600; margin-bottom:28px; line-height:1.6; }
+.start-btns { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:32px; }
+.btn-play {
+  background:var(--orange); color:#fff; border:none;
+  border-radius:22px; padding:14px 38px;
+  font-size:18px; font-weight:800; cursor:pointer;
+  box-shadow:0 4px 18px rgba(251,128,35,.35);
+  transition:transform .15s,box-shadow .15s;
+}
+.btn-play:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(251,128,35,.5); }
+.btn-how {
+  background:transparent; color:var(--green);
+  border:2.5px solid var(--green); border-radius:22px;
+  padding:14px 28px; font-size:16px; font-weight:700; cursor:pointer;
+  transition:background .2s,color .2s;
+}
+.btn-how:hover { background:var(--green); color:#fff; }
+.start-stats { display:flex; gap:28px; padding-top:20px; border-top:1px solid var(--lgray); }
+.stat-val { font-size:20px; font-weight:800; }
+.stat-lbl { font-size:12px; color:var(--gray); font-weight:600; }
+
+/* Превью-арена */
+.preview-arena {
+  width:100%; max-width:480px;
+  background:linear-gradient(180deg,#e0f2fe 0%,#dbeafe 50%,#c7d2fe 100%);
+  border-radius:24px; height:360px; position:relative; overflow:hidden;
+  box-shadow:0 16px 48px rgba(0,0,0,.12);
+}
+.pa-floor {
+  position:absolute; bottom:0; left:0; right:0; height:70px;
+  background:linear-gradient(180deg,#a7f3d0,#6ee7b7);
+  border-top:3px solid #34d399;
+}
+.pa-char {
+  position:absolute; bottom:70px; left:60px;
+  width:64px; height:128px;
+  animation:idleBob 1.2s ease-in-out infinite alternate;
+}
+@keyframes idleBob { from{transform:translateY(0)} to{transform:translateY(-5px)} }
+.pa-obs {
+  position:absolute; bottom:70px;
+  animation:obsSlide linear infinite;
+}
+@keyframes obsSlide { from{left:110%} to{left:-80px} }
+.pa-book {
+  width:52px; height:66px; background:var(--red);
+  border-radius:6px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  box-shadow:3px 3px 0 rgba(0,0,0,.15);
+}
+.pa-book span { color:#fff; font-size:9px; font-weight:800; text-align:center; }
+.pa-paper {
+  width:52px; height:62px; background:#fff;
+  border-radius:6px; border:3px solid var(--red);
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  box-shadow:3px 3px 0 rgba(0,0,0,.1);
+}
+.pa-paper .grade { font-size:28px; font-weight:900; color:var(--red); }
+.pa-paper .glbl  { font-size:8px; color:var(--gray); font-weight:700; }
+.pa-star {
+  position:absolute; width:36px; height:36px;
+  background:var(--yellow);
+  clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);
+  animation:starFloat linear infinite;
+}
+@keyframes starFloat {
+  0%   { left:110%; bottom:160px; }
+  50%  { bottom:200px; }
+  100% { left:-50px; bottom:160px; }
+}
+.pa-hint {
+  position:absolute; bottom:88px; right:16px;
+  background:rgba(255,255,255,.9); border-radius:12px;
+  padding:8px 14px; font-size:12px; font-weight:700; color:var(--dark);
+  box-shadow:0 4px 12px rgba(0,0,0,.1);
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.04)} }
+.key-badge {
+  display:inline-block; background:var(--dark); color:#fff;
+  border-radius:5px; padding:1px 7px; font-size:11px; margin:0 2px;
+}
+
+/* ── GAME SCREEN ── */
+#gameScreen { background:#000; position:relative; }
+#gameCanvas { display:block; }
+.game-hud {
+  position:absolute; top:0; left:0; right:0;
+  height:52px; background:rgba(255,255,255,.96);
+  border-bottom:2px solid var(--green);
+  display:flex; align-items:center; padding:0 16px; gap:12px;
+  z-index:5;
+}
+.hud-logo { width:70px; height:auto; flex-shrink:0; }
+.hud-box {
+  background:var(--lgray2); border-radius:10px;
+  padding:4px 14px; display:flex; flex-direction:column;
+  align-items:flex-start; min-width:80px;
+}
+.hud-lbl { font-size:10px; color:var(--gray); font-weight:700; }
+.hud-val { font-size:18px; font-weight:800; line-height:1.1; }
+.hud-lives { display:flex; gap:4px; align-items:center; }
+.hud-heart { font-size:20px; }
+.hud-progress-wrap {
+  flex:1; background:var(--lgray2); border-radius:10px;
+  padding:4px 14px; min-width:120px;
+}
+.hud-progress-bar {
+  height:8px; background:var(--lgray); border-radius:4px; margin-top:4px;
+}
+.hud-progress-fill {
+  height:100%; background:var(--green); border-radius:4px;
+  transition:width .3s;
+}
+.hud-timer {
+  background:var(--orange); color:#fff;
+  border-radius:10px; padding:6px 18px;
+  font-size:20px; font-weight:800;
+}
+.hud-pause {
+  background:var(--lgray2); border:none; border-radius:10px;
+  padding:6px 14px; font-size:18px; cursor:pointer;
+  font-weight:700; color:var(--dark);
+}
+
+/* ── PAUSE OVERLAY ── */
+.overlay {
+  display:none; position:absolute; inset:0; z-index:20;
+  background:rgba(0,0,0,.6);
+  align-items:center; justify-content:center;
+}
+.overlay.show { display:flex; }
+.overlay-box {
+  background:#fff; border-radius:28px;
+  padding:40px 48px; max-width:440px; width:90%;
+  text-align:center;
+  animation:popIn .3s ease;
+}
+@keyframes popIn { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+.overlay-box h2 { font-size:28px; font-weight:900; color:var(--dark); margin-bottom:8px; }
+.overlay-box p  { font-size:15px; color:var(--gray); margin-bottom:28px; }
+.ov-btn {
+  width:100%; border:none; border-radius:18px;
+  padding:14px; font-size:17px; font-weight:800;
+  cursor:pointer; margin-bottom:10px;
+  transition:transform .15s,box-shadow .15s;
+}
+.ov-btn:hover { transform:translateY(-2px); }
+.ov-primary { background:var(--orange); color:#fff; box-shadow:0 4px 16px rgba(251,128,35,.35); }
+.ov-secondary { background:var(--lgray2); color:var(--dark); }
+
+/* ── END SCREEN ── */
+#endScreen {
+  background:linear-gradient(135deg,#faf5ff 0%,#f0fdf4 100%);
+  padding:20px;
+}
+.end-inner {
+  max-width:680px; width:100%; text-align:center;
+}
+.end-score-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--yellow); color:#fff;
+  border-radius:20px; padding:8px 24px;
+  font-size:14px; font-weight:800; margin-bottom:20px;
+}
+.end-title { font-size:clamp(28px,4vw,48px); font-weight:900; color:var(--dark); margin-bottom:8px; }
+.end-sub   { font-size:16px; color:var(--gray); margin-bottom:28px; }
+.result-card {
+  background:#fff; border-radius:24px;
+  padding:28px 32px; margin-bottom:24px;
+  box-shadow:0 8px 32px rgba(0,0,0,.08);
+  text-align:left;
+}
+.result-card h3 { font-size:18px; font-weight:800; color:var(--dark); margin-bottom:18px; text-align:center; }
+.prof-row { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+.prof-icon {
+  width:44px; height:44px; border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; flex-shrink:0;
+}
+.prof-info { flex:1; }
+.prof-name { font-size:15px; font-weight:700; color:var(--dark); }
+.prof-bar-wrap { height:8px; background:var(--lgray); border-radius:4px; margin-top:4px; }
+.prof-bar { height:100%; border-radius:4px; transition:width 1s ease; }
+.prof-pct { font-size:14px; font-weight:800; margin-left:auto; flex-shrink:0; }
+.end-cta {
+  background:var(--orange); color:#fff; border:none;
+  border-radius:22px; padding:16px 40px;
+  font-size:18px; font-weight:800; cursor:pointer;
+  box-shadow:0 4px 18px rgba(251,128,35,.35);
+  transition:transform .15s,box-shadow .15s;
+  margin-bottom:12px; width:100%;
+}
+.end-cta:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(251,128,35,.5); }
+.end-replay {
+  background:transparent; color:var(--purple);
+  border:2px solid var(--purple); border-radius:22px;
+  padding:14px 40px; font-size:16px; font-weight:700;
+  cursor:pointer; width:100%;
+  transition:background .2s,color .2s;
+}
+.end-replay:hover { background:var(--purple); color:#fff; }
+
+/* ── HOW-TO MODAL ── */
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,.5);
+  align-items:center; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:#fff; border-radius:28px;
+  padding:40px 44px; max-width:500px; width:90%;
+  position:relative; animation:popIn .3s ease;
+}
+.modal h2 { font-size:26px; font-weight:900; color:var(--dark); margin-bottom:22px; }
+.modal-close {
+  position:absolute; top:14px; right:18px;
+  background:var(--lgray2); border:none; border-radius:50%;
+  width:34px; height:34px; font-size:16px; cursor:pointer;
+}
+.how-item { display:flex; align-items:flex-start; gap:14px; margin-bottom:18px; }
+.how-num {
+  width:34px; height:34px; border-radius:50%;
+  background:var(--purple); color:#fff;
+  font-size:15px; font-weight:800;
+  display:flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+.how-text { font-size:15px; font-weight:600; color:var(--dark); line-height:1.5; }
+.how-text span { color:var(--gray); font-weight:400; font-size:13px; display:block; }
+.modal-cta {
+  width:100%; margin-top:24px; background:var(--orange); color:#fff;
+  border:none; border-radius:18px; padding:14px;
+  font-size:17px; font-weight:800; cursor:pointer;
+}
+
+@media(max-width:700px){
+  .start-inner { grid-template-columns:1fr; }
+  .preview-arena { height:240px; }
+  .nav-menu { display:none; }
+  .hud-box:nth-child(3) { display:none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#" class="nav-logo" id="navLogo">
+    <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="22" font-family="Arial" font-weight="900" font-size="18" fill="#1E1E1E">онлайн—</text>
+      <text x="0" y="42" font-family="Arial" font-weight="900" font-size="18" fill="#1E1E1E">колледж</text>
+      <circle cx="10" cy="55" r="7" fill="#FB8023"/>
+      <text x="20" y="59" font-family="Arial" font-weight="900" font-size="20" fill="#1E1E1E">№1</text>
+    </svg>
+  </a>
+  <nav class="nav-menu">
+    <a href="#">Специальности</a>
+    <a href="#">О колледже</a>
+    <a href="#">Учебный процесс</a>
+    <a href="#">Стоимость</a>
+  </nav>
+  <a href="https://onlinecollege-1.ru/" target="_blank" class="nav-cta">Начать бесплатно</a>
+</nav>
+
+<!-- ══ START SCREEN ══ -->
+<div class="screen active" id="startScreen">
+  <div class="start-inner">
+    <div>
+      <div class="start-tag">🎮 МИНИ-ИГРА</div>
+      <h1 class="start-title">
+        ВЫЖИВИ<br>
+        <div class="row2">
+          <span class="badge bg-green">ДО</span>
+          <span class="badge bg-orange">ОГЭ</span>
+        </div>
+      </h1>
+      <p class="start-sub">Уворачивайся от контрольных,<br>собирай бонусы и узнай свою профессию!</p>
+      <div class="start-btns">
+        <button class="btn-play" id="startBtn">▶ ИГРАТЬ</button>
+        <button class="btn-how" id="howBtn">Как играть?</button>
+      </div>
+      <div class="start-stats">
+        <div><div class="stat-val" style="color:var(--yellow)">1 234</div><div class="stat-lbl">рекорд</div></div>
+        <div><div class="stat-val" style="color:var(--teal)">8 500+</div><div class="stat-lbl">игроков</div></div>
+        <div><div class="stat-val" style="color:var(--green)">4.8 ★</div><div class="stat-lbl">рейтинг</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="preview-arena" id="previewArena">
+        <!-- Персонаж -->
+        <div class="pa-char">
+          <svg viewBox="0 0 64 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="32" cy="124" rx="22" ry="5" fill="rgba(0,0,0,.1)"/>
+            <path d="M24 96 Q16 112 12 124" stroke="#1E3A5F" stroke-width="8" stroke-linecap="round"/>
+            <path d="M40 96 Q50 110 53 122" stroke="#1E3A5F" stroke-width="8" stroke-linecap="round"/>
+            <rect x="3" y="118" width="18" height="8" rx="4" fill="#2ECC71"/>
+            <rect x="44" y="116" width="18" height="8" rx="4" fill="#2ECC71"/>
+            <rect x="14" y="54" width="36" height="46" rx="12" fill="#A855F7"/>
+            <rect x="44" y="58" width="14" height="34" rx="6" fill="#FB8023"/>
+            <path d="M14 66 Q5 76 3 90" stroke="#FDBCB4" stroke-width="7" stroke-linecap="round"/>
+            <path d="M50 66 Q59 76 61 88" stroke="#FDBCB4" stroke-width="7" stroke-linecap="round"/>
+            <ellipse cx="32" cy="34" rx="21" ry="23" fill="#FDBCB4"/>
+            <path d="M11 30 Q11 10 32 10 Q53 10 53 30 L53 24 Q53 6 32 6 Q11 6 11 24 Z" fill="#2D1810"/>
+            <ellipse cx="22" cy="33" rx="5" ry="6" fill="white"/>
+            <ellipse cx="42" cy="33" rx="5" ry="6" fill="white"/>
+            <circle cx="23" cy="34" r="3" fill="#1E1E1E"/>
+            <circle cx="43" cy="34" r="3" fill="#1E1E1E"/>
+            <circle cx="24" cy="32" r="1.2" fill="white"/>
+            <circle cx="44" cy="32" r="1.2" fill="white"/>
+            <path d="M25 45 Q32 50 39 45" stroke="#C0605A" stroke-width="2" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+        <!-- Препятствия -->
+        <div class="pa-obs" style="animation-duration:3s;animation-delay:0s">
+          <div class="pa-book"><span>АЛГЕ-<br>БРА</span></div>
+        </div>
+        <div class="pa-obs" style="animation-duration:4s;animation-delay:-1.5s">
+          <div class="pa-paper"><div class="grade">2</div><div class="glbl">КОНТР.</div></div>
+        </div>
+        <div class="pa-obs" style="animation-duration:3.5s;animation-delay:-2.8s">
+          <div class="pa-book" style="background:var(--blue)"><span>ФИ-<br>ЗИКА</span></div>
+        </div>
+        <!-- Звезда -->
+        <div class="pa-star" style="animation-duration:4.5s;animation-delay:-1s"></div>
+        <!-- Пол -->
+        <div class="pa-floor"></div>
+        <!-- Подсказка -->
+        <div class="pa-hint">
+          <span class="key-badge">ПРОБЕЛ</span> или <span class="key-badge">↑</span> — прыжок
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div class="screen" id="gameScreen">
+  <!-- HUD -->
+  <div class="game-hud">
+    <svg class="hud-logo" viewBox="0 0 200 60" fill="none">
+      <text x="0" y="22" font-family="Arial" font-weight="900" font-size="18" fill="#1E1E1E">онлайн—</text>
+      <text x="0" y="42" font-family="Arial" font-weight="900" font-size="18" fill="#1E1E1E">колледж</text>
+      <circle cx="10" cy="55" r="7" fill="#FB8023"/>
+      <text x="20" y="59" font-family="Arial" font-weight="900" font-size="20" fill="#1E1E1E">№1</text>
+    </svg>
+    <div class="hud-box">
+      <div class="hud-lbl">ОЧКИ</div>
+      <div class="hud-val" id="hudScore" style="color:var(--yellow)">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-lbl">РЕКОРД</div>
+      <div class="hud-val" id="hudBest">0</div>
+    </div>
+    <div class="hud-box">
+      <div class="hud-lbl">ЖИЗНИ</div>
+      <div class="hud-lives" id="hudLives">
+        <span class="hud-heart">❤️</span>
+        <span class="hud-heart">❤️</span>
+        <span class="hud-heart">❤️</span>
+      </div>
+    </div>
+    <div class="hud-progress-wrap">
+      <div class="hud-lbl">ДО КОНЦА УРОВНЯ</div>
+      <div class="hud-progress-bar">
+        <div class="hud-progress-fill" id="hudProgress" style="width:0%"></div>
+      </div>
+    </div>
+    <div class="hud-timer" id="hudTimer">0:00</div>
+    <button class="hud-pause" id="pauseBtn">⏸</button>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+
+  <!-- PAUSE OVERLAY -->
+  <div class="overlay" id="pauseOverlay">
+    <div class="overlay-box">
+      <h2>⏸ Пауза</h2>
+      <p>Игра приостановлена</p>
+      <button class="ov-btn ov-primary" id="resumeBtn">▶ Продолжить</button>
+      <button class="ov-btn ov-secondary" id="restartFromPause">🔄 Начать заново</button>
+    </div>
+  </div>
+
+  <!-- GAME OVER OVERLAY -->
+  <div class="overlay" id="gameOverOverlay">
+    <div class="overlay-box">
+      <h2>💥 Игра окончена!</h2>
+      <p id="gameOverScore">Твой счёт: 0</p>
+      <button class="ov-btn ov-primary" id="retryBtn">🔄 Ещё раз</button>
+      <button class="ov-btn ov-secondary" id="toResultBtn">🎯 Узнать профессию</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ END SCREEN ══ -->
+<div class="screen" id="endScreen">
+  <div class="end-inner">
+    <div class="end-score-badge">⭐ Твой счёт: <span id="finalScore">0</span></div>
+    <h2 class="end-title">Твоя профессия определена!</h2>
+    <p class="end-sub">На основе твоих результатов мы подобрали подходящие направления</p>
+
+    <div class="result-card">
+      <h3>🎯 Результат профориентации</h3>
+      <div class="prof-row">
+        <div class="prof-icon" style="background:#faf5ff">🎨</div>
+        <div class="prof-info">
+          <div class="prof-name">Дизайн</div>
+          <div class="prof-bar-wrap"><div class="prof-bar" id="bar1" style="width:0%;background:var(--purple)"></div></div>
+        </div>
+        <div class="prof-pct" id="pct1" style="color:var(--purple)">0%</div>
+      </div>
+      <div class="prof-row">
+        <div class="prof-icon" style="background:#eff6ff">💻</div>
+        <div class="prof-info">
+          <div class="prof-name">IT / Программирование</div>
+          <div class="prof-bar-wrap"><div class="prof-bar" id="bar2" style="width:0%;background:var(--blue)"></div></div>
+        </div>
+        <div class="prof-pct" id="pct2" style="color:var(--blue)">0%</div>
+      </div>
+      <div class="prof-row">
+        <div class="prof-icon" style="background:#f0fdf4">📈</div>
+        <div class="prof-info">
+          <div class="prof-name">Маркетинг</div>
+          <div class="prof-bar-wrap"><div class="prof-bar" id="bar3" style="width:0%;background:var(--green)"></div></div>
+        </div>
+        <div class="prof-pct" id="pct3" style="color:var(--green)">0%</div>
+      </div>
+    </div>
+
+    <button class="end-cta" onclick="window.open('https://onlinecollege-1.ru/','_blank')">
+      🎓 Записаться на мини-курс бесплатно
+    </button>
+    <button class="end-replay" id="replayBtn">🔄 Сыграть ещё раз</button>
+  </div>
+</div>
+
+<!-- HOW-TO MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <h2>🎮 Как играть?</h2>
+    <div class="how-item">
+      <div class="how-num">1</div>
+      <div class="how-text">Прыгай через препятствия
+        <span>Нажми <b>Пробел</b>, <b>↑</b> или <b>тап по экрану</b></span>
+      </div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">2</div>
+      <div class="how-text">Уворачивайся от контрольных
+        <span>Летящие учебники и двойки — твои враги!</span>
+      </div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">3</div>
+      <div class="how-text">Собирай золотые звёзды ⭐
+        <span>Каждая звезда = +50 очков</span>
+      </div>
+    </div>
+    <div class="how-item">
+      <div class="how-num">4</div>
+      <div class="how-text">3 жизни — используй их мудро
+        <span>После потери всех жизней — финальный результат</span>
+      </div>
+    </div>
+    <button class="modal-cta" id="modalPlay">▶ НАЧАТЬ ИГРУ</button>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// GAME ENGINE
+// ════════════════════════════════════════════════════════
+
+const NAVBAR_H = 56;
+
+// Screens
+const screens = {
+  start: document.getElementById('startScreen'),
+  game:  document.getElementById('gameScreen'),
+  end:   document.getElementById('endScreen'),
+};
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  if (name === 'game') resizeCanvas();
+}
+
+// Canvas
+const canvas = document.getElementById('gameCanvas');
+const ctx    = canvas.getContext('2d');
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight - NAVBAR_H - 52; // minus navbar & hud
+}
+window.addEventListener('resize', () => { if (screens.game.classList.contains('active')) resizeCanvas(); });
+
+// ── GAME STATE ──
+let state = {};
+let raf   = null;
+let best  = parseInt(localStorage.getItem('ogeGameBest') || '0');
+document.getElementById('hudBest').textContent = best;
+
+function initState() {
+  const W = canvas.width, H = canvas.height;
+  const FLOOR = H - 80;
+  return {
+    running: false,
+    paused:  false,
+    score:   0,
+    lives:   3,
+    time:    0,
+    frameCount: 0,
+    speed:   4,
+    W, H, FLOOR,
+    // Персонаж
+    char: {
+      x: 120, y: FLOOR - 110,
+      w: 56,  h: 110,
+      vy: 0, onGround: true,
+      jumping: false,
+      invincible: 0,
+      frame: 0,
+    },
+    obstacles: [],
+    stars: [],
+    particles: [],
+    bgOffset: 0,
+    nextObstacle: 80,
+    nextStar: 120,
+    levelProgress: 0,
+    maxProgress: 800,
+  };
+}
+
+// ── JUMP ──
+function jump() {
+  if (!state.running || state.paused) return;
+  if (state.char.onGround) {
+    state.char.vy = -18;
+    state.char.onGround = false;
+    spawnParticles(state.char.x + state.char.w/2, state.FLOOR, '#2ECC71', 6);
+  }
+}
+
+// ── PARTICLES ──
+function spawnParticles(x, y, color, count) {
+  for (let i = 0; i < count; i++) {
+    state.particles.push({
+      x, y,
+      vx: (Math.random()-0.5)*6,
+      vy: -(Math.random()*5+2),
+      life: 1, color,
+      r: Math.random()*5+2,
+    });
+  }
+}
+
+// ── DRAW HELPERS ──
+function roundRect(x, y, w, h, r, fill, stroke, sw) {
+  ctx.beginPath();
+  ctx.roundRect(x, y, w, h, r);
+  if (fill)  { ctx.fillStyle = fill; ctx.fill(); }
+  if (stroke){ ctx.strokeStyle = stroke; ctx.lineWidth = sw||2; ctx.stroke(); }
+}
+
+function drawCharacter(c, invincible) {
+  const x = c.x, y = c.y, w = c.w, h = c.h;
+  const alpha = (invincible > 0 && Math.floor(invincible/4)%2===0) ? 0.4 : 1;
+  ctx.globalAlpha = alpha;
+
+  // Тень
+  ctx.beginPath();
+  ctx.ellipse(x+w/2, c.y+h+4, w*0.45, 6, 0, 0, Math.PI*2);
+  ctx.fillStyle = 'rgba(0,0,0,0.12)'; ctx.fill();
+
+  // Ноги
+  ctx.strokeStyle = '#1E3A5F'; ctx.lineWidth = 8; ctx.lineCap = 'round';
+  const legSwing = Math.sin(state.frameCount * 0.25) * 12;
+  ctx.beginPath(); ctx.moveTo(x+w*0.35, y+h*0.78);
+  ctx.lineTo(x+w*0.2-legSwing, y+h*0.92);
+  ctx.lineTo(x+w*0.05-legSwing, y+h);
+  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+w*0.65, y+h*0.78);
+  ctx.lineTo(x+w*0.8+legSwing, y+h*0.9);
+  ctx.lineTo(x+w*0.95+legSwing, y+h*0.98);
+  ctx.stroke();
+
+  // Кроссовки
+  roundRect(x+w*0.02-legSwing, y+h-10, 20, 10, 5, '#2ECC71');
+  roundRect(x+w*0.72+legSwing, y+h-12, 20, 10, 5, '#2ECC71');
+
+  // Тело (куртка)
+  roundRect(x+w*0.15, y+h*0.42, w*0.7, h*0.4, 12, '#A855F7');
+
+  // Рюкзак
+  roundRect(x+w*0.78, y+h*0.44, w*0.24, h*0.32, 7, '#FB8023');
+  roundRect(x+w*0.8, y+h*0.56, w*0.18, 3, 3, 'rgba(255,255,255,0.4)');
+
+  // Руки
+  const armSwing = Math.sin(state.frameCount * 0.25 + Math.PI) * 10;
+  ctx.strokeStyle = '#FDBCB4'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(x+w*0.18, y+h*0.5);
+  ctx.lineTo(x+w*0.05, y+h*0.65+armSwing);
+  ctx.lineTo(x, y+h*0.75+armSwing);
+  ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+w*0.82, y+h*0.5);
+  ctx.lineTo(x+w*0.95, y+h*0.65-armSwing);
+  ctx.lineTo(x+w, y+h*0.75-armSwing);
+  ctx.stroke();
+
+  // Голова
+  ctx.beginPath();
+  ctx.ellipse(x+w/2, y+h*0.26, w*0.38, h*0.22, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#FDBCB4'; ctx.fill();
+
+  // Волосы
+  ctx.beginPath();
+  ctx.ellipse(x+w/2, y+h*0.16, w*0.4, h*0.12, 0, 0, Math.PI*2);
+  ctx.fillStyle = '#2D1810'; ctx.fill();
+  ctx.fillRect(x+w*0.1, y+h*0.1, w*0.8, h*0.1);
+
+  // Глаза
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.ellipse(x+w*0.35, y+h*0.25, 5, 6, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(x+w*0.65, y+h*0.25, 5, 6, 0, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#1E1E1E';
+  ctx.beginPath(); ctx.arc(x+w*0.37, y+h*0.255, 3.5, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+w*0.67, y+h*0.255, 3.5, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.arc(x+w*0.38, y+h*0.245, 1.3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.arc(x+w*0.68, y+h*0.245, 1.3, 0, Math.PI*2); ctx.fill();
+
+  // Улыбка
+  ctx.strokeStyle = '#C0605A'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(x+w/2, y+h*0.3, w*0.12, 0.1, Math.PI-0.1);
+  ctx.stroke();
+
+  ctx.globalAlpha = 1;
+}
+
+function drawObstacle(ob) {
+  const x = ob.x, y = ob.y;
+  if (ob.type === 'book') {
+    roundRect(x, y, ob.w, ob.h, 6, ob.color);
+    // Страницы
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    for (let i = 1; i < 4; i++) {
+      ctx.fillRect(x + i*(ob.w/4), y+4, 1.5, ob.h-8);
+    }
+    // Текст
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold ${Math.min(11, ob.w*0.22)}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText(ob.label1, x+ob.w/2, y+ob.h*0.42);
+    ctx.fillText(ob.label2, x+ob.w/2, y+ob.h*0.68);
+  } else if (ob.type === 'paper') {
+    roundRect(x, y, ob.w, ob.h, 6, '#fff', '#EF4444', 3);
+    ctx.fillStyle = '#EF4444';
+    ctx.font = `bold ${ob.w*0.55}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText('2', x+ob.w/2, y+ob.h*0.65);
+    ctx.fillStyle = '#6B7280';
+    ctx.font = `bold 9px Arial`;
+    ctx.fillText('КОНТР.', x+ob.w/2, y+ob.h*0.88);
+  }
+  ctx.textAlign = 'left';
+}
+
+function drawStar(s) {
+  ctx.save();
+  ctx.translate(s.x + s.r, s.y + s.r);
+  ctx.rotate(s.rot);
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const a = Math.PI*i/5 - Math.PI/2;
+    const r = i%2===0 ? s.r : s.r*0.4;
+    i===0 ? ctx.moveTo(r*Math.cos(a), r*Math.sin(a))
+           : ctx.lineTo(r*Math.cos(a), r*Math.sin(a));
+  }
+  ctx.closePath();
+  ctx.fillStyle = '#F59E0B';
+  ctx.shadowColor = '#F59E0B';
+  ctx.shadowBlur = 12;
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawBackground() {
+  const W = state.W, H = state.H, FLOOR = state.FLOOR;
+
+  // Небо
+  const skyGrad = ctx.createLinearGradient(0, 0, 0, FLOOR);
+  skyGrad.addColorStop(0, '#dbeafe');
+  skyGrad.addColorStop(1, '#e0f2fe');
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(0, 0, W, FLOOR);
+
+  // Облака
+  ctx.fillStyle = 'rgba(255,255,255,0.75)';
+  const clouds = [
+    { x: (state.bgOffset*0.3) % (W+200) - 100, y: 40, w: 90, h: 30 },
+    { x: (state.bgOffset*0.2 + W*0.4) % (W+200) - 100, y: 70, w: 70, h: 22 },
+    { x: (state.bgOffset*0.25 + W*0.7) % (W+200) - 100, y: 30, w: 60, h: 20 },
+  ];
+  clouds.forEach(c => {
+    roundRect(c.x, c.y, c.w, c.h, 15, 'rgba(255,255,255,0.75)');
+    ctx.beginPath();
+    ctx.arc(c.x+c.w*0.3, c.y, c.h*0.8, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.fill();
+    ctx.beginPath();
+    ctx.arc(c.x+c.w*0.6, c.y+2, c.h*0.65, 0, Math.PI*2);
+    ctx.fill();
+  });
+
+  // Пол
+  const floorGrad = ctx.createLinearGradient(0, FLOOR, 0, H);
+  floorGrad.addColorStop(0, '#a7f3d0');
+  floorGrad.addColorStop(1, '#6ee7b7');
+  ctx.fillStyle = floorGrad;
+  ctx.fillRect(0, FLOOR, W, H - FLOOR);
+
+  // Линия пола
+  ctx.strokeStyle = '#34d399'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(0, FLOOR); ctx.lineTo(W, FLOOR); ctx.stroke();
+
+  // Разметка пола
+  ctx.strokeStyle = 'rgba(255,255,255,0.4)'; ctx.lineWidth = 1.5;
+  const lineSpacing = 120;
+  const offset = state.bgOffset % lineSpacing;
+  for (let x = -offset; x < W + lineSpacing; x += lineSpacing) {
+    ctx.beginPath(); ctx.moveTo(x, FLOOR+10); ctx.lineTo(x, H); ctx.stroke();
+  }
+}
+
+function drawParticles() {
+  state.particles.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+// ── SPAWN ──
+const OBSTACLE_TYPES = [
+  { type:'book', w:52, h:68, color:'#EF4444', label1:'АЛГЕ-', label2:'БРА' },
+  { type:'book', w:52, h:68, color:'#3B82F6', label1:'ФИ-',   label2:'ЗИКА' },
+  { type:'book', w:52, h:68, color:'#8B5CF6', label1:'ХИ-',   label2:'МИЯ' },
+  { type:'paper', w:52, h:64 },
+];
+
+function spawnObstacle() {
+  const t = OBSTACLE_TYPES[Math.floor(Math.random()*OBSTACLE_TYPES.length)];
+  state.obstacles.push({
+    ...t,
+    x: state.W + 20,
+    y: state.FLOOR - t.h,
+  });
+}
+
+function spawnStar() {
+  const r = 20;
+  state.stars.push({
+    x: state.W + 20,
+    y: state.FLOOR - 80 - Math.random()*80,
+    r, rot: 0,
+  });
+}
+
+// ── COLLISION ──
+function rectsOverlap(ax, ay, aw, ah, bx, by, bw, bh, pad) {
+  pad = pad || 10;
+  return ax+pad < bx+bw-pad && ax+aw-pad > bx+pad &&
+         ay+pad < by+bh-pad && ay+ah-pad > by+pad;
+}
+
+// ── UPDATE ──
+function update() {
+  if (!state.running || state.paused) return;
+  const s = state;
+  s.frameCount++;
+  s.time += 1/60;
+  s.score += 1;
+  s.levelProgress = Math.min(s.maxProgress, s.levelProgress + 1);
+  s.bgOffset += s.speed;
+
+  // Скорость нарастает
+  if (s.frameCount % 600 === 0) s.speed = Math.min(12, s.speed + 0.5);
+
+  // Персонаж
+  const c = s.char;
+  if (!c.onGround) {
+    c.vy += 0.9; // гравитация
+    c.y  += c.vy;
+    if (c.y >= s.FLOOR - c.h) {
+      c.y = s.FLOOR - c.h;
+      c.vy = 0;
+      c.onGround = true;
+    }
+  }
+  if (c.invincible > 0) c.invincible--;
+  c.frame++;
+
+  // Препятствия
+  s.nextObstacle--;
+  if (s.nextObstacle <= 0) {
+    spawnObstacle();
+    s.nextObstacle = Math.floor(80 + Math.random()*80 - s.speed*4);
+    s.nextObstacle = Math.max(40, s.nextObstacle);
+  }
+  s.obstacles.forEach(o => { o.x -= s.speed; });
+  s.obstacles = s.obstacles.filter(o => o.x > -100);
+
+  // Звёзды
+  s.nextStar--;
+  if (s.nextStar <= 0) {
+    spawnStar();
+    s.nextStar = Math.floor(150 + Math.random()*120);
+  }
+  s.stars.forEach(st => { st.x -= s.speed; st.rot += 0.05; });
+  s.stars = s.stars.filter(st => st.x > -60);
+
+  // Частицы
+  s.particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.05;
+  });
+  s.particles = s.particles.filter(p => p.life > 0);
+
+  // Коллизии с препятствиями
+  if (c.invincible === 0) {
+    for (let o of s.obstacles) {
+      if (rectsOverlap(c.x, c.y, c.w, c.h, o.x, o.y, o.w, o.h, 12)) {
+        s.lives--;
+        c.invincible = 90;
+        spawnParticles(c.x+c.w/2, c.y+c.h/2, '#EF4444', 10);
+        updateHudLives();
+        if (s.lives <= 0) { gameOver(); return; }
+        break;
+      }
+    }
+  }
+
+  // Коллизии со звёздами
+  s.stars = s.stars.filter(st => {
+    if (rectsOverlap(c.x, c.y, c.w, c.h, st.x, st.y, st.r*2, st.r*2, 5)) {
+      s.score += 50;
+      spawnParticles(st.x+st.r, st.y+st.r, '#F59E0B', 8);
+      showScorePop('+50 ⭐', st.x, st.y);
+      return false;
+    }
+    return true;
+  });
+
+  // HUD
+  document.getElementById('hudScore').textContent = s.score;
+  document.getElementById('hudProgress').style.width =
+    Math.min(100, (s.levelProgress / s.maxProgress * 100)).toFixed(1) + '%';
+  const m = Math.floor(s.time/60), sec = Math.floor(s.time%60);
+  document.getElementById('hudTimer').textContent =
+    m + ':' + (sec<10?'0':'') + sec;
+
+  // Конец уровня
+  if (s.levelProgress >= s.maxProgress) {
+    s.levelProgress = 0;
+    s.maxProgress += 200;
+    s.speed = Math.min(12, s.speed + 0.3);
+  }
+}
+
+// Score pop-up
+const scorePops = [];
+function showScorePop(text, x, y) {
+  scorePops.push({ text, x, y, life: 1 });
+}
+function drawScorePops() {
+  scorePops.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = '#F59E0B';
+    ctx.font = 'bold 16px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText(p.text, p.x, p.y);
+    p.y -= 1.5;
+    p.life -= 0.025;
+  });
+  ctx.globalAlpha = 1;
+  ctx.textAlign = 'left';
+  scorePops.splice(0, scorePops.findIndex(p => p.life > 0));
+}
+
+// ── DRAW ──
+function draw() {
+  ctx.clearRect(0, 0, state.W, state.H);
+  drawBackground();
+  state.stars.forEach(drawStar);
+  state.obstacles.forEach(drawObstacle);
+  drawCharacter(state.char, state.char.invincible);
+  drawParticles();
+  drawScorePops();
+}
+
+// ── LOOP ──
+function loop() {
+  update();
+  draw();
+  raf = requestAnimationFrame(loop);
+}
+
+// ── GAME OVER ──
+function gameOver() {
+  state.running = false;
+  cancelAnimationFrame(raf);
+  if (state.score > best) {
+    best = state.score;
+    localStorage.setItem('ogeGameBest', best);
+    document.getElementById('hudBest').textContent = best;
+  }
+  document.getElementById('gameOverScore').textContent = 'Твой счёт: ' + state.score;
+  document.getElementById('gameOverOverlay').classList.add('show');
+}
+
+// ── HUD LIVES ──
+function updateHudLives() {
+  const el = document.getElementById('hudLives');
+  el.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const span = document.createElement('span');
+    span.className = 'hud-heart';
+    span.textContent = i < state.lives ? '❤️' : '🖤';
+    el.appendChild(span);
+  }
+}
+
+// ── START GAME ──
+function startGame() {
+  showScreen('game');
+  resizeCanvas();
+  state = initState();
+  state.running = true;
+  updateHudLives();
+  document.getElementById('hudScore').textContent = '0';
+  document.getElementById('hudBest').textContent = best;
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  cancelAnimationFrame(raf);
+  loop();
+}
+
+// ── SHOW END ──
+function showEnd() {
+  cancelAnimationFrame(raf);
+  const score = state.score;
+  document.getElementById('finalScore').textContent = score;
+
+  // Рассчитываем профессии на основе очков
+  const base = Math.min(score, 1000);
+  const d = Math.round(55 + (base/1000)*32);
+  const it = Math.round(45 + (base/1000)*27);
+  const m  = Math.round(38 + (base/1000)*22);
+
+  setTimeout(() => {
+    document.getElementById('bar1').style.width = d + '%';
+    document.getElementById('pct1').textContent = d + '%';
+    document.getElementById('bar2').style.width = it + '%';
+    document.getElementById('pct2').textContent = it + '%';
+    document.getElementById('bar3').style.width = m + '%';
+    document.getElementById('pct3').textContent = m + '%';
+  }, 300);
+
+  showScreen('end');
+}
+
+// ── CONTROLS ──
+document.addEventListener('keydown', e => {
+  if (e.code === 'Space' || e.code === 'ArrowUp') {
+    e.preventDefault();
+    jump();
+  }
+  if (e.code === 'Escape') togglePause();
+});
+
+// Тач
+document.getElementById('gameCanvas').addEventListener('touchstart', e => {
+  e.preventDefault(); jump();
+}, { passive: false });
+document.getElementById('gameCanvas').addEventListener('click', () => jump());
+
+// Кнопки
+document.getElementById('startBtn').addEventListener('click', startGame);
+document.getElementById('howBtn').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.add('open');
+});
+document.getElementById('modalClose').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+});
+document.getElementById('modalPlay').addEventListener('click', () => {
+  document.getElementById('modalOverlay').classList.remove('open');
+  startGame();
+});
+document.getElementById('modalOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modalOverlay'))
+    document.getElementById('modalOverlay').classList.remove('open');
+});
+
+// Пауза
+document.getElementById('pauseBtn').addEventListener('click', togglePause);
+document.getElementById('resumeBtn').addEventListener('click', togglePause);
+document.getElementById('restartFromPause').addEventListener('click', startGame);
+
+function togglePause() {
+  if (!state.running) return;
+  state.paused = !state.paused;
+  document.getElementById('pauseOverlay').classList.toggle('show', state.paused);
+  document.getElementById('pauseBtn').textContent = state.paused ? '▶' : '⏸';
+}
+
+// Game over кнопки
+document.getElementById('retryBtn').addEventListener('click', startGame);
+document.getElementById('toResultBtn').addEventListener('click', showEnd);
+
+// End screen
+document.getElementById('replayBtn').addEventListener('click', startGame);
+
+// Лого → старт
+document.getElementById('navLogo').addEventListener('click', e => {
+  e.preventDefault();
+  if (screens.game.classList.contains('active')) {
+    cancelAnimationFrame(raf);
+    state.running = false;
+  }
+  showScreen('start');
+});
+
+// Клик по превью-арене → запуск
+document.getElementById('previewArena').addEventListener('click', startGame);
+</script>
+</body>
+</html>
