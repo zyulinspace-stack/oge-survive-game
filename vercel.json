@@ -5,6 +5,7 @@
   ],
   "routes": [
     { "src": "/logo.png", "dest": "/logo.png" },
+    { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/demo", "dest": "/demo.html" },
     { "src": "/demo.html", "dest": "/demo.html" },
     {
