@@ -5,6 +5,8 @@
   ],
   "routes": [
     { "src": "/logo.png", "dest": "/logo.png" },
+    { "src": "/demo", "dest": "/demo.html" },
+    { "src": "/demo.html", "dest": "/demo.html" },
     {
       "src": "/things/(.*)",
       "dest": "https://stranger-quiz.vercel.app/$1"

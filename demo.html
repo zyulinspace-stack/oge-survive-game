@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Демо-доступ — Онлайн-колледж №1</title>
+  <meta name="description" content="Геймифицированный чек-лист демо-доступа. 5 шагов — 5 бонусов. Выполни всё и получи скидку на поступление.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange: #F97316;
+      --orange-dark: #ea6c0a;
+      --orange-light: #FED7AA;
+      --dark: #111827;
+      --dark2: #1F2937;
+      --dark3: #374151;
+      --gray: #6B7280;
+      --gray-light: #F3F4F6;
+      --white: #FFFFFF;
+      --green: #22C55E;
+      --green-dark: #16a34a;
+      --text: #111827;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #F9FAFB;
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: var(--dark);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-box {
+      background: var(--orange);
+      color: white;
+      font-weight: 900;
+      font-size: 11px;
+      line-height: 1.2;
+      padding: 6px 8px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+
+    .logo-text {
+      color: white;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .header-cta {
+      background: var(--orange);
+      color: white;
+      font-weight: 700;
+      font-size: 14px;
+      padding: 10px 20px;
+      border-radius: 50px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .header-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    /* ===== HERO ===== */
+    .hero {
+      background: linear-gradient(135deg, var(--dark) 0%, #1a2a4a 100%);
+      padding: 56px 24px 48px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(249,115,22,0.15) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -40px; left: -40px;
+      width: 200px; height: 200px;
+      background: radial-gradient(circle, rgba(34,197,94,0.1) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(249,115,22,0.15);
+      border: 1px solid rgba(249,115,22,0.4);
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+    }
+
+    .hero h1 {
+      color: white;
+      font-size: clamp(28px, 5vw, 48px);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: 8px;
+    }
+
+    .hero h1 span {
+      color: var(--orange);
+    }
+
+    .hero-sub {
+      color: rgba(255,255,255,0.65);
+      font-size: 16px;
+      margin-bottom: 32px;
+      max-width: 480px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      max-width: 480px;
+      margin: 0 auto 12px;
+    }
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .progress-label {
+      color: rgba(255,255,255,0.7);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .progress-count {
+      color: var(--orange);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .progress-bar-bg {
+      background: rgba(255,255,255,0.1);
+      border-radius: 50px;
+      height: 12px;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      background: linear-gradient(90deg, var(--orange), #fbbf24);
+      height: 100%;
+      border-radius: 50px;
+      transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+      width: 0%;
+    }
+
+    .bonus-stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .bonus-star {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(255,255,255,0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .bonus-star.earned {
+      background: linear-gradient(135deg, #fbbf24, var(--orange));
+      border-color: var(--orange);
+      transform: scale(1.15);
+      box-shadow: 0 0 16px rgba(249,115,22,0.5);
+    }
+
+    /* ===== MAIN ===== */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .section-title {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gray);
+      margin: 40px 0 16px;
+    }
+
+    /* ===== CHECKLIST ITEMS ===== */
+    .checklist {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 32px 0 40px;
+    }
+
+    .step-card {
+      background: white;
+      border-radius: 16px;
+      border: 2px solid #E5E7EB;
+      overflow: hidden;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .step-card:hover {
+      border-color: var(--orange);
+      box-shadow: 0 4px 20px rgba(249,115,22,0.12);
+      transform: translateY(-2px);
+    }
+
+    .step-card.done {
+      border-color: var(--green);
+      background: #F0FDF4;
+    }
+
+    .step-card.done:hover {
+      border-color: var(--green-dark);
+      box-shadow: 0 4px 20px rgba(34,197,94,0.15);
+    }
+
+    .step-inner {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+    }
+
+    .step-badge {
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      padding: 16px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+
+    .step-card.done .step-badge {
+      background: var(--green);
+    }
+
+    .step-content {
+      flex: 1;
+      padding: 18px 20px;
+    }
+
+    .step-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .step-num {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--gray);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .step-checkbox {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid #D1D5DB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex-shrink: 0;
+    }
+
+    .step-card.done .step-checkbox {
+      background: var(--green);
+      border-color: var(--green);
+      transform: scale(1.1);
+    }
+
+    .step-checkbox svg {
+      opacity: 0;
+      transform: scale(0);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .step-card.done .step-checkbox svg {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .step-title {
+      font-size: 17px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .step-desc {
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 400;
+    }
+
+    .step-card.done .step-title {
+      color: var(--green-dark);
+    }
+
+    /* Confetti burst on complete */
+    @keyframes burst {
+      0% { transform: scale(0) rotate(0deg); opacity: 1; }
+      100% { transform: scale(2.5) rotate(180deg); opacity: 0; }
+    }
+
+    .burst {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 60px; height: 60px;
+      margin: -30px;
+      pointer-events: none;
+      animation: burst 0.5s ease-out forwards;
+      background: radial-gradient(circle, rgba(249,115,22,0.4) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    /* ===== FINAL BLOCK ===== */
+    .final-block {
+      background: var(--dark);
+      border-radius: 20px;
+      padding: 28px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      margin-bottom: 48px;
+      position: relative;
+      overflow: hidden;
+      opacity: 0.4;
+      transition: opacity 0.5s ease;
+    }
+
+    .final-block.unlocked {
+      opacity: 1;
+    }
+
+    .final-block::before {
+      content: '';
+      position: absolute;
+      top: -30px; right: -30px;
+      width: 150px; height: 150px;
+      background: radial-gradient(circle, rgba(249,115,22,0.2) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .final-score {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+
+    .final-num {
+      font-size: 56px;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+    }
+
+    .final-denom {
+      font-size: 28px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .final-text {
+      flex: 1;
+    }
+
+    .final-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+
+    .final-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: white;
+      line-height: 1.3;
+      margin-bottom: 4px;
+    }
+
+    .final-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.5);
+    }
+
+    .final-btn {
+      background: var(--orange);
+      color: white;
+      font-weight: 800;
+      font-size: 14px;
+      padding: 14px 22px;
+      border-radius: 12px;
+      text-decoration: none;
+      text-align: center;
+      line-height: 1.3;
+      flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+      pointer-events: none;
+    }
+
+    .final-block.unlocked .final-btn {
+      pointer-events: auto;
+    }
+
+    .final-btn:hover { background: var(--orange-dark); transform: translateY(-2px); }
+
+    .final-btn-label {
+      font-size: 10px;
+      font-weight: 600;
+      opacity: 0.8;
+      display: block;
+      margin-top: 2px;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-block {
+      background: white;
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 48px;
+      border: 1px solid #E5E7EB;
+    }
+
+    .how-title {
+      font-size: 16px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      color: var(--dark);
+    }
+
+    .how-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .how-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+
+    .how-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--orange);
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-weight: 800;
+    }
+
+    .how-text {
+      font-size: 14px;
+      color: var(--dark2);
+      line-height: 1.5;
+      padding-top: 6px;
+    }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: var(--dark);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-size: 15px;
+      font-weight: 700;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+      z-index: 999;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .toast-icon {
+      font-size: 20px;
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--dark);
+      padding: 24px;
+      text-align: center;
+      color: rgba(255,255,255,0.4);
+      font-size: 13px;
+    }
+
+    footer a {
+      color: var(--orange);
+      text-decoration: none;
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 600px) {
+      .hero { padding: 40px 16px 36px; }
+      .final-block { flex-direction: column; text-align: center; }
+      .final-score { justify-content: center; }
+      .final-btn { width: 100%; }
+      .step-title { font-size: 15px; }
+      .hero h1 { font-size: 26px; }
+    }
+
+    /* Celebration animation */
+    @keyframes celebrate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .celebrating {
+      animation: celebrate 0.5s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <a href="https://onlinecollege-1.ru/" class="logo">
+      <div class="logo-box">Онлайн<br>Колледж<br>№1</div>
+    </a>
+    <a href="https://get.onlinecollege-1.ru/demodostuplid" class="header-cta">Начать бесплатно</a>
+  </header>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-badge">Демо-доступ</div>
+    <h1>Посадочная страница:<br><span>«собирай бонусы»</span></h1>
+    <p class="hero-sub">5 шагов — 5 бонусов. Выполни все шаги и получи скидку на поступление.</p>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-label">Механика: 5 шагов</span>
+        <span class="progress-count"><span id="doneCount">0</span>/5 бонусов</span>
+      </div>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="progressFill"></div>
+      </div>
+      <div class="bonus-stars">
+        <div class="bonus-star" id="star1">⭐</div>
+        <div class="bonus-star" id="star2">⭐</div>
+        <div class="bonus-star" id="star3">⭐</div>
+        <div class="bonus-star" id="star4">⭐</div>
+        <div class="bonus-star" id="star5">⭐</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CHECKLIST -->
+  <div class="container">
+
+    <div class="checklist" id="checklist">
+
+      <!-- STEP 1 -->
+      <div class="step-card" data-step="1" onclick="toggleStep(this)">
+        <div class="step-inner">
+          <div class="step-badge">+1 бонус</div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-num">Шаг 01</span>
+              <div class="step-checkbox">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-title">Посмотрите 1 живую лекцию</div>
+            <div class="step-desc">или запись — почувствуй формат изнутри</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step-card" data-step="2" onclick="toggleStep(this)">
+        <div class="step-inner">
+          <div class="step-badge">+1 бонус</div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-num">Шаг 02</span>
+              <div class="step-checkbox">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-title">Оцените платформу</div>
+            <div class="step-desc">удобно ли навигировать?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step-card" data-step="3" onclick="toggleStep(this)">
+        <div class="step-inner">
+          <div class="step-badge">+1 бонус</div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-num">Шаг 03</span>
+              <div class="step-checkbox">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-title">Посмотрите расписание</div>
+            <div class="step-desc">подходит ли формат занятий?</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step-card" data-step="4" onclick="toggleStep(this)">
+        <div class="step-inner">
+          <div class="step-badge">+1 бонус</div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-num">Шаг 04</span>
+              <div class="step-checkbox">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-title">Загляните в раздел практики</div>
+            <div class="step-desc">кейсы от Яндекс/Озон</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step-card" data-step="5" onclick="toggleStep(this)">
+        <div class="step-inner">
+          <div class="step-badge">+1 бонус</div>
+          <div class="step-content">
+            <div class="step-meta">
+              <span class="step-num">Шаг 05</span>
+              <div class="step-checkbox">
+                <svg width="12" height="10" viewBox="0 0 12 10" fill="none">
+                  <path d="M1 5L4.5 8.5L11 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="step-title">Задайте вопрос куратору — оцените скорость ответа</div>
+            <div class="step-desc">живой контакт с командой</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FINAL BLOCK -->
+    <div class="final-block" id="finalBlock">
+      <div class="final-score">
+        <span class="final-num" id="finalNum">0</span>
+        <span class="final-denom">/5</span>
+      </div>
+      <div class="final-text">
+        <div class="final-tag">Финал</div>
+        <div class="final-title">Обрати внимание — получи скидку</div>
+        <div class="final-sub">Собрал все бонусы = лучшая цена на поступление</div>
+      </div>
+      <a href="https://get.onlinecollege-1.ru/demodostuplid" class="final-btn" id="finalBtn">
+        Скидка
+        <span class="final-btn-label">за выполненный чек-лист</span>
+      </a>
+    </div>
+
+    <!-- HOW IT WORKS -->
+    <div class="how-block">
+      <div class="how-title">Как это работает?</div>
+      <div class="how-list">
+        <div class="how-item">
+          <div class="how-icon">1</div>
+          <div class="how-text">Отмечай шаги по мере прохождения демо-доступа</div>
+        </div>
+        <div class="how-item">
+          <div class="how-icon">2</div>
+          <div class="how-text">За каждый выполненный шаг получаешь +1 бонус</div>
+        </div>
+        <div class="how-item">
+          <div class="how-icon">3</div>
+          <div class="how-text">Собери все 5 бонусов — и получи лучшую цену на поступление</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast">
+    <span class="toast-icon" id="toastIcon">⭐</span>
+    <span id="toastText">+1 бонус получен!</span>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2025 <a href="https://onlinecollege-1.ru/">Онлайн-колледж №1</a> — Государственный диплом, онлайн-обучение</p>
+  </footer>
+
+  <script>
+    const TOTAL = 5;
+    let done = new Set();
+    let toastTimer = null;
+
+    function toggleStep(card) {
+      const step = card.dataset.step;
+
+      if (card.classList.contains('done')) {
+        // Uncheck
+        card.classList.remove('done');
+        done.delete(step);
+      } else {
+        // Check
+        card.classList.add('done');
+        done.add(step);
+
+        // Burst effect
+        const burst = document.createElement('div');
+        burst.className = 'burst';
+        card.appendChild(burst);
+        setTimeout(() => burst.remove(), 600);
+
+        // Toast
+        showToast('⭐', `+1 бонус! Шаг ${step} выполнен`);
+      }
+
+      updateProgress();
+    }
+
+    function updateProgress() {
+      const count = done.size;
+      const pct = (count / TOTAL) * 100;
+
+      // Progress bar
+      document.getElementById('progressFill').style.width = pct + '%';
+      document.getElementById('doneCount').textContent = count;
+
+      // Stars
+      for (let i = 1; i <= TOTAL; i++) {
+        const star = document.getElementById('star' + i);
+        if (done.has(String(i))) {
+          star.classList.add('earned');
+        } else {
+          star.classList.remove('earned');
+        }
+      }
+
+      // Final block
+      const finalBlock = document.getElementById('finalBlock');
+      document.getElementById('finalNum').textContent = count;
+
+      if (count === TOTAL) {
+        finalBlock.classList.add('unlocked');
+        finalBlock.classList.add('celebrating');
+        setTimeout(() => finalBlock.classList.remove('celebrating'), 600);
+        showToast('🎉', 'Все бонусы собраны! Скидка разблокирована');
+      } else {
+        finalBlock.classList.remove('unlocked');
+      }
+
+      // Save to localStorage
+      localStorage.setItem('demoChecklist', JSON.stringify([...done]));
+    }
+
+    function showToast(icon, text) {
+      if (toastTimer) clearTimeout(toastTimer);
+      const toast = document.getElementById('toast');
+      document.getElementById('toastIcon').textContent = icon;
+      document.getElementById('toastText').textContent = text;
+      toast.classList.add('show');
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Restore from localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('demoChecklist');
+      if (saved) {
+        try {
+          const arr = JSON.parse(saved);
+          arr.forEach(step => {
+            const card = document.querySelector(`[data-step="${step}"]`);
+            if (card) {
+              card.classList.add('done');
+              done.add(step);
+            }
+          });
+          updateProgress();
+        } catch(e) {}
+      }
+    });
+  </script>
+
+</body>
+</html>
