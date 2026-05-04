@@ -1,1028 +1,1525 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#C6F105" />
-<title>Демо-доступ — Онлайн-колледж №1</title>
-<meta name="description" content="Геймифицированный демо-доступ. Пройди 5 простых шагов и получи скидку на обучение в Онлайн-колледж №1." />
-<link rel="icon" href="/assets/logo.png" />
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Anton&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --lime:#C6F105;
-    --lime-dark:#B0DA00;
-    --violet:#4E3FEB;
-    --violet-dark:#3A2DC9;
-    --pink:#F56DCB;
-    --pink-light:#FFB8E5;
-    --orange:#F1681A;
-    --orange-light:#FF9B50;
-    --ink:#131D0E;
-    --muted:#5D625B;
-    --bg:#FFFFFF;
-    --bg-soft:#E6F1FB;
-    --green-success:#07B396;
-    --radius:24px;
-    --radius-pill:999px;
-  }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; }
-  body{
-    font-family:'Manrope', system-ui, -apple-system, sans-serif;
-    color:var(--ink);
-    background:var(--bg);
-    line-height:1.5;
-    -webkit-font-smoothing:antialiased;
-    overflow-x:hidden;
-  }
-  a{ color:inherit; text-decoration:none; }
-  button{ font-family:inherit; cursor:pointer; border:0; background:none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Добро пожаловать — Онлайн-колледж №1</title>
+  <meta name="description" content="Добро пожаловать в Онлайн-колледж №1! Пройди 5 шагов демо-доступа и получи скидку на поступление.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .display{
-    font-family:'Anton', 'Manrope', sans-serif;
-    text-transform:uppercase;
-    letter-spacing:-0.01em;
-    line-height:0.92;
-    font-weight:400;
-  }
-  .mark-lime{
-    background:var(--lime);
-    padding:0 .25em;
-    border-radius:6px;
-    box-decoration-break:clone;
-    -webkit-box-decoration-break:clone;
-  }
-  .mark-pink{
-    background:var(--pink);
-    color:#fff;
-    padding:0 .25em;
-    border-radius:6px;
-    box-decoration-break:clone;
-    -webkit-box-decoration-break:clone;
-  }
-  .underline-pink{
-    background-image:linear-gradient(transparent 60%, var(--pink) 60%, var(--pink) 95%, transparent 95%);
-    padding:0 .1em;
-  }
+    :root {
+      --orange:      #FB8125;
+      --orange-dark: #e06b10;
+      --teal:        #07B396;
+      --purple:      #D571FF;
+      --dark:        #131D0E;
+      --gray:        #6B7280;
+      --border:      #E5E7EB;
+      --white:       #FFFFFF;
+      --sky:         #C2F5FF;
+      --sky-light:   #E8FBFF;
+    }
 
-  /* === Topbar === */
-  .topbar{
-    background:var(--orange);
-    color:#fff;
-    text-align:center;
-    padding:10px 16px;
-    font-size:14px;
-    font-weight:600;
-    display:flex; align-items:center; justify-content:center;
-    gap:14px; flex-wrap:wrap;
-  }
-  .topbar .topbar-cta{
-    background:#fff; color:var(--orange);
-    padding:5px 16px; border-radius:var(--radius-pill);
-    font-weight:800; font-size:13px;
-  }
+    html { scroll-behavior: smooth; }
 
-  /* === Header === */
-  .header{
-    position:sticky; top:0; z-index:50;
-    background:#fff;
-    border-bottom:1px solid #F0F0EE;
-  }
-  .header-inner{
-    max-width:1280px; margin:0 auto;
-    padding:14px 24px;
-    display:flex; align-items:center; gap:24px;
-  }
-  .logo img{ height:54px; display:block; }
-  .nav{ display:flex; gap:24px; margin-left:32px; flex-wrap:wrap; }
-  .nav a{
-    font-weight:700; font-size:14px; color:var(--ink);
-    padding:6px 0; transition:color .15s;
-  }
-  .nav a:hover{ color:var(--violet); }
-  .header-spacer{ flex:1; }
-  .btn-cta{
-    background:var(--orange); color:#fff;
-    padding:14px 26px; border-radius:var(--radius-pill);
-    font-weight:800; font-size:15px;
-    box-shadow:0 4px 0 rgba(19,29,14,.18);
-    transition:transform .12s, box-shadow .12s;
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .btn-cta:hover{ transform:translateY(-2px); box-shadow:0 6px 0 rgba(19,29,14,.18); }
-  .btn-cta:active{ transform:translateY(2px); box-shadow:0 1px 0 rgba(19,29,14,.18); }
-  @media(max-width:900px){ .nav{ display:none; } }
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--white);
+      color: var(--dark);
+    }
 
-  /* === Welcome-back bar === */
-  .welcome-back{
-    background:var(--violet); color:#fff;
-    padding:18px 24px; display:none;
-    text-align:center; font-weight:700;
-  }
-  .welcome-back.show{ display:block; }
-  .welcome-back .wb-inner{
-    max-width:1100px; margin:0 auto;
-    display:flex; align-items:center; gap:16px; justify-content:center; flex-wrap:wrap;
-  }
-  .welcome-back .wb-text{ font-size:15px; }
-  .welcome-back .wb-btn{
-    background:var(--lime); color:var(--ink);
-    padding:10px 22px; border-radius:var(--radius-pill);
-    font-weight:800; font-size:14px;
-  }
+    /* ===== TOP BAR ===== */
+    .topbar {
+      background: var(--sky-light);
+      border-bottom: 1px solid #D1F5FF;
+      padding: 6px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 13px;
+      font-weight: 500;
+    }
+    .topbar a { color: var(--gray); text-decoration: none; }
+    .topbar a:hover { color: var(--dark); }
+    .topbar-left { display: flex; gap: 24px; }
+    .topbar-right { display: flex; gap: 20px; align-items: center; }
+    .topbar-right a { color: var(--dark); font-weight: 600; }
+    .topbar-right a:hover { color: var(--teal); }
+    .topbar-sep { color: #D1D5DB; }
 
-  /* === HERO === */
-  .hero{
-    position:relative;
-    background:var(--lime);
-    padding:80px 24px 100px;
-    overflow:hidden;
-  }
-  .hero::after{
-    content:'';
-    position:absolute; left:0; right:0; bottom:-2px;
-    height:60px;
-    background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 60' preserveAspectRatio='none'><path d='M0 30 Q360 0 720 30 T1440 30 V60 H0 Z' fill='%23ffffff'/></svg>") no-repeat center/cover;
-  }
-  .hero-inner{ max-width:1100px; margin:0 auto; position:relative; }
+    /* ===== HEADER ===== */
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 40px;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    }
 
-  .sticker{
-    position:absolute;
-    background:#fff;
-    padding:10px 18px;
-    border-radius:var(--radius-pill);
-    font-weight:800; font-size:14px;
-    box-shadow:0 4px 0 rgba(19,29,14,.15);
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .sticker.heart{ top:-10px; left:50%; transform:translateX(-50%) rotate(-3deg); }
-  .sticker.follow{
-    background:var(--pink); color:#fff;
-    top:120px; right:-10px; transform:rotate(8deg);
-    font-family:'Anton', sans-serif; font-size:24px;
-    padding:18px 28px; text-transform:uppercase;
-  }
-  .sticker.bonus{
-    background:var(--violet); color:#fff;
-    bottom:0; right:14%; transform:rotate(-6deg);
-    font-weight:800; padding:14px 22px; font-size:14px;
-  }
-  .sticker.demo{
-    background:var(--ink); color:var(--lime);
-    top:24px; left:0; transform:rotate(-4deg);
-    font-family:'Anton', sans-serif;
-    text-transform:uppercase; letter-spacing:.04em;
-    font-size:18px;
-  }
-  @media(max-width:760px){
-    .sticker.follow{ display:none; }
-    .sticker.bonus{ font-size:12px; padding:10px 14px; bottom:30px; right:0; }
-    .sticker.demo{ font-size:14px; padding:8px 14px; }
-  }
+    /* ===== LOGO ===== */
+    /* Exact brand: 3 lines bold lowercase, orange filled circle before "1" */
+    .logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .logo-img {
+      height: 56px;
+      width: auto;
+      display: block;
+    }
+    @media (max-width: 680px) {
+      .logo-img { height: 44px; }
+    }
 
-  .hero-title{
-    text-align:center;
-    font-size:clamp(38px, 7vw, 92px);
-    color:var(--violet);
-    margin:60px auto 30px;
-    max-width:980px;
-    word-wrap:break-word;
-    overflow-wrap:break-word;
-  }
-  .hero-title .mark-pink{
-    display:inline-block;
-    line-height:1.05;
-    padding:.04em .25em;
-    margin-top:.1em;
-  }
-  @media(max-width:760px){
-    .hero-title{ font-size:clamp(32px, 9vw, 56px); margin-top:90px; }
-  }
-  .hero-sub{
-    text-align:center;
-    font-size:clamp(18px, 2vw, 22px);
-    font-weight:600; color:var(--ink);
-    max-width:720px; margin:0 auto 38px;
-    line-height:1.45;
-  }
-  .hero-cta-row{ display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
-  .btn-hero{
-    background:var(--orange); color:#fff;
-    font-family:'Anton', sans-serif;
-    text-transform:uppercase;
-    font-size:22px; padding:22px 44px;
-    border-radius:var(--radius-pill);
-    letter-spacing:.02em;
-    box-shadow:0 6px 0 rgba(19,29,14,.18);
-    transition:transform .12s, box-shadow .12s;
-    display:inline-flex; align-items:center; gap:10px;
-  }
-  .btn-hero:hover{ transform:translateY(-3px); box-shadow:0 9px 0 rgba(19,29,14,.18); }
-  .btn-hero.secondary{ background:#fff; color:var(--ink); }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+    nav a {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    nav a:hover { color: var(--teal); }
 
-  /* === Progress strip === */
-  .progress-section{
-    background:#fff;
-    padding:50px 24px 30px;
-  }
-  .progress-inner{
-    max-width:1100px; margin:0 auto;
-    display:flex; align-items:center; gap:24px; flex-wrap:wrap;
-  }
-  .progress-label{
-    font-family:'Anton', sans-serif;
-    font-size:34px;
-    color:var(--violet);
-    text-transform:uppercase;
-    flex-shrink:0;
-  }
-  .progress-bar{
-    flex:1; min-width:240px;
-    height:14px;
-    background:var(--bg-soft);
-    border-radius:var(--radius-pill);
-    overflow:hidden;
-  }
-  .progress-fill{
-    height:100%;
-    background:linear-gradient(90deg, var(--lime), var(--violet));
-    width:0%;
-    border-radius:var(--radius-pill);
-    transition:width .6s cubic-bezier(.2,.8,.2,1);
-  }
-  .progress-stars{ display:flex; gap:8px; }
-  .progress-stars .star{
-    width:34px; height:34px; border-radius:50%;
-    background:var(--bg-soft);
-    display:flex; align-items:center; justify-content:center;
-    font-size:18px; transition:all .3s; color:#B5C0CC;
-  }
-  .progress-stars .star.on{
-    background:var(--lime); color:var(--ink);
-    transform:scale(1.1) rotate(-8deg);
-    box-shadow:0 3px 0 rgba(19,29,14,.15);
-  }
+    .btn-orange {
+      background: var(--orange);
+      color: white;
+      font-weight: 800;
+      font-size: 15px;
+      padding: 13px 26px;
+      border-radius: 50px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      white-space: nowrap;
+      display: inline-block;
+    }
+    .btn-orange:hover { background: var(--orange-dark); transform: translateY(-1px); }
 
-  /* === Checklist === */
-  .checklist-section{
-    padding:60px 24px;
-    background:#fff;
-    position:relative;
-  }
-  .section-head{
-    max-width:1100px; margin:0 auto 50px;
-    text-align:center; position:relative;
-  }
-  .section-head h2{ font-size:clamp(36px, 5vw, 64px); color:var(--violet); }
-  .section-head .badge-side{
-    position:absolute;
-    background:var(--lime); color:var(--ink);
-    padding:8px 16px; border-radius:14px;
-    font-family:'Anton', sans-serif;
-    text-transform:uppercase; font-size:18px;
-    transform:rotate(-6deg);
-    top:-12px; right:0;
-  }
-  .section-head p{
-    color:var(--muted); font-size:17px;
-    margin-top:14px; max-width:620px;
-    margin-left:auto; margin-right:auto;
-  }
+    /* ===== HERO ===== */
+    .hero {
+      background: var(--sky);
+      padding: 52px 40px 44px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 360px; height: 360px;
+      background: radial-gradient(circle, rgba(7,179,150,0.15) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -50px; left: 35%;
+      width: 280px; height: 280px;
+      background: radial-gradient(circle, rgba(213,113,255,0.1) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .hero-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
 
-  .steps-grid{
-    max-width:1100px; margin:0 auto;
-    display:grid; grid-template-columns:repeat(2, 1fr);
-    gap:22px;
-  }
-  .step-card{
-    background:#fff;
-    border:3px solid var(--ink);
-    border-radius:var(--radius);
-    padding:28px;
-    cursor:pointer; position:relative;
-    overflow:hidden;
-    transition:transform .15s, box-shadow .15s, background .25s;
-    box-shadow:0 6px 0 rgba(19,29,14,.12);
-  }
-  .step-card:nth-child(2){ background:var(--bg-soft); }
-  .step-card:nth-child(3){ background:#FFE9F4; }
-  .step-card:nth-child(4){ background:#F4F0FF; }
-  .step-card:nth-child(5){ grid-column:1 / -1; background:var(--lime); }
+    .welcome-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: white;
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      padding: 7px 16px;
+      border-radius: 50px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 10px rgba(7,179,150,0.18);
+    }
 
-  .step-card:hover{ transform:translate(-2px,-4px); box-shadow:0 10px 0 rgba(19,29,14,.12); }
-  .step-card:active{ transform:translate(0,2px); box-shadow:0 2px 0 rgba(19,29,14,.12); }
-  .step-card.done{
-    background:linear-gradient(135deg, #DFFAE3, #BFEEC9);
-    border-color:var(--green-success);
-  }
-  .step-card.done::after{
-    content:'✓';
-    position:absolute; top:18px; right:22px;
-    width:42px; height:42px;
-    background:var(--green-success); color:#fff;
-    border-radius:50%;
-    display:flex; align-items:center; justify-content:center;
-    font-size:22px; font-weight:900;
-    box-shadow:0 3px 0 rgba(7,179,150,.45);
-    animation:pop .35s cubic-bezier(.2,1.4,.4,1);
-  }
-  @keyframes pop{ 0%{ transform:scale(0) rotate(-90deg); } 100%{ transform:scale(1) rotate(0); } }
+    /* ===== WELCOME-BACK BANNER ===== */
+    .wb-banner {
+      max-width: 800px;
+      margin: 18px auto -10px;
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFFBEB 100%);
+      border: 2px solid var(--orange);
+      border-radius: 16px;
+      padding: 16px 22px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 6px 20px rgba(251,129,37,0.15);
+      animation: wbSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .wb-banner.show { display: flex; }
+    @keyframes wbSlide {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .wb-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: var(--orange); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .wb-text { flex: 1; }
+    .wb-title { font-size: 15px; font-weight: 900; color: var(--dark); margin-bottom: 2px; }
+    .wb-sub { font-size: 13px; color: #6B5340; font-weight: 600; }
+    .wb-cta {
+      background: var(--orange); color: white;
+      border: none; border-radius: 10px;
+      padding: 10px 18px; font-size: 13px; font-weight: 800;
+      cursor: pointer; flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+    }
+    .wb-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .wb-close {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--gray); font-size: 18px; padding: 4px 8px;
+      flex-shrink: 0;
+    }
 
-  .step-num{
-    display:inline-block;
-    background:var(--violet); color:#fff;
-    font-family:'Anton', sans-serif; font-size:20px;
-    padding:6px 14px; border-radius:8px;
-    transform:rotate(-3deg);
-    margin-bottom:12px;
-  }
-  .step-card.done .step-num{ background:var(--green-success); }
-  .step-card:nth-child(5) .step-num{ background:var(--ink); color:var(--lime); }
+    /* ===== STEP-ACTION MODAL ===== */
+    .sa-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 600;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .sa-overlay.open { opacity: 1; pointer-events: auto; }
+    .sa-modal {
+      background: white; border-radius: 22px;
+      padding: 32px 32px 28px;
+      max-width: 460px; width: 100%;
+      position: relative;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    }
+    .sa-overlay.open .sa-modal { transform: scale(1) translateY(0); }
+    .sa-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #F3F4F6; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--gray);
+    }
+    .sa-close:hover { background: #E5E7EB; }
+    .sa-step-tag {
+      display: inline-block;
+      background: #FFF7ED; color: var(--orange);
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 5px 12px; border-radius: 50px;
+      margin-bottom: 12px;
+    }
+    .sa-title {
+      font-size: 22px; font-weight: 900;
+      color: var(--dark); line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .sa-desc {
+      font-size: 14px; color: #4B5563;
+      font-weight: 500; line-height: 1.55;
+      margin-bottom: 22px;
+    }
+    .sa-instructions {
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.55;
+    }
+    .sa-instructions strong { color: var(--dark); font-weight: 800; }
+    .sa-actions {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .sa-btn-primary {
+      background: var(--teal); color: white;
+      border: none; border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .sa-btn-primary:hover { background: #069680; transform: translateY(-1px); }
+    .sa-btn-secondary {
+      background: white; color: var(--dark);
+      border: 2px solid var(--border); border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .sa-btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+    .sa-btn-done {
+      background: var(--orange); color: white;
+      border: none; border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px; font-weight: 900;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+      display: none;
+    }
+    .sa-btn-done.visible { display: block; }
+    .sa-btn-done:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .sa-tip {
+      font-size: 12px; color: var(--gray);
+      text-align: center; margin-top: 12px;
+      line-height: 1.4;
+    }
 
-  .step-bonus{
-    position:absolute; top:24px; right:24px;
-    background:var(--orange); color:#fff;
-    font-family:'Anton', sans-serif; font-size:14px;
-    padding:6px 12px; border-radius:var(--radius-pill);
-    transform:rotate(8deg);
-    text-transform:uppercase; letter-spacing:.04em;
-  }
-  .step-card.done .step-bonus{ display:none; }
+    @media (max-width: 600px) {
+      .wb-banner { margin: 14px 16px -8px; padding: 14px 16px; gap: 12px; }
+      .wb-icon { width: 40px; height: 40px; font-size: 18px; }
+      .wb-cta { padding: 9px 14px; font-size: 12px; }
+      .sa-modal { padding: 26px 22px 22px; }
+      .sa-title { font-size: 19px; }
+    }
+    .welcome-dot {
+      width: 8px; height: 8px;
+      background: var(--teal);
+      border-radius: 50%;
+      animation: blink 2s infinite;
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(1.5); }
+    }
 
-  .step-title{
-    font-size:22px; font-weight:800; color:var(--ink);
-    margin-bottom:6px; line-height:1.25;
-    padding-right:80px;
-  }
-  .step-desc{ color:var(--muted); font-size:15px; line-height:1.5; }
-  .step-card.done .step-title, .step-card.done .step-desc{ color:#0F4D2A; }
+    .hero h1 {
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.1;
+      margin-bottom: 14px;
+      letter-spacing: -1px;
+    }
+    .hero h1 .hl {
+      background: var(--purple);
+      color: white;
+      padding: 3px 14px 5px;
+      border-radius: 10px;
+      display: inline;
+    }
 
-  @media(max-width:760px){
-    .steps-grid{ grid-template-columns:1fr; }
-    .step-card:nth-child(5){ grid-column:auto; }
-  }
+    .hero-desc {
+      font-size: 17px;
+      color: #374151;
+      font-weight: 500;
+      line-height: 1.65;
+      max-width: 520px;
+      margin-bottom: 30px;
+    }
 
-  /* === Reward === */
-  .reward{
-    max-width:1100px; margin:48px auto 0;
-    background:var(--ink); color:#fff;
-    border-radius:var(--radius);
-    padding:44px;
-    display:grid; grid-template-columns:auto 1fr auto;
-    gap:32px; align-items:center;
-    position:relative; overflow:hidden;
-  }
-  .reward::before{
-    content:''; position:absolute; left:-30px; top:-30px;
-    width:160px; height:160px;
-    background:var(--lime); border-radius:50%;
-    opacity:.25;
-  }
-  .reward-num{
-    font-family:'Anton', sans-serif;
-    font-size:96px; color:var(--orange);
-    line-height:1; z-index:1;
-  }
-  .reward-content{ z-index:1; }
-  .reward-tag{
-    background:var(--orange); color:#fff;
-    display:inline-block;
-    padding:4px 12px; border-radius:6px;
-    font-size:12px; font-weight:800;
-    text-transform:uppercase; letter-spacing:.06em;
-    margin-bottom:8px;
-  }
-  .reward h3{ font-size:28px; font-weight:800; margin-bottom:6px; }
-  .reward p{ color:rgba(255,255,255,.75); font-size:15px; }
-  .reward-btn{
-    background:var(--orange); color:#fff;
-    font-family:'Anton', sans-serif;
-    text-transform:uppercase;
-    font-size:18px; padding:18px 30px;
-    border-radius:var(--radius-pill);
-    box-shadow:0 5px 0 rgba(0,0,0,.3);
-    z-index:1;
-    transition:transform .12s, opacity .25s;
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .reward-btn:hover:not(:disabled){ transform:translateY(-3px); box-shadow:0 8px 0 rgba(0,0,0,.3); }
-  .reward-btn:disabled{ opacity:.45; cursor:not-allowed; }
-  .reward-hint{
-    color:rgba(255,255,255,.55);
-    font-size:13px; margin-top:10px; z-index:1;
-  }
-  @media(max-width:760px){
-    .reward{ grid-template-columns:1fr; text-align:center; padding:32px 24px; }
-    .reward-num{ font-size:72px; }
-  }
+    .hero-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .hero-step {
+      background: white;
+      border: 1.5px solid rgba(7,179,150,0.25);
+      color: var(--dark);
+      font-size: 13px;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 50px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+    .hero-step-num {
+      width: 22px; height: 22px;
+      background: var(--orange);
+      border-radius: 50%;
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
 
-  /* === How === */
-  .how{ background:var(--bg-soft); padding:80px 24px; }
-  .how-head{ max-width:900px; margin:0 auto 40px; text-align:center; }
-  .how-head h2{ font-size:clamp(36px, 5vw, 56px); color:var(--violet); line-height:.95; }
-  .how-grid{
-    max-width:1100px; margin:0 auto;
-    display:grid; grid-template-columns:repeat(3, 1fr); gap:22px;
-  }
-  .how-card{
-    background:#fff; border-radius:var(--radius);
-    padding:32px;
-    border:3px solid var(--ink);
-    box-shadow:0 6px 0 rgba(19,29,14,.12);
-  }
-  .how-card-emoji{ font-size:40px; margin-bottom:14px; }
-  .how-card h3{ font-size:22px; font-weight:800; margin-bottom:8px; color:var(--ink); }
-  .how-card p{ color:var(--muted); font-size:15px; }
-  @media(max-width:860px){ .how-grid{ grid-template-columns:1fr; } }
+    /* ===== PROGRESS BAR ===== */
+    .progress-bar-section {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 14px 40px;
+    }
+    .pb-inner {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+    }
+    .pb-label {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray);
+      white-space: nowrap;
+    }
+    .pb-track {
+      flex: 1;
+      height: 8px;
+      background: #E5E7EB;
+      border-radius: 50px;
+      overflow: hidden;
+    }
+    .pb-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--teal), #0DCBA8);
+      border-radius: 50px;
+      width: 0%;
+      transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pb-count {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--teal);
+      white-space: nowrap;
+    }
+    .pb-stars {
+      display: flex;
+      gap: 4px;
+    }
+    .pb-star {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: #F3F4F6;
+      border: 2px solid #E5E7EB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .pb-star.lit {
+      background: linear-gradient(135deg, #fbbf24, var(--orange));
+      border-color: var(--orange);
+      transform: scale(1.25);
+      box-shadow: 0 0 10px rgba(251,129,37,0.45);
+    }
 
-  /* === Footer === */
-  .footer{
-    background:var(--ink); color:rgba(255,255,255,.7);
-    padding:50px 24px 30px;
-  }
-  .footer-inner{
-    max-width:1100px; margin:0 auto;
-    display:grid; grid-template-columns:auto 1fr auto; gap:40px;
-    align-items:center;
-  }
-  .footer .logo img{ height:64px; filter:brightness(0) invert(1); }
-  .footer-links{ display:flex; gap:28px; flex-wrap:wrap; font-size:14px; }
-  .footer-links a:hover{ color:var(--lime); }
-  .footer-phone{ color:#fff; font-weight:800; font-size:18px; }
-  .footer-bottom{
-    max-width:1100px; margin:30px auto 0;
-    padding-top:20px; border-top:1px solid rgba(255,255,255,.1);
-    font-size:13px; color:rgba(255,255,255,.45);
-    display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
-  }
-  @media(max-width:860px){
-    .footer-inner{ grid-template-columns:1fr; text-align:center; }
-    .footer-links{ justify-content:center; }
-  }
+    /* ===== CHECKLIST ===== */
+    .checklist-section {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
 
-  /* === Modal === */
-  .overlay{
-    position:fixed; inset:0;
-    background:rgba(19,29,14,.7);
-    backdrop-filter:blur(6px);
-    z-index:200;
-    display:none; align-items:center; justify-content:center;
-    padding:20px;
-    animation:fadeIn .2s;
-  }
-  .overlay.show{ display:flex; }
-  @keyframes fadeIn{ from{opacity:0;} to{opacity:1;} }
+    .section-header {
+      padding: 32px 0 6px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .section-tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--teal);
+      margin-bottom: 5px;
+    }
+    .section-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--dark);
+    }
+    .mechanic-pill {
+      background: var(--sky);
+      color: var(--teal);
+      font-size: 12px;
+      font-weight: 800;
+      padding: 8px 16px;
+      border-radius: 50px;
+      white-space: nowrap;
+      border: 1.5px solid rgba(7,179,150,0.2);
+    }
 
-  .modal{
-    background:#fff;
-    border-radius:var(--radius);
-    border:3px solid var(--ink);
-    box-shadow:0 10px 0 var(--violet);
-    max-width:520px; width:100%;
-    padding:40px 32px 32px;
-    position:relative;
-    animation:rise .35s cubic-bezier(.2,1.2,.3,1);
-  }
-  @keyframes rise{ from{ transform:translateY(40px); opacity:0; } to{ transform:translateY(0); opacity:1; } }
-  .modal-close{
-    position:absolute; top:14px; right:14px;
-    width:36px; height:36px; border-radius:50%;
-    background:var(--bg-soft);
-    font-size:20px; color:var(--ink);
-    display:flex; align-items:center; justify-content:center;
-  }
-  .modal-tag{
-    background:var(--lime); color:var(--ink);
-    display:inline-block;
-    padding:5px 12px;
-    font-family:'Anton', sans-serif; font-size:14px;
-    border-radius:8px;
-    text-transform:uppercase; letter-spacing:.04em;
-    margin-bottom:14px;
-  }
-  .modal h3{
-    font-size:26px; font-weight:800; margin-bottom:10px;
-    color:var(--ink); line-height:1.2;
-  }
-  .modal p.lead{ color:var(--muted); font-size:15px; margin-bottom:18px; }
-  .modal .instruction{
-    background:var(--bg-soft);
-    border-radius:14px;
-    padding:14px 18px; margin-bottom:22px;
-    font-size:14px; color:var(--ink);
-  }
-  .modal .instruction b{ color:var(--violet); }
-  .modal-actions{ display:flex; flex-direction:column; gap:10px; }
-  .modal-btn{
-    width:100%; padding:16px 20px;
-    border-radius:var(--radius-pill);
-    font-weight:800; font-size:15px;
-    transition:transform .12s;
-    display:inline-flex; align-items:center; justify-content:center; gap:8px;
-  }
-  .modal-btn.primary{
-    background:var(--violet); color:#fff;
-    box-shadow:0 4px 0 var(--violet-dark);
-  }
-  .modal-btn.primary:hover{ transform:translateY(-2px); }
-  .modal-btn.success{
-    background:var(--lime); color:var(--ink);
-    box-shadow:0 4px 0 var(--lime-dark);
-  }
-  .modal-btn.success:hover{ transform:translateY(-2px); }
-  .modal-btn.ghost{ background:transparent; color:var(--muted); }
-  .modal-hint{ font-size:13px; color:var(--muted); text-align:center; margin-top:14px; }
+    .steps-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding: 18px 0 12px;
+    }
 
-  /* === Form === */
-  .form-row{ margin-bottom:14px; }
-  .form-row label{
-    display:block; font-size:13px; font-weight:700; color:var(--muted);
-    margin-bottom:6px;
-  }
-  .form-row input{
-    width:100%; padding:14px 16px;
-    border:2px solid #E2E5DF;
-    border-radius:14px; font-size:15px;
-    font-family:inherit; transition:border-color .15s;
-  }
-  .form-row input:focus{ outline:none; border-color:var(--violet); }
-  .form-row input.error{ border-color:#EE1313; }
-  .form-disclaimer{
-    font-size:12px; color:var(--muted); text-align:center; margin-top:14px;
-  }
-  .form-disclaimer a{ color:var(--violet); text-decoration:underline; }
+    .step {
+      background: white;
+      border-radius: 18px;
+      border: 2px solid var(--border);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      position: relative;
+      user-select: none;
+    }
+    .step:hover {
+      border-color: var(--teal);
+      box-shadow: 0 6px 20px rgba(7,179,150,0.13);
+      transform: translateY(-2px);
+    }
+    .step.done {
+      border-color: var(--teal);
+      background: #F0FDFB;
+    }
+    .step.full { grid-column: 1 / -1; }
 
-  .success-screen{ text-align:center; padding:20px 0; }
-  .success-screen .emoji{ font-size:64px; margin-bottom:14px; }
-  .success-screen h3{ color:var(--violet); margin-bottom:10px; font-size:28px; }
-  .success-screen p{ color:var(--muted); font-size:15px; }
+    .step-row { display: flex; align-items: stretch; }
 
-  /* === Toast === */
-  .toast{
-    position:fixed; bottom:30px; left:50%;
-    transform:translateX(-50%) translateY(120px);
-    background:var(--ink); color:#fff;
-    padding:14px 26px; border-radius:var(--radius-pill);
-    font-weight:700;
-    box-shadow:0 8px 24px rgba(19,29,14,.3);
-    z-index:300;
-    transition:transform .35s cubic-bezier(.2,1.4,.3,1);
-    display:flex; align-items:center; gap:10px;
-  }
-  .toast.show{ transform:translateX(-50%) translateY(0); }
-  .toast.success{ background:var(--green-success); }
-  .toast .em{ font-size:20px; }
+    .step-side {
+      background: var(--orange);
+      color: white;
+      font-size: 8px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      writing-mode: vertical-rl;
+      text-orientation: mixed;
+      transform: rotate(180deg);
+      padding: 14px 9px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 30px;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    .step.done .step-side { background: var(--teal); }
 
-  @keyframes pulse{
-    0%,100%{ transform:translate(0,0); box-shadow:0 6px 0 rgba(19,29,14,.12); }
-    50%{ transform:translate(-2px,-6px); box-shadow:0 14px 0 var(--violet); }
-  }
-</style>
+    .step-body { flex: 1; padding: 16px 18px; }
+
+    .step-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 7px;
+    }
+    .step-label {
+      font-size: 10px;
+      font-weight: 800;
+      color: #9CA3AF;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .step-check {
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      border: 2px solid #D1D5DB;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex-shrink: 0;
+    }
+    .step.done .step-check {
+      background: var(--teal);
+      border-color: var(--teal);
+      transform: scale(1.1);
+    }
+    .step-check svg { opacity: 0; transform: scale(0); transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .step.done .step-check svg { opacity: 1; transform: scale(1); }
+
+    .step-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .step.done .step-title { color: var(--teal); }
+    .step-hint { font-size: 13px; color: var(--gray); font-weight: 500; line-height: 1.4; }
+
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(5); opacity: 0; }
+    }
+    .pop-ring {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 30px; height: 30px;
+      margin: -15px;
+      pointer-events: none;
+      animation: pop 0.5s ease-out forwards;
+      background: radial-gradient(circle, rgba(7,179,150,0.25) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    /* ===== REWARD BLOCK ===== */
+    .reward-block {
+      background: var(--dark);
+      border-radius: 20px;
+      padding: 28px 32px;
+      margin: 4px 0 40px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.5s, transform 0.4s;
+    }
+    .reward-block.locked { opacity: 0.35; pointer-events: none; }
+    .reward-block.unlocked { opacity: 1; pointer-events: auto; }
+    .reward-block::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(251,129,37,0.2) 0%, transparent 70%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .reward-score {
+      display: flex;
+      align-items: baseline;
+      gap: 2px;
+      flex-shrink: 0;
+    }
+    .reward-num {
+      font-size: 60px;
+      font-weight: 900;
+      color: var(--orange);
+      line-height: 1;
+    }
+    .reward-denom {
+      font-size: 26px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.25);
+    }
+
+    .reward-text { flex: 1; }
+    .reward-tag {
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--orange);
+      margin-bottom: 6px;
+    }
+    .reward-title {
+      font-size: 19px;
+      font-weight: 900;
+      color: white;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .reward-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.4);
+      font-weight: 500;
+    }
+
+    .reward-cta {
+      background: var(--orange);
+      color: white;
+      font-weight: 900;
+      font-size: 14px;
+      padding: 16px 22px;
+      border-radius: 14px;
+      text-align: center;
+      line-height: 1.3;
+      flex-shrink: 0;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .reward-cta:hover { background: var(--orange-dark); transform: translateY(-2px); }
+    .reward-cta small { font-size: 10px; font-weight: 600; opacity: 0.8; display: block; margin-top: 3px; }
+
+    /* ===== MODAL OVERLAY ===== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal {
+      background: white;
+      border-radius: 24px;
+      padding: 40px 36px;
+      max-width: 460px;
+      width: 100%;
+      position: relative;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    }
+    .modal-overlay.open .modal {
+      transform: scale(1) translateY(0);
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #F3F4F6;
+      border: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      color: var(--gray);
+      transition: background 0.2s;
+    }
+    .modal-close:hover { background: #E5E7EB; }
+
+    .modal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF7ED;
+      color: var(--orange);
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+    }
+    .modal h2 {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.2;
+      margin-bottom: 8px;
+    }
+    .modal h2 span { color: var(--orange); }
+    .modal-sub {
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.55;
+      margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 14px 18px;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      font-size: 15px;
+      font-family: inherit;
+      font-weight: 500;
+      color: var(--dark);
+      background: white;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(7,179,150,0.1);
+    }
+    .form-group input::placeholder { color: #9CA3AF; }
+
+    .form-submit {
+      width: 100%;
+      background: var(--orange);
+      color: white;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 16px;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      margin-top: 6px;
+    }
+    .form-submit:hover { background: var(--orange-dark); transform: translateY(-1px); }
+
+    .form-agree {
+      font-size: 12px;
+      color: #9CA3AF;
+      text-align: center;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+    .form-agree a { color: var(--teal); text-decoration: none; }
+
+    /* Success state */
+    .modal-success {
+      text-align: center;
+      padding: 10px 0;
+      display: none;
+    }
+    .success-icon {
+      width: 72px; height: 72px;
+      background: linear-gradient(135deg, var(--teal), #0DCBA8);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      font-size: 32px;
+    }
+    .modal-success h3 {
+      font-size: 22px;
+      font-weight: 900;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .modal-success p {
+      font-size: 15px;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-section {
+      background: var(--sky);
+      padding: 44px 40px 48px;
+    }
+    .how-inner { max-width: 800px; margin: 0 auto; }
+    .how-tag { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; color: var(--teal); margin-bottom: 6px; }
+    .how-title { font-size: 22px; font-weight: 900; color: var(--dark); margin-bottom: 24px; }
+    .how-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .how-card {
+      background: white;
+      border-radius: 18px;
+      padding: 22px 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .how-num {
+      width: 38px; height: 38px;
+      border-radius: 12px;
+      background: var(--teal);
+      color: white;
+      font-size: 17px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 14px;
+    }
+    .how-card h4 { font-size: 15px; font-weight: 800; color: var(--dark); margin-bottom: 5px; }
+    .how-card p { font-size: 13px; color: var(--gray); font-weight: 500; line-height: 1.55; }
+
+    /* ===== TOAST ===== */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--dark);
+      color: white;
+      padding: 13px 22px;
+      border-radius: 50px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+      z-index: 999;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ===== FOOTER ===== */
+    footer {
+      background: var(--dark);
+      padding: 28px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+    }
+    .footer-logo-img {
+      height: 60px;
+      filter: brightness(0) invert(1);
+    }
+    .footer-logo-img:hover {
+      filter: none;
+    }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; font-weight: 500; }
+    .footer-links a:hover { color: white; }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 680px) {
+      .topbar, nav { display: none; }
+      header { padding: 0 16px; }
+      .hero { padding: 32px 16px 28px; }
+      .progress-bar-section { padding: 12px 16px; }
+      .pb-stars { display: none; }
+      .checklist-section { padding: 0 16px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .step.full { grid-column: auto; }
+      .reward-block { flex-direction: column; text-align: center; padding: 22px 18px; }
+      .reward-score { justify-content: center; }
+      .reward-cta { width: 100%; }
+      .how-section { padding: 36px 16px 40px; }
+      .how-cards { grid-template-columns: 1fr; }
+      footer { padding: 20px 16px; flex-direction: column; text-align: center; }
+      .modal { padding: 28px 20px; }
+    }
+  </style>
 </head>
 <body>
 
+<!-- TOP BAR -->
 <div class="topbar">
-  <span>⭐</span>
-  <span>Получи грант на обучение 60 000 ₽</span>
-  <a href="https://onlinecollege-1.ru/" target="_blank" class="topbar-cta">Узнать</a>
+  <div class="topbar-left">
+    <a href="https://onlinecollege-1.ru/#about">О колледже</a>
+    <a href="https://onlinecollege-1.ru/#license">Лицензия</a>
+    <a href="https://onlinecollege-1.ru/#faq">Вопрос-ответ</a>
+  </div>
+  <div class="topbar-right">
+    <span style="color:#9CA3AF">Позвонить:</span>
+    <a href="tel:88004443019">8 (800) 444-30-19</a>
+    <span class="topbar-sep">|</span>
+    <a href="https://t.me/onlinecollege1">Telegram</a>
+  </div>
 </div>
 
-<header class="header">
-  <div class="header-inner">
-    <a href="https://onlinecollege-1.ru/" class="logo" aria-label="Онлайн-колледж №1">
-      <img src="/assets/logo.png" alt="Онлайн-колледж №1" />
-    </a>
-    <nav class="nav">
-      <a href="https://onlinecollege-1.ru/it/" target="_blank">IT</a>
-      <a href="https://onlinecollege-1.ru/design/" target="_blank">Дизайн</a>
-      <a href="https://onlinecollege-1.ru/marketing/" target="_blank">Маркетинг</a>
-      <a href="https://onlinecollege-1.ru/business/" target="_blank">Бизнес</a>
-      <a href="https://onlinecollege-1.ru/" target="_blank">Все направления</a>
-    </nav>
-    <div class="header-spacer"></div>
-    <a href="#checklist" class="btn-cta">Начать</a>
-  </div>
+<!-- HEADER -->
+<header>
+  <!-- LOGO: official brand PNG -->
+  <a href="https://onlinecollege-1.ru/" class="logo" title="Онлайн-колледж №1">
+    <img src="/assets/logo.png" alt="Онлайн-колледж №1" class="logo-img">
+  </a>
+
+  <nav>
+    <a href="https://onlinecollege-1.ru/#specialties">Специальности</a>
+    <a href="https://onlinecollege-1.ru/#about">О колледже</a>
+    <a href="https://onlinecollege-1.ru/#process">Учебный процесс</a>
+    <a href="https://onlinecollege-1.ru/#price">Стоимость</a>
+    <a href="https://onlinecollege-1.ru/#reviews">Отзывы</a>
+  </nav>
+
+  <a href="https://get.onlinecollege-1.ru/demodostuplid" class="btn-orange">Начать бесплатно</a>
 </header>
 
-<div class="welcome-back" id="welcomeBack">
-  <div class="wb-inner">
-    <span class="wb-text" id="wbText">С возвращением! Ты на шаге 1 из 5</span>
-    <button class="wb-btn" id="wbBtn">Продолжить</button>
+<!-- WELCOME-BACK BANNER -->
+<div class="wb-banner" id="wbBanner">
+  <div class="wb-icon">👋</div>
+  <div class="wb-text">
+    <div class="wb-title" id="wbTitle">С возвращением!</div>
+    <div class="wb-sub" id="wbSub">Ты на шаге 0 из 5 — продолжим?</div>
+  </div>
+  <button class="wb-cta" onclick="continueProgress()">Продолжить</button>
+  <button class="wb-close" onclick="closeWb()" title="Закрыть">✕</button>
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="welcome-badge">
+      <div class="welcome-dot"></div>
+      Демо-доступ активирован
+    </div>
+
+    <h1>Добро пожаловать<br>в <span class="hl">Онлайн-колледж №1</span></h1>
+
+    <p class="hero-desc">
+      Ты уже внутри! Пройди 5 простых шагов — познакомься с форматом, платформой и командой.
+      За каждый шаг получаешь бонус. Собери все 5 — и мы дадим тебе лучшую цену на поступление.
+    </p>
+
+    <div class="hero-steps">
+      <div class="hero-step"><div class="hero-step-num">1</div>Живая лекция</div>
+      <div class="hero-step"><div class="hero-step-num">2</div>Платформа</div>
+      <div class="hero-step"><div class="hero-step-num">3</div>Расписание</div>
+      <div class="hero-step"><div class="hero-step-num">4</div>Практика</div>
+      <div class="hero-step"><div class="hero-step-num">5</div>Куратор</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS BAR -->
+<div class="progress-bar-section">
+  <div class="pb-inner">
+    <span class="pb-label">Твой прогресс</span>
+    <div class="pb-track">
+      <div class="pb-fill" id="pbFill"></div>
+    </div>
+    <span class="pb-count"><span id="pbCount">0</span>/5</span>
+    <div class="pb-stars">
+      <div class="pb-star" id="s1">⭐</div>
+      <div class="pb-star" id="s2">⭐</div>
+      <div class="pb-star" id="s3">⭐</div>
+      <div class="pb-star" id="s4">⭐</div>
+      <div class="pb-star" id="s5">⭐</div>
+    </div>
   </div>
 </div>
 
-<section class="hero">
-  <div class="hero-inner">
-    <span class="sticker demo">Демо-доступ активирован</span>
-    <span class="sticker heart">💜 Привет, будущий студент!</span>
-    <span class="sticker follow">Follow!</span>
-
-    <h1 class="display hero-title">
-      Добро пожаловать<br/>в&nbsp;<span class="mark-pink">Онлайн-колледж&nbsp;№1</span>
-    </h1>
-    <p class="hero-sub">
-      Ты уже внутри! Пройди <b>5 простых шагов</b> — познакомься с форматом, платформой и командой. За каждый шаг — <span class="mark-lime">+1 бонус</span>. Собери все&nbsp;5 → получи <b>скидку</b> на обучение.
-    </p>
-    <div class="hero-cta-row">
-      <a href="#checklist" class="btn-hero">Поехали 🚀</a>
-      <a href="#how" class="btn-hero secondary">Как это работает?</a>
+<!-- CHECKLIST -->
+<div class="checklist-section">
+  <div class="section-header">
+    <div>
+      <div class="section-tag">Твой чек-лист</div>
+      <div class="section-title">5 шагов — 5 бонусов</div>
     </div>
-
-    <span class="sticker bonus">+1 бонус за каждый шаг</span>
-  </div>
-</section>
-
-<section class="progress-section">
-  <div class="progress-inner">
-    <span class="progress-label">Бонусы:</span>
-    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-    <div class="progress-stars" id="progressStars">
-      <div class="star">★</div><div class="star">★</div><div class="star">★</div><div class="star">★</div><div class="star">★</div>
-    </div>
-  </div>
-</section>
-
-<section class="checklist-section" id="checklist">
-  <div class="section-head">
-    <h2 class="display">5 шагов — <span class="mark-lime">5 бонусов</span></h2>
-    <p>Открывай каждый шаг — внутри короткая инструкция и кнопка перехода. Пройдёшь все&nbsp;— разблокируешь скидку.</p>
-    <span class="badge-side">Механика</span>
+    <div class="mechanic-pill">каждый шаг = +1 бонус</div>
   </div>
 
   <div class="steps-grid" id="stepsGrid">
-    <div class="step-card" data-step="1">
-      <span class="step-bonus">+1 бонус</span>
-      <span class="step-num">Шаг 01</span>
-      <h3 class="step-title">Посмотри живую лекцию</h3>
-      <p class="step-desc">Подключись к ближайшей трансляции или открой запись — почувствуй формат изнутри.</p>
+
+    <!-- ШАГ 1 -->
+    <div class="step" data-step="1" onclick="openStepModal(1)">
+      <div class="step-row">
+        <div class="step-side">+1 бонус</div>
+        <div class="step-body">
+          <div class="step-top">
+            <span class="step-label">Шаг 01</span>
+            <div class="step-check">
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="step-title">Посмотри живую лекцию</div>
+          <div class="step-hint">Или запись — почувствуй формат изнутри</div>
+        </div>
+      </div>
     </div>
-    <div class="step-card" data-step="2">
-      <span class="step-bonus">+1 бонус</span>
-      <span class="step-num">Шаг 02</span>
-      <h3 class="step-title">Оцени платформу</h3>
-      <p class="step-desc">Удобно ли навигировать? Найди свой курс, посмотри как устроен личный кабинет.</p>
+
+    <!-- ШАГ 2 -->
+    <div class="step" data-step="2" onclick="openStepModal(2)">
+      <div class="step-row">
+        <div class="step-side">+1 бонус</div>
+        <div class="step-body">
+          <div class="step-top">
+            <span class="step-label">Шаг 02</span>
+            <div class="step-check">
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="step-title">Оцени платформу</div>
+          <div class="step-hint">Удобно ли навигировать? Найди свой курс</div>
+        </div>
+      </div>
     </div>
-    <div class="step-card" data-step="3">
-      <span class="step-bonus">+1 бонус</span>
-      <span class="step-num">Шаг 03</span>
-      <h3 class="step-title">Посмотри расписание</h3>
-      <p class="step-desc">Подходит ли формат занятий? Заглянь на 1–2 недели вперёд.</p>
+
+    <!-- ШАГ 3 -->
+    <div class="step" data-step="3" onclick="openStepModal(3)">
+      <div class="step-row">
+        <div class="step-side">+1 бонус</div>
+        <div class="step-body">
+          <div class="step-top">
+            <span class="step-label">Шаг 03</span>
+            <div class="step-check">
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="step-title">Посмотри расписание</div>
+          <div class="step-hint">Подходит ли тебе формат занятий?</div>
+        </div>
+      </div>
     </div>
-    <div class="step-card" data-step="4">
-      <span class="step-bonus">+1 бонус</span>
-      <span class="step-num">Шаг 04</span>
-      <h3 class="step-title">Загляни в раздел практики</h3>
-      <p class="step-desc">Реальные кейсы от Яндекс и Озон — посмотри что делают студенты.</p>
+
+    <!-- ШАГ 4 -->
+    <div class="step" data-step="4" onclick="openStepModal(4)">
+      <div class="step-row">
+        <div class="step-side">+1 бонус</div>
+        <div class="step-body">
+          <div class="step-top">
+            <span class="step-label">Шаг 04</span>
+            <div class="step-check">
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="step-title">Загляни в раздел практики</div>
+          <div class="step-hint">Реальные кейсы от Яндекс и Озон</div>
+        </div>
+      </div>
     </div>
-    <div class="step-card" data-step="5">
-      <span class="step-bonus">+1 бонус</span>
-      <span class="step-num">Финальный шаг</span>
-      <h3 class="step-title">Напиши куратору — оцени скорость ответа</h3>
-      <p class="step-desc">Живой контакт с командой. Задай любой вопрос о поступлении.</p>
+
+    <!-- ШАГ 5 — full width -->
+    <div class="step full" data-step="5" onclick="openStepModal(5)">
+      <div class="step-row">
+        <div class="step-side">+1 бонус</div>
+        <div class="step-body">
+          <div class="step-top">
+            <span class="step-label">Шаг 05</span>
+            <div class="step-check">
+              <svg width="11" height="9" viewBox="0 0 11 9" fill="none"><path d="M1 4.5L4 7.5L10 1.5" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+          </div>
+          <div class="step-title">Напиши куратору — оцени скорость ответа</div>
+          <div class="step-hint">Живой контакт с командой. Задай любой вопрос о поступлении</div>
+        </div>
+      </div>
     </div>
+
   </div>
 
-  <div class="reward">
-    <div class="reward-num" id="rewardNum">0/5</div>
-    <div class="reward-content">
-      <span class="reward-tag">Финал</span>
-      <h3>Собери все бонусы — получи скидку</h3>
-      <p>Заполни короткую форму, мы свяжемся с тобой и зафиксируем скидку на поступление.</p>
-      <p class="reward-hint" id="rewardHint">Пройди все 5 шагов, чтобы разблокировать кнопку</p>
+  <!-- REWARD BLOCK -->
+  <div class="reward-block locked" id="rewardBlock">
+    <div class="reward-score">
+      <span class="reward-num" id="rewardNum">0</span>
+      <span class="reward-denom">/5</span>
     </div>
-    <button class="reward-btn" id="rewardBtn" disabled>🎁 Получить скидку</button>
+    <div class="reward-text">
+      <div class="reward-tag">Финал — все бонусы собраны!</div>
+      <div class="reward-title">Получи скидку на поступление</div>
+      <div class="reward-sub">Ты прошёл все шаги — оставь контакты и мы свяжемся с тобой с лучшим предложением</div>
+    </div>
+    <button class="reward-cta" id="rewardBtn" onclick="openModal()">
+      Получить скидку
+      <small>оставить контакты</small>
+    </button>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <div class="how-tag">Как это работает</div>
+    <div class="how-title">Три простых шага к скидке</div>
+    <div class="how-cards">
+      <div class="how-card">
+        <div class="how-num">1</div>
+        <h4>Отмечай шаги</h4>
+        <p>Нажимай на каждый шаг по мере того, как знакомишься с колледжем</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">2</div>
+        <h4>Собирай бонусы</h4>
+        <p>За каждый выполненный шаг получаешь +1 бонус — всего 5 бонусов</p>
+      </div>
+      <div class="how-card">
+        <div class="how-num">3</div>
+        <h4>Получи скидку</h4>
+        <p>Собери все 5 бонусов, оставь контакты — и мы дадим лучшую цену на поступление</p>
+      </div>
+    </div>
   </div>
 </section>
 
-<section class="how" id="how">
-  <div class="how-head">
-    <h2 class="display">Как это <span class="underline-pink">работает</span></h2>
+<!-- STEP-ACTION MODAL: инструкция и кнопки для каждого шага -->
+<div class="sa-overlay" id="saOverlay" onclick="closeSaOnBg(event)">
+  <div class="sa-modal">
+    <button class="sa-close" onclick="closeStepModal()">✕</button>
+    <div class="sa-step-tag" id="saTag">Шаг 01 · +1 бонус</div>
+    <div class="sa-title" id="saTitle">Заголовок</div>
+    <div class="sa-desc" id="saDesc">Описание</div>
+    <div class="sa-instructions" id="saInstructions">
+      <strong>Что делать:</strong> <span id="saInstrText">…</span>
+    </div>
+    <div class="sa-actions">
+      <a class="sa-btn-primary" id="saOpenBtn" href="#" target="_blank" rel="noopener" onclick="onStepOpened()">
+        Открыть в новой вкладке
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <button class="sa-btn-done" id="saDoneBtn" onclick="confirmStepDone()">
+        Я выполнил — засчитать бонус
+      </button>
+      <button class="sa-btn-secondary" onclick="closeStepModal()">Отмена</button>
+    </div>
+    <div class="sa-tip" id="saTip">
+      Эта вкладка останется открытой — вернись и нажми «Я выполнил»
+    </div>
   </div>
-  <div class="how-grid">
-    <div class="how-card">
-      <div class="how-card-emoji">🎯</div>
-      <h3>1. Открываешь шаг</h3>
-      <p>Кликаешь на карточку — появляется короткая инструкция: что делать и зачем.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-card-emoji">🚀</div>
-      <h3>2. Переходишь на платформу</h3>
-      <p>В новой вкладке. Эта страница остаётся открытой — прогресс не теряется.</p>
-    </div>
-    <div class="how-card">
-      <div class="how-card-emoji">⚡</div>
-      <h3>3. Возвращаешься — нажимаешь «Я выполнил»</h3>
-      <p>Получаешь +1 бонус. После 5 шагов — кнопка скидки разблокируется.</p>
-    </div>
-  </div>
-</section>
+</div>
 
-<footer class="footer">
-  <div class="footer-inner">
-    <a href="https://onlinecollege-1.ru/" class="logo">
-      <img src="/assets/logo.png" alt="Онлайн-колледж №1" />
-    </a>
-    <div class="footer-links">
-      <a href="https://onlinecollege-1.ru/" target="_blank">О колледже</a>
-      <a href="https://onlinecollege-1.ru/" target="_blank">Специальности</a>
-      <a href="https://onlinecollege-1.ru/" target="_blank">Стоимость</a>
-      <a href="https://t.me/onlinecollege1" target="_blank">Telegram</a>
+<!-- MODAL: форма получения скидки -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeOnBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <!-- Form state -->
+    <div id="modalForm">
+      <div class="modal-badge">🎉 Все 5 бонусов собраны!</div>
+      <h2>Получи <span>скидку</span><br>на поступление</h2>
+      <p class="modal-sub">
+        Ты прошёл все шаги демо-доступа — это значит, ты уже знаешь, как у нас всё устроено.
+        Оставь контакты, и мы свяжемся с тобой с персональным предложением.
+      </p>
+
+      <form id="discountForm" onsubmit="submitForm(event)">
+        <div class="form-group">
+          <label for="fname">Как тебя зовут?</label>
+          <input type="text" id="fname" name="name" placeholder="Имя" required>
+        </div>
+        <div class="form-group">
+          <label for="fphone">Телефон</label>
+          <input type="tel" id="fphone" name="phone" placeholder="+7 (___) ___-__-__" required>
+        </div>
+        <div class="form-group">
+          <label for="femail">Email <span style="color:#9CA3AF;font-weight:500">(необязательно)</span></label>
+          <input type="email" id="femail" name="email" placeholder="example@mail.ru">
+        </div>
+        <button type="submit" class="form-submit">Получить скидку</button>
+        <p class="form-agree">
+          Нажимая кнопку, вы соглашаетесь на обработку
+          <a href="https://onlinecollege-1.ru/privacy" target="_blank">персональных данных</a>
+        </p>
+      </form>
     </div>
-    <a href="tel:88004443019" class="footer-phone">8 (800) 444-30-19</a>
+
+    <!-- Success state -->
+    <div class="modal-success" id="modalSuccess">
+      <div class="success-icon">✓</div>
+      <h3>Отлично! Мы свяжемся с тобой</h3>
+      <p>Наш менеджер позвонит в течение рабочего дня и расскажет о специальных условиях поступления для тебя.</p>
+      <a href="https://onlinecollege-1.ru/" class="btn-orange" style="display:inline-block;text-align:center">
+        Вернуться на сайт
+      </a>
+    </div>
   </div>
-  <div class="footer-bottom">
-    <span>© 2026 Онлайн-колледж №1. Все права защищены.</span>
-    <a href="https://onlinecollege-1.ru/policy/" target="_blank" style="color:rgba(255,255,255,.6);">Политика конфиденциальности</a>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span id="toastIcon">⭐</span>
+  <span id="toastMsg">+1 бонус!</span>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <a href="https://onlinecollege-1.ru/" class="footer-logo" title="Онлайн-колледж №1">
+    <img src="/assets/logo.png" alt="Онлайн-колледж №1" class="logo-img footer-logo-img">
+  </a>
+  <div class="footer-links">
+    <a href="tel:88004443019">8 (800) 444-30-19</a>
+    <a href="https://onlinecollege-1.ru/#specialties">Специальности</a>
+    <a href="https://onlinecollege-1.ru/#about">О колледже</a>
+    <a href="https://onlinecollege-1.ru/#price">Стоимость</a>
+    <a href="https://t.me/onlinecollege1">Telegram</a>
   </div>
 </footer>
 
-<div class="overlay" id="stepOverlay" role="dialog" aria-modal="true">
-  <div class="modal">
-    <button class="modal-close" id="stepClose" aria-label="Закрыть">✕</button>
-    <span class="modal-tag" id="modalTag">ШАГ 01 · +1 БОНУС</span>
-    <h3 id="modalTitle">Посмотри живую лекцию</h3>
-    <p class="lead" id="modalLead"></p>
-    <div class="instruction" id="modalInstruction"></div>
-    <div class="modal-actions">
-      <a href="#" target="_blank" class="modal-btn primary" id="modalOpenBtn">Открыть в новой вкладке ↗</a>
-      <button class="modal-btn success" id="modalDoneBtn" style="display:none;">Я выполнил — засчитать бонус ✓</button>
-      <button class="modal-btn ghost" id="modalCancelBtn">Отмена</button>
-    </div>
-    <p class="modal-hint" id="modalHint">Эта вкладка останется открытой — вернись и нажми «Я выполнил»</p>
-  </div>
-</div>
-
-<div class="overlay" id="formOverlay" role="dialog" aria-modal="true">
-  <div class="modal" id="formModal">
-    <button class="modal-close" id="formClose" aria-label="Закрыть">✕</button>
-    <div id="formStage">
-      <span class="modal-tag" style="background:var(--orange); color:#fff;">🎁 Скидка</span>
-      <h3>Все 5 бонусов собраны!</h3>
-      <p class="lead">Оставь контакты — менеджер свяжется и зафиксирует твою скидку на обучение.</p>
-      <form id="discountForm" novalidate>
-        <div class="form-row">
-          <label for="fname">Как тебя зовут?</label>
-          <input id="fname" name="name" type="text" placeholder="Имя" required minlength="2"/>
-        </div>
-        <div class="form-row">
-          <label for="fphone">Телефон для связи</label>
-          <input id="fphone" name="phone" type="tel" placeholder="+7 (___) ___-__-__" required/>
-        </div>
-        <div class="form-row">
-          <label for="femail">Email <span style="font-weight:500; color:var(--muted);">(необязательно)</span></label>
-          <input id="femail" name="email" type="email" placeholder="you@mail.ru"/>
-        </div>
-        <button type="submit" class="modal-btn primary" style="margin-top:8px;">Получить скидку 🎉</button>
-      </form>
-      <p class="form-disclaimer">
-        Нажимая на кнопку, я соглашаюсь на обработку
-        <a href="https://onlinecollege-1.ru/policy/" target="_blank">персональных данных</a>
-      </p>
-    </div>
-    <div class="success-screen" id="successStage" style="display:none;">
-      <div class="emoji">🎉</div>
-      <h3>Спасибо! Мы на связи</h3>
-      <p>Менеджер свяжется в ближайшее время и подтвердит твою скидку. До встречи в колледже!</p>
-      <a href="https://onlinecollege-1.ru/" target="_blank" class="modal-btn primary" style="margin-top:18px;">На главную</a>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
 <script>
+  const TOTAL = 5;
+  let done = new Set();
+  let toastTimer = null;
+  let currentStep = null;
+
+  // Конфигурация шагов: что делать, куда вести, как формулировать
   const STEPS = {
     1: {
-      title:'Посмотри живую лекцию',
-      lead:'Подключись к ближайшей live-трансляции или открой запись прошлой лекции — почувствуй, как у нас проходят занятия.',
-      instruction:'<b>Что делать:</b> открой расписание, выбери любую лекцию и посмотри 5–10 минут. Этого достаточно, чтобы понять формат и стиль преподавания.',
-      url:'https://onlinecollege-1.ru/#process'
+      title: 'Посмотри живую лекцию',
+      desc: 'Подключись к ближайшей live-трансляции или открой запись прошлой лекции — почувствуй, как у нас проходят занятия.',
+      instr: 'Открой расписание лекций, выбери любую и посмотри хотя бы 5–10 минут. Этого достаточно, чтобы понять формат и стиль преподавателей.',
+      url: 'https://onlinecollege-1.ru/#process'
     },
     2: {
-      title:'Оцени платформу',
-      lead:'Зайди в личный кабинет и оцени удобство интерфейса. Найди свой будущий курс.',
-      instruction:'<b>Что делать:</b> обойди разделы — материалы, домашки, прогресс. Удобно ли искать? Понятно ли что где?',
-      url:'https://onlinecollege-1.ru/#about'
+      title: 'Оцени платформу',
+      desc: 'Зайди в личный кабинет, осмотрись: меню, материалы, личный профиль. Удобно ли всё устроено?',
+      instr: 'Походи по разделам платформы 2–3 минуты. Попробуй найти расписание, материалы курса и кнопку чата с куратором.',
+      url: 'https://onlinecollege-1.ru/#about'
     },
     3: {
-      title:'Посмотри расписание',
-      lead:'Подходит ли тебе наш ритм? Загляни на 1–2 недели вперёд.',
-      instruction:'<b>Что делать:</b> открой расписание, посмотри сколько пар в день, в какое время, какие предметы. Решит ли это твоё «когда учиться».',
-      url:'https://onlinecollege-1.ru/#process'
+      title: 'Посмотри расписание',
+      desc: 'Открой расписание занятий и проверь — впишется ли учёба в твой день. Когда лекции? Когда практика?',
+      instr: 'Посмотри расписание на 1–2 недели вперёд. Прикинь, успеваешь ли ты в эти часы. Если что-то не подходит — это нормально, скажи куратору на шаге 5.',
+      url: 'https://onlinecollege-1.ru/#process'
     },
     4: {
-      title:'Загляни в раздел практики',
-      lead:'Реальные кейсы от Яндекс, Озон и других. Посмотри что делают студенты на практике.',
-      instruction:'<b>Что делать:</b> открой раздел практики, посмотри 1–2 кейса. Какие задачи решают студенты, какие проекты идут в портфолио.',
-      url:'https://onlinecollege-1.ru/#specialties'
+      title: 'Загляни в раздел практики',
+      desc: 'Посмотри, какие реальные кейсы от Яндекса, Озона и других компаний студенты решают на практических занятиях.',
+      instr: 'Открой раздел практики и пробеги 2–3 кейса. Обрати внимание: задачи реальные, не учебные. Именно с такими ты будешь работать.',
+      url: 'https://onlinecollege-1.ru/#specialties'
     },
     5: {
-      title:'Напиши куратору',
-      lead:'Финальный шаг — живой контакт с командой. Задай любой вопрос о поступлении или обучении.',
-      instruction:'<b>Что делать:</b> напиши в Telegram куратору одно сообщение — например, спроси сроки поступления или про скидку. Оцени, как быстро отвечают.',
-      url:'https://t.me/onlinecollege1'
+      title: 'Напиши куратору',
+      desc: 'Задай куратору любой вопрос о поступлении, программе или формате — оцени, насколько быстро и понятно отвечает живой человек.',
+      instr: 'Напиши в Telegram любой вопрос — про специальности, стоимость, диплом, что угодно. Куратор обычно отвечает в течение нескольких минут в рабочее время.',
+      url: 'https://t.me/onlinecollege1'
     }
   };
 
-  const STORAGE_KEY = 'oc1_demo_progress_v3';
-  const state = loadState();
-
-  function loadState(){
-    try{
-      const raw = localStorage.getItem(STORAGE_KEY);
-      const obj = raw ? JSON.parse(raw) : {};
-      return { done: obj.done || {}, opened: obj.opened || {}, formSubmitted: !!obj.formSubmitted };
-    }catch(e){ return { done:{}, opened:{}, formSubmitted:false }; }
-  }
-  function saveState(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-  function doneCount(){ return Object.keys(state.done).filter(k=>state.done[k]).length; }
-  function allDone(){ return doneCount() === 5; }
-
-  const fillEl = document.getElementById('progressFill');
-  const starsEl = document.getElementById('progressStars').children;
-  const rewardNum = document.getElementById('rewardNum');
-  const rewardBtn = document.getElementById('rewardBtn');
-  const rewardHint = document.getElementById('rewardHint');
-  const stepCards = document.querySelectorAll('.step-card');
-
-  function render(){
-    const n = doneCount();
-    fillEl.style.width = (n/5)*100 + '%';
-    rewardNum.textContent = n + '/5';
-    for (let i=0; i<5; i++){ starsEl[i].classList.toggle('on', i < n); }
-    stepCards.forEach(card => {
-      card.classList.toggle('done', !!state.done[card.dataset.step]);
-    });
-    if (allDone()){
-      rewardBtn.disabled = false;
-      rewardHint.textContent = 'Все бонусы собраны — кнопка активна!';
-      rewardHint.style.color = 'var(--lime)';
-    } else {
-      rewardBtn.disabled = true;
-      rewardHint.textContent = 'Пройди все 5 шагов, чтобы разблокировать кнопку';
-      rewardHint.style.color = 'rgba(255,255,255,.55)';
-    }
-  }
-
-  let toastTimer;
-  function showToast(text, kind='success'){
-    const t = document.getElementById('toast');
-    t.className = 'toast show ' + kind;
-    t.innerHTML = '<span class="em">'+(kind==='success'?'✨':'ℹ️')+'</span><span>'+text+'</span>';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(()=> t.classList.remove('show'), 2800);
-  }
-
-  const overlay = document.getElementById('stepOverlay');
-  const modalTag = document.getElementById('modalTag');
-  const modalTitle = document.getElementById('modalTitle');
-  const modalLead = document.getElementById('modalLead');
-  const modalInstr = document.getElementById('modalInstruction');
-  const modalOpen = document.getElementById('modalOpenBtn');
-  const modalDone = document.getElementById('modalDoneBtn');
-  const modalCancel = document.getElementById('modalCancelBtn');
-  const modalClose = document.getElementById('stepClose');
-  const modalHint = document.getElementById('modalHint');
-
-  let currentStep = null;
-
-  function openStepModal(stepId){
-    if (state.done[stepId]){
-      if (confirm('Отменить отметку этого шага?')){
-        delete state.done[stepId]; saveState(); render();
-        showToast('Отметка снята');
+  // Открыть модалку шага
+  function openStepModal(stepNum) {
+    // Если уже выполнен — спросим, отменить ли
+    const card = document.querySelector(`[data-step="${stepNum}"]`);
+    if (card && card.classList.contains('done')) {
+      if (confirm(`Шаг ${stepNum} уже выполнен. Отменить отметку?`)) {
+        card.classList.remove('done');
+        done.delete(String(stepNum));
+        updateProgress();
       }
       return;
     }
-    currentStep = stepId;
-    const s = STEPS[stepId];
-    modalTag.textContent = 'ШАГ ' + String(stepId).padStart(2,'0') + ' · +1 БОНУС';
-    modalTitle.textContent = s.title;
-    modalLead.textContent = s.lead;
-    modalInstr.innerHTML = s.instruction;
-    modalOpen.href = s.url;
-    modalDone.style.display = state.opened[stepId] ? '' : 'none';
-    modalHint.textContent = state.opened[stepId]
-      ? 'Когда вернёшься — нажми оранжевую кнопку «Я выполнил»'
-      : 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
-    overlay.classList.add('show');
+
+    currentStep = stepNum;
+    const cfg = STEPS[stepNum];
+    document.getElementById('saTag').textContent = `Шаг 0${stepNum} · +1 бонус`;
+    document.getElementById('saTitle').textContent = cfg.title;
+    document.getElementById('saDesc').textContent = cfg.desc;
+    document.getElementById('saInstrText').textContent = cfg.instr;
+    document.getElementById('saOpenBtn').href = cfg.url;
+    // Кнопка "Я выполнил" пока скрыта — появится после клика на "Открыть"
+    document.getElementById('saDoneBtn').classList.remove('visible');
+    document.getElementById('saTip').textContent = 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
+
+    document.getElementById('saOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
   }
-  function closeStepModal(){ overlay.classList.remove('show'); currentStep = null; }
 
-  stepCards.forEach(card => {
-    card.addEventListener('click', () => openStepModal(card.dataset.step));
-  });
-  modalClose.addEventListener('click', closeStepModal);
-  modalCancel.addEventListener('click', closeStepModal);
-  overlay.addEventListener('click', e => { if (e.target === overlay) closeStepModal(); });
+  function closeStepModal() {
+    document.getElementById('saOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentStep = null;
+  }
 
-  modalOpen.addEventListener('click', () => {
+  function closeSaOnBg(e) {
+    if (e.target === document.getElementById('saOverlay')) closeStepModal();
+  }
+
+  // Когда пользователь нажал "Открыть в новой вкладке"
+  function onStepOpened() {
+    // Показываем кнопку "Я выполнил" и меняем подсказку
+    document.getElementById('saDoneBtn').classList.add('visible');
+    document.getElementById('saTip').textContent = 'Когда вернёшься — нажми оранжевую кнопку, чтобы засчитать бонус';
+    // Сохраняем что пользователь "открыл" этот шаг — для welcome-back
+    try {
+      const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
+      if (!opened.includes(currentStep)) {
+        opened.push(currentStep);
+        localStorage.setItem('oc1_demo_opened', JSON.stringify(opened));
+      }
+    } catch(e) {}
+    // Не закрываем модалку — пусть остаётся, чтобы было куда вернуться
+  }
+
+  // Подтвердить выполнение шага
+  function confirmStepDone() {
     if (!currentStep) return;
-    state.opened[currentStep] = Date.now();
-    saveState();
-    modalDone.style.display = '';
-    modalHint.textContent = 'Когда вернёшься — нажми «Я выполнил»';
-  });
-
-  modalDone.addEventListener('click', () => {
-    if (!currentStep) return;
-    state.done[currentStep] = true;
-    delete state.opened[currentStep];
-    saveState();
+    const card = document.querySelector(`[data-step="${currentStep}"]`);
+    if (card && !card.classList.contains('done')) {
+      card.classList.add('done');
+      done.add(String(currentStep));
+      // Pop animation
+      const ring = document.createElement('div');
+      ring.className = 'pop-ring';
+      card.appendChild(ring);
+      setTimeout(() => ring.remove(), 600);
+      showToast('⭐', `+1 бонус! Шаг ${currentStep} выполнен`);
+    }
     closeStepModal();
-    render();
-    if (allDone()){
-      showToast('🎉 Все 5 бонусов собраны! Получи скидку');
-      setTimeout(()=> document.querySelector('.reward').scrollIntoView({behavior:'smooth', block:'center'}), 600);
-    } else {
-      showToast('+1 бонус! Шаг ' + currentStep + ' выполнен');
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const count = done.size;
+    document.getElementById('pbFill').style.width = (count / TOTAL * 100) + '%';
+    document.getElementById('pbCount').textContent = count;
+    document.getElementById('rewardNum').textContent = count;
+
+    for (let i = 1; i <= TOTAL; i++) {
+      document.getElementById('s' + i).classList.toggle('lit', done.has(String(i)));
     }
-  });
 
-  const formOverlay = document.getElementById('formOverlay');
-  const formClose = document.getElementById('formClose');
-  const formStage = document.getElementById('formStage');
-  const successStage = document.getElementById('successStage');
-  const form = document.getElementById('discountForm');
+    const rb = document.getElementById('rewardBlock');
+    if (count === TOTAL) {
+      rb.classList.remove('locked');
+      rb.classList.add('unlocked');
+      // Scroll to reward block
+      setTimeout(() => rb.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+      showToast('🎉', 'Все бонусы собраны! Получи скидку');
+    } else {
+      rb.classList.add('locked');
+      rb.classList.remove('unlocked');
+    }
 
-  rewardBtn.addEventListener('click', () => {
-    if (rewardBtn.disabled) return;
-    formStage.style.display = state.formSubmitted ? 'none' : '';
-    successStage.style.display = state.formSubmitted ? '' : 'none';
-    formOverlay.classList.add('show');
-  });
-  formClose.addEventListener('click', () => formOverlay.classList.remove('show'));
-  formOverlay.addEventListener('click', e => { if (e.target === formOverlay) formOverlay.classList.remove('show'); });
+    localStorage.setItem('oc1_demo', JSON.stringify([...done]));
+  }
 
-  form.addEventListener('submit', e => {
+  function openModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modalOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeOnBg(e) {
+    if (e.target === document.getElementById('modalOverlay')) closeModal();
+  }
+
+  function submitForm(e) {
     e.preventDefault();
-    const name = form.fname.value.trim();
-    const phone = form.fphone.value.trim();
-    const email = form.femail.value.trim();
-    let valid = true;
-    if (name.length < 2){ form.fname.classList.add('error'); valid=false; } else form.fname.classList.remove('error');
-    if (phone.replace(/\D/g,'').length < 10){ form.fphone.classList.add('error'); valid=false; } else form.fphone.classList.remove('error');
-    if (!valid){ showToast('Проверь имя и телефон'); return; }
-    state.formSubmitted = true; saveState();
-    formStage.style.display = 'none';
-    successStage.style.display = '';
-    showToast('🎉 Заявка отправлена!');
-    console.log('Lead:', { name, phone, email, steps: state.done });
-  });
+    const name = document.getElementById('fname').value.trim();
+    const phone = document.getElementById('fphone').value.trim();
+    const email = document.getElementById('femail').value.trim();
 
-  const wb = document.getElementById('welcomeBack');
-  const wbText = document.getElementById('wbText');
-  const wbBtn = document.getElementById('wbBtn');
+    // Here you could send data to a backend/webhook
+    // For now, show success state
+    document.getElementById('modalForm').style.display = 'none';
+    document.getElementById('modalSuccess').style.display = 'block';
 
-  function pluralize(n, one, few, many){
-    n = Math.abs(n) % 100;
-    const n1 = n % 10;
-    if (n > 10 && n < 20) return many;
-    if (n1 > 1 && n1 < 5) return few;
-    if (n1 === 1) return one;
-    return many;
+    // Optional: send to Telegram bot or webhook
+    // fetch('https://your-webhook.com', { method: 'POST', body: JSON.stringify({name, phone, email}) });
   }
 
-  function setupWelcomeBack(){
-    const n = doneCount();
-    if (n === 0) return;
-    if (state.formSubmitted) return;
-    if (allDone()){
-      wbText.textContent = '✨ Все 5 бонусов уже собраны — получи скидку!';
-      wbBtn.textContent = 'Получить скидку';
-      wbBtn.onclick = () => rewardBtn.click();
+  function showToast(icon, msg) {
+    if (toastTimer) clearTimeout(toastTimer);
+    document.getElementById('toastIcon').textContent = icon;
+    document.getElementById('toastMsg').textContent = msg;
+    const t = document.getElementById('toast');
+    t.classList.add('show');
+    toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
+  }
+
+  // Welcome-back banner logic
+  function showWelcomeBack() {
+    const banner = document.getElementById('wbBanner');
+    const count = done.size;
+    let title, sub;
+
+    if (count === 0) {
+      // Никогда не начинал — не показываем баннер
+      return;
+    } else if (count === TOTAL) {
+      title = 'Ты выполнил все шаги!';
+      sub = 'Скидка ждёт — осталось оставить контакт';
+      document.querySelector('.wb-cta').textContent = 'Получить скидку';
     } else {
-      const left = 5 - n;
-      wbText.textContent = `С возвращением! Ты на шаге ${n+1} из 5 — осталось ${left} ${pluralize(left,'шаг','шага','шагов')} до скидки`;
-      wbBtn.textContent = 'Продолжить';
-      wbBtn.onclick = () => {
-        for (let i=1; i<=5; i++){
-          if (!state.done[i]){
-            const card = document.querySelector(`.step-card[data-step="${i}"]`);
-            card.scrollIntoView({behavior:'smooth', block:'center'});
-            card.style.animation = 'pulse 1.2s 2';
-            setTimeout(()=> openStepModal(String(i)), 700);
-            break;
-          }
-        }
-      };
+      const left = TOTAL - count;
+      title = `С возвращением! Ты на шаге ${count} из ${TOTAL}`;
+      sub = `Осталось всего ${left} шаг${left === 1 ? '' : 'a'} до скидки`;
     }
-    wb.classList.add('show');
+
+    document.getElementById('wbTitle').textContent = title;
+    document.getElementById('wbSub').textContent = sub;
+    banner.classList.add('show');
   }
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape'){
-      overlay.classList.remove('show');
-      formOverlay.classList.remove('show');
+  function continueProgress() {
+    if (done.size === TOTAL) {
+      openModal();
+    } else {
+      // Скролл к первому невыполненному шагу
+      for (let i = 1; i <= TOTAL; i++) {
+        if (!done.has(String(i))) {
+          const card = document.querySelector(`[data-step="${i}"]`);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Подсветка
+            card.style.transition = 'box-shadow 0.4s';
+            card.style.boxShadow = '0 0 0 4px rgba(251,129,37,0.4), 0 12px 32px rgba(251,129,37,0.25)';
+            setTimeout(() => { card.style.boxShadow = ''; }, 1800);
+          }
+          break;
+        }
+      }
     }
+    closeWb();
+  }
+
+  function closeWb() {
+    document.getElementById('wbBanner').classList.remove('show');
+  }
+
+  // Restore saved progress
+  window.addEventListener('DOMContentLoaded', () => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('oc1_demo') || '[]');
+      saved.forEach(step => {
+        const card = document.querySelector(`[data-step="${step}"]`);
+        if (card) { card.classList.add('done'); done.add(step); }
+      });
+      if (done.size) {
+        updateProgress();
+        // Показываем welcome-back через 0.5с для эффекта
+        setTimeout(showWelcomeBack, 500);
+      }
+
+      // Проверяем: есть ли открытые но не подтверждённые шаги
+      const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
+      const pending = opened.filter(s => !done.has(String(s)));
+      if (pending.length > 0 && done.size === 0) {
+        // Пользователь открывал шаг, но не вернулся чтобы подтвердить
+        const banner = document.getElementById('wbBanner');
+        const stepNum = pending[0];
+        document.getElementById('wbTitle').textContent = `Нажми «Я выполнил» на шаге ${stepNum}`;
+        document.getElementById('wbSub').textContent = 'Чтобы засчитать бонус за выполненный шаг';
+        document.querySelector('.wb-cta').textContent = 'Открыть';
+        document.querySelector('.wb-cta').onclick = () => { closeWb(); openStepModal(stepNum); };
+        setTimeout(() => banner.classList.add('show'), 500);
+      }
+    } catch(e) {}
   });
 
-  render();
-  setupWelcomeBack();
+  // Close modal on Escape
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      closeModal();
+      closeStepModal();
+    }
+  });
 </script>
-
 </body>
 </html>
