@@ -360,163 +360,303 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
 // IMPROVED PIXEL CHARACTER (detailed schoolboy)
 // ══════════════════════════════════════════
 function drawPixelChar(ctx, x, y, frame, jumping, shielded) {
-  const S = 3;
-  // Pixel art color palette
-  const P = {
-    // Skin tones
-    sk: '#FDBCB4',  // skin
-    sd: '#e8956d',  // skin dark
-    sh: '#f5c9a0',  // skin highlight
-    // Hair (dark brown)
-    h1: '#2d1b00',
-    h2: '#4a2f00',
-    h3: '#6b4400',
-    // Uniform (dark blue)
-    u1: '#1a237e',
-    u2: '#283593',
-    u3: '#3949ab',
-    u4: '#5c6bc0',
-    // White shirt
-    ws: '#f5f5f5',
-    // Pants (dark navy)
-    p1: '#1a1a2e',
-    p2: '#2d2d44',
-    p3: '#3d3d5c',
-    // Shoes (black)
-    s1: '#1a1a1a',
-    s2: '#2d2d2d',
-    // Backpack (orange)
-    b1: '#e65100',
-    b2: '#f57c00',
-    b3: '#ff9800',
-    b4: '#ffb74d',
-    // Outline
-    ol: '#1a1a1a',
-    // Tie (red)
-    ti: '#c62828',
-    t2: '#e53935',
-    // Eyes
-    ey: '#1a1a2e',
-    ep: '#ffffff',
-    // Blush
-    bl: '#ffb3b3',
-  };
-
-  // 12x20 pixel character grid (each cell = S pixels)
-  // Frame-based animation for running
-  const f = Math.floor(frame / 4) % 4;
-
-  // HAIR (3 rows x 12 cols)
-  const HAIR = [
-    [0,   0,   P.h1,P.h1,P.h1,P.h1,P.h1,P.h1,P.h1,0,   0,   0  ],
-    [0,   P.h1,P.h2,P.h2,P.h2,P.h2,P.h2,P.h2,P.h2,P.h1,0,   0  ],
-    [P.h1,P.h2,P.h3,P.h3,P.h3,P.h3,P.h3,P.h3,P.h2,P.h1,0,   0  ],
-  ];
-
-  // HEAD (5 rows x 12 cols)
-  const HEAD = [
-    [0,   P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,0,   0  ],
-    [P.sk,P.sh,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sd,0  ],
-    [P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sd,0  ],
-    [P.sk,P.sk,P.bl,P.sk,P.sk,P.sk,P.sk,P.bl,P.sk,P.sk,P.sd,0  ],
-    [0,   P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sk,P.sd,0,   0  ],
-  ];
-
-  // BODY (jacket + backpack) — 5 rows x 12 cols
-  // Backpack on right side (cols 9-11)
-  const BODY = [
-    [P.u1,P.u2,P.u3,P.u3,P.u3,P.u3,P.u3,P.u3,P.u2,P.b2,P.b3,P.b2],
-    [P.u2,P.u3,P.ws,P.ws,P.ti,P.ti,P.ws,P.ws,P.u3,P.b1,P.b4,P.b2],
-    [P.u2,P.u3,P.ws,P.ws,P.t2,P.t2,P.ws,P.ws,P.u3,P.b1,P.b3,P.b2],
-    [P.u1,P.u2,P.u3,P.u3,P.u3,P.u3,P.u3,P.u3,P.u2,P.b2,P.b2,P.b1],
-    [P.u1,P.u1,P.u2,P.u2,P.u2,P.u2,P.u2,P.u2,P.u1,P.b1,P.b1,P.b1],
-  ];
-
-  // LEGS — 4 animation frames
-  const LEGS_FRAMES = [
-    // Frame 0: neutral
-    [
-      [0,   P.p2,P.p2,P.p2,P.p3,P.p3,P.p2,P.p2,P.p1,0,   0,   0  ],
-      [0,   P.p1,P.p2,P.p2,P.p3,P.p3,P.p2,P.p2,P.p1,0,   0,   0  ],
-      [0,   P.s1,P.s2,0,   0,   0,   0,   P.s2,P.s1,0,   0,   0  ],
-    ],
-    // Frame 1: left leg forward
-    [
-      [0,   0,   P.p2,P.p2,P.p3,P.p2,P.p2,P.p2,0,   0,   0,   0  ],
-      [0,   P.p1,P.p2,P.p3,0,   P.p3,P.p2,P.p1,0,   0,   0,   0  ],
-      [P.s1,P.s2,P.s1,0,   0,   0,   P.s2,P.s1,0,   0,   0,   0  ],
-    ],
-    // Frame 2: neutral
-    [
-      [0,   P.p2,P.p2,P.p2,P.p3,P.p3,P.p2,P.p2,P.p1,0,   0,   0  ],
-      [0,   P.p1,P.p2,P.p2,P.p3,P.p3,P.p2,P.p2,P.p1,0,   0,   0  ],
-      [0,   P.s1,P.s2,0,   0,   0,   0,   P.s2,P.s1,0,   0,   0  ],
-    ],
-    // Frame 3: right leg forward
-    [
-      [0,   P.p2,P.p2,P.p2,P.p3,0,   P.p3,P.p2,0,   0,   0,   0  ],
-      [0,   P.p1,P.p2,P.p3,0,   0,   P.p3,P.p2,P.p1,0,   0,   0  ],
-      [0,   0,   P.s2,P.s1,0,   0,   0,   P.s2,P.s1,0,   0,   0  ],
-    ],
-  ];
-  const LEGS_JUMP = [
-    [0,   P.p2,P.p3,P.p2,P.p3,P.p3,P.p2,P.p3,P.p2,0,   0,   0  ],
-    [P.s1,P.s2,0,   P.p2,P.p3,P.p3,P.p2,0,   P.s2,P.s1,0,   0  ],
-    [0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0  ],
-  ];
-  const LEGS = jumping ? LEGS_JUMP : LEGS_FRAMES[f];
-
-  function drawGrid(grid, ox, oy) {
-    grid.forEach((row, ry) => {
-      row.forEach((col, rx) => {
-        if (col) {
-          ctx.fillStyle = col;
-          ctx.fillRect(ox + rx*S, oy + ry*S, S, S);
-        }
-      });
-    });
-  }
-
   const cx = Math.floor(x);
   const cy = Math.floor(y);
+  const f = Math.floor(frame / 4) % 4;
 
-  // Shield glow
+  ctx.save();
+
+  // ── SHIELD GLOW ──
   if (shielded) {
-    ctx.save();
     ctx.shadowColor = '#3B82F6';
-    ctx.shadowBlur = 22;
-    ctx.fillStyle = 'rgba(59,130,246,0.2)';
+    ctx.shadowBlur = 28;
+    ctx.fillStyle = 'rgba(59,130,246,0.18)';
     ctx.beginPath();
-    ctx.ellipse(cx+18, cy+30, 24, 34, 0, 0, Math.PI*2);
+    ctx.ellipse(cx+18, cy+32, 26, 36, 0, 0, Math.PI*2);
     ctx.fill();
-    ctx.restore();
+    ctx.shadowBlur = 0;
   }
 
-  // Draw shadow
-  ctx.fillStyle = 'rgba(0,0,0,0.15)';
+  // ── GROUND SHADOW ──
+  const shadowGrad = ctx.createRadialGradient(cx+18, cy+62, 0, cx+18, cy+62, 18);
+  shadowGrad.addColorStop(0, 'rgba(0,0,0,0.28)');
+  shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = shadowGrad;
   ctx.beginPath();
-  ctx.ellipse(cx+18, cy+60, 14, 4, 0, 0, Math.PI*2);
+  ctx.ellipse(cx+18, cy+62, 18, 5, 0, 0, Math.PI*2);
   ctx.fill();
 
-  drawGrid(HAIR, cx, cy);
-  drawGrid(HEAD, cx, cy + 3*S);
+  // ── BACKPACK ──
+  // Main body
+  const bpGrad = ctx.createLinearGradient(cx+26, cy+24, cx+38, cy+50);
+  bpGrad.addColorStop(0, '#ffb74d');
+  bpGrad.addColorStop(0.4, '#f57c00');
+  bpGrad.addColorStop(1, '#bf360c');
+  ctx.fillStyle = bpGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+27, cy+24, 12, 22, 3);
+  ctx.fill();
+  // Backpack highlight
+  ctx.fillStyle = 'rgba(255,220,150,0.5)';
+  ctx.beginPath();
+  ctx.roundRect(cx+28, cy+25, 5, 8, 2);
+  ctx.fill();
+  // Backpack pocket
+  const pktGrad = ctx.createLinearGradient(cx+28, cy+38, cx+38, cy+44);
+  pktGrad.addColorStop(0, '#e65100');
+  pktGrad.addColorStop(1, '#bf360c');
+  ctx.fillStyle = pktGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+28, cy+38, 10, 6, 2);
+  ctx.fill();
+  // Pocket zipper
+  ctx.strokeStyle = 'rgba(255,200,100,0.7)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(cx+29, cy+41); ctx.lineTo(cx+37, cy+41);
+  ctx.stroke();
+  // Backpack straps
+  ctx.strokeStyle = '#e65100';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(cx+27, cy+26); ctx.lineTo(cx+24, cy+32);
+  ctx.moveTo(cx+27, cy+34); ctx.lineTo(cx+24, cy+42);
+  ctx.stroke();
 
-  // Eyes (drawn manually for crispness)
-  ctx.fillStyle = P.ey;
-  ctx.fillRect(cx+2*S, cy+4*S+S, S+1, S+1); // left eye
-  ctx.fillRect(cx+6*S, cy+4*S+S, S+1, S+1); // right eye
-  ctx.fillStyle = P.ep;
-  ctx.fillRect(cx+2*S+1, cy+4*S+S, 1, 1); // left eye highlight
-  ctx.fillRect(cx+6*S+1, cy+4*S+S, 1, 1); // right eye highlight
+  // ── BODY / JACKET ──
+  const jacketGrad = ctx.createLinearGradient(cx+4, cy+24, cx+26, cy+50);
+  jacketGrad.addColorStop(0, '#5c6bc0');
+  jacketGrad.addColorStop(0.3, '#3949ab');
+  jacketGrad.addColorStop(0.7, '#283593');
+  jacketGrad.addColorStop(1, '#1a237e');
+  ctx.fillStyle = jacketGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+4, cy+24, 24, 22, 4);
+  ctx.fill();
+  // Jacket highlight (left shoulder)
+  ctx.fillStyle = 'rgba(140,158,255,0.35)';
+  ctx.beginPath();
+  ctx.roundRect(cx+5, cy+24, 8, 6, 3);
+  ctx.fill();
+  // Jacket shadow (right side)
+  ctx.fillStyle = 'rgba(0,0,30,0.2)';
+  ctx.beginPath();
+  ctx.roundRect(cx+20, cy+24, 8, 22, [0,4,4,0]);
+  ctx.fill();
 
-  // Smile
-  ctx.fillStyle = P.sd;
-  ctx.fillRect(cx+3*S, cy+7*S, S, 1);
-  ctx.fillRect(cx+5*S, cy+7*S, S, 1);
-  ctx.fillRect(cx+4*S, cy+7*S+1, S, 1);
+  // ── SHIRT / COLLAR ──
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.roundRect(cx+10, cy+24, 12, 10, 2);
+  ctx.fill();
+  ctx.fillStyle = 'rgba(200,200,200,0.4)';
+  ctx.fillRect(cx+10, cy+28, 12, 1);
 
-  drawGrid(BODY, cx, cy + 8*S);
-  drawGrid(LEGS, cx, cy + 13*S);
+  // ── TIE ──
+  const tieGrad = ctx.createLinearGradient(cx+15, cy+24, cx+17, cy+40);
+  tieGrad.addColorStop(0, '#ef5350');
+  tieGrad.addColorStop(0.5, '#c62828');
+  tieGrad.addColorStop(1, '#b71c1c');
+  ctx.fillStyle = tieGrad;
+  ctx.beginPath();
+  ctx.moveTo(cx+15, cy+25); ctx.lineTo(cx+17, cy+25);
+  ctx.lineTo(cx+18, cy+38); ctx.lineTo(cx+16, cy+40);
+  ctx.lineTo(cx+14, cy+38); ctx.closePath();
+  ctx.fill();
+  // Tie knot highlight
+  ctx.fillStyle = 'rgba(255,150,150,0.4)';
+  ctx.fillRect(cx+15, cy+25, 2, 3);
+
+  // ── LAPELS ──
+  ctx.fillStyle = '#f5f5f5';
+  ctx.beginPath();
+  ctx.moveTo(cx+10, cy+24); ctx.lineTo(cx+14, cy+30); ctx.lineTo(cx+8, cy+24); ctx.closePath(); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(cx+22, cy+24); ctx.lineTo(cx+18, cy+30); ctx.lineTo(cx+24, cy+24); ctx.closePath(); ctx.fill();
+
+  // ── ARMS ──
+  // Left arm
+  const armGrad = ctx.createLinearGradient(cx+2, cy+24, cx+6, cy+42);
+  armGrad.addColorStop(0, '#3949ab');
+  armGrad.addColorStop(1, '#1a237e');
+  ctx.fillStyle = armGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+2, cy+24, 6, 16, 3);
+  ctx.fill();
+  // Left hand (skin)
+  const handGrad = ctx.createRadialGradient(cx+5, cy+40, 0, cx+5, cy+40, 5);
+  handGrad.addColorStop(0, '#f5c9a0');
+  handGrad.addColorStop(1, '#e8956d');
+  ctx.fillStyle = handGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx+5, cy+41, 4, 4, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Right arm (slightly behind backpack)
+  ctx.fillStyle = armGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+24, cy+24, 5, 14, 3);
+  ctx.fill();
+
+  // ── PANTS ──
+  const pantsGrad = ctx.createLinearGradient(cx+4, cy+46, cx+26, cy+60);
+  pantsGrad.addColorStop(0, '#3d3d5c');
+  pantsGrad.addColorStop(0.5, '#2d2d44');
+  pantsGrad.addColorStop(1, '#1a1a2e');
+
+  // Animate legs
+  if (jumping) {
+    // Both legs bent up
+    ctx.fillStyle = pantsGrad;
+    ctx.beginPath(); ctx.roundRect(cx+5, cy+46, 8, 12, 3); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(cx+18, cy+46, 8, 12, 3); ctx.fill();
+    // Shoes
+    const shoeGrad = ctx.createLinearGradient(cx+4, cy+56, cx+14, cy+62);
+    shoeGrad.addColorStop(0, '#424242');
+    shoeGrad.addColorStop(1, '#1a1a1a');
+    ctx.fillStyle = shoeGrad;
+    ctx.beginPath(); ctx.roundRect(cx+3, cy+56, 12, 5, 2); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(cx+16, cy+56, 12, 5, 2); ctx.fill();
+    // Shoe highlights
+    ctx.fillStyle = 'rgba(255,255,255,0.2)';
+    ctx.fillRect(cx+4, cy+57, 5, 1);
+    ctx.fillRect(cx+17, cy+57, 5, 1);
+  } else {
+    // Running animation
+    const legOffsets = [
+      [0, 0, 0, 0],   // frame 0: neutral
+      [-4, 4, -3, 3], // frame 1: left forward
+      [0, 0, 0, 0],   // frame 2: neutral
+      [4, -4, 3, -3], // frame 3: right forward
+    ];
+    const lo = legOffsets[f];
+    // Left leg
+    ctx.fillStyle = pantsGrad;
+    ctx.beginPath();
+    ctx.roundRect(cx+5, cy+46+lo[0], 8, 14+Math.abs(lo[0]), 3);
+    ctx.fill();
+    // Highlight on left leg
+    ctx.fillStyle = 'rgba(100,100,150,0.3)';
+    ctx.fillRect(cx+6, cy+47+lo[0], 3, 6);
+    // Right leg
+    ctx.fillStyle = pantsGrad;
+    ctx.beginPath();
+    ctx.roundRect(cx+18, cy+46+lo[1], 8, 14+Math.abs(lo[1]), 3);
+    ctx.fill();
+    // Highlight on right leg
+    ctx.fillStyle = 'rgba(100,100,150,0.3)';
+    ctx.fillRect(cx+19, cy+47+lo[1], 3, 6);
+    // Left shoe
+    const shoeGrad = ctx.createLinearGradient(cx+4, cy+58, cx+14, cy+64);
+    shoeGrad.addColorStop(0, '#424242');
+    shoeGrad.addColorStop(1, '#1a1a1a');
+    ctx.fillStyle = shoeGrad;
+    ctx.beginPath();
+    ctx.roundRect(cx+3+lo[2], cy+58+lo[0], 12, 5, 2);
+    ctx.fill();
+    // Right shoe
+    ctx.beginPath();
+    ctx.roundRect(cx+16+lo[3], cy+58+lo[1], 12, 5, 2);
+    ctx.fill();
+    // Shoe highlights
+    ctx.fillStyle = 'rgba(255,255,255,0.18)';
+    ctx.fillRect(cx+4+lo[2], cy+59+lo[0], 5, 1);
+    ctx.fillRect(cx+17+lo[3], cy+59+lo[1], 5, 1);
+  }
+
+  // ── HEAD ──
+  // Head shadow (neck area)
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.beginPath();
+  ctx.ellipse(cx+16, cy+24, 9, 3, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Main head shape
+  const headGrad = ctx.createRadialGradient(cx+13, cy+14, 2, cx+16, cy+16, 12);
+  headGrad.addColorStop(0, '#f5c9a0');  // highlight
+  headGrad.addColorStop(0.5, '#FDBCB4'); // mid skin
+  headGrad.addColorStop(1, '#d4845a');  // shadow edge
+  ctx.fillStyle = headGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx+16, cy+16, 11, 12, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Head outline (subtle)
+  ctx.strokeStyle = 'rgba(180,100,60,0.3)';
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.ellipse(cx+16, cy+16, 11, 12, 0, 0, Math.PI*2);
+  ctx.stroke();
+  // Cheek blush
+  ctx.fillStyle = 'rgba(255,150,150,0.3)';
+  ctx.beginPath();
+  ctx.ellipse(cx+9, cy+18, 4, 3, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath();
+  ctx.ellipse(cx+22, cy+18, 4, 3, 0, 0, Math.PI*2); ctx.fill();
+
+  // ── HAIR ──
+  const hairGrad = ctx.createLinearGradient(cx+8, cy+4, cx+24, cy+14);
+  hairGrad.addColorStop(0, '#6b4400');  // highlight
+  hairGrad.addColorStop(0.4, '#4a2f00');
+  hairGrad.addColorStop(1, '#2d1b00');  // dark
+  ctx.fillStyle = hairGrad;
+  // Hair shape (top)
+  ctx.beginPath();
+  ctx.ellipse(cx+16, cy+8, 11, 9, 0, 0, Math.PI*2);
+  ctx.fill();
+  // Hair highlight
+  ctx.fillStyle = 'rgba(150,100,40,0.5)';
+  ctx.beginPath();
+  ctx.ellipse(cx+13, cy+6, 5, 3, -0.3, 0, Math.PI*2);
+  ctx.fill();
+  // Side hair strands
+  ctx.fillStyle = '#2d1b00';
+  ctx.beginPath();
+  ctx.ellipse(cx+7, cy+12, 3, 5, 0.2, 0, Math.PI*2);
+  ctx.fill();
+
+  // ── EYES ──
+  // Eye whites
+  ctx.fillStyle = '#fff';
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 3.5, 3, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 3.5, 3, 0, 0, Math.PI*2); ctx.fill();
+  // Iris (brown/dark)
+  const irisGrad = ctx.createRadialGradient(cx+11, cy+15, 0, cx+11, cy+15, 2.5);
+  irisGrad.addColorStop(0, '#5d4037');
+  irisGrad.addColorStop(1, '#1a1a2e');
+  ctx.fillStyle = irisGrad;
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 2.5, 2.5, 0, 0, Math.PI*2); ctx.fill();
+  const irisGrad2 = ctx.createRadialGradient(cx+21, cy+15, 0, cx+21, cy+15, 2.5);
+  irisGrad2.addColorStop(0, '#5d4037');
+  irisGrad2.addColorStop(1, '#1a1a2e');
+  ctx.fillStyle = irisGrad2;
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 2.5, 2.5, 0, 0, Math.PI*2); ctx.fill();
+  // Eye highlights
+  ctx.fillStyle = 'rgba(255,255,255,0.9)';
+  ctx.beginPath(); ctx.ellipse(cx+12, cy+14, 1, 1, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+22, cy+14, 1, 1, 0, 0, Math.PI*2); ctx.fill();
+  // Eyebrows
+  ctx.strokeStyle = '#2d1b00';
+  ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx+8, cy+11); ctx.lineTo(cx+14, cy+10); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+18, cy+10); ctx.lineTo(cx+24, cy+11); ctx.stroke();
+
+  // ── SMILE ──
+  ctx.strokeStyle = '#c07050';
+  ctx.lineWidth = 1.5;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.arc(cx+16, cy+19, 4, 0.2, Math.PI-0.2);
+  ctx.stroke();
+
+  // ── NECK ──
+  const neckGrad = ctx.createLinearGradient(cx+13, cy+22, cx+19, cy+26);
+  neckGrad.addColorStop(0, '#f5c9a0');
+  neckGrad.addColorStop(1, '#e8956d');
+  ctx.fillStyle = neckGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx+13, cy+22, 6, 4, 1);
+  ctx.fill();
+
+  ctx.restore();
 }
 
 // ══════════════════════════════════════════
@@ -824,223 +964,404 @@ function drawBg() {
 
 function drawObs(o) {
   ctx.save();
-  // Drop shadow for all obstacles
-  ctx.shadowColor = 'rgba(0,0,0,0.3)';
-  ctx.shadowBlur = 6;
-  ctx.shadowOffsetX = 3;
-  ctx.shadowOffsetY = 3;
 
   if(o.type==='book') {
     const bx=o.x, by=o.y, bw=o.w, bh=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=8; ctx.shadowOffsetX=4; ctx.shadowOffsetY=4;
+    // 3D side edge (bottom-right)
+    ctx.fillStyle=shadeColor(o.color,-55);
+    ctx.beginPath(); ctx.roundRect(bx+4,by+4,bw,bh,6); ctx.fill();
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    // Main cover with rounded corners
-    roundRect(bx,by,bw,bh,6,o.color);
-    // Spine (left side, darker)
-    ctx.fillStyle=shadeColor(o.color,-40);
-    roundRect(bx,by,10,bh,6,shadeColor(o.color,-40));
-    // Highlight stripe on cover
-    ctx.fillStyle='rgba(255,255,255,0.18)';
-    ctx.fillRect(bx+12,by+4,bw-18,5);
-    // Pages (right edge)
-    ctx.fillStyle='#f5f0e8';
+    // Main cover with gradient
+    const coverGrad = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+    coverGrad.addColorStop(0, shadeColor(o.color,30));
+    coverGrad.addColorStop(0.4, o.color);
+    coverGrad.addColorStop(1, shadeColor(o.color,-35));
+    ctx.fillStyle=coverGrad;
+    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,6); ctx.fill();
+    // Spine (left side, darker + gradient)
+    const spineGrad = ctx.createLinearGradient(bx,by,bx+10,by);
+    spineGrad.addColorStop(0, shadeColor(o.color,-50));
+    spineGrad.addColorStop(1, shadeColor(o.color,-25));
+    ctx.fillStyle=spineGrad;
+    ctx.beginPath(); ctx.roundRect(bx,by,10,bh,[6,0,0,6]); ctx.fill();
+    // Specular highlight (top-left)
+    const hlGrad = ctx.createLinearGradient(bx+10,by,bx+bw,by+bh*.5);
+    hlGrad.addColorStop(0,'rgba(255,255,255,0.35)');
+    hlGrad.addColorStop(0.4,'rgba(255,255,255,0.1)');
+    hlGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=hlGrad;
+    ctx.beginPath(); ctx.roundRect(bx+10,by,bw-10,bh,[0,6,6,0]); ctx.fill();
+    // Pages (right edge) with gradient
+    const pagesGrad = ctx.createLinearGradient(bx+bw-7,by,bx+bw,by);
+    pagesGrad.addColorStop(0,'#e8e0d0');
+    pagesGrad.addColorStop(1,'#f5f0e8');
+    ctx.fillStyle=pagesGrad;
     ctx.fillRect(bx+bw-6,by+3,5,bh-6);
-    // Page lines
-    ctx.fillStyle='rgba(180,170,150,0.6)';
-    for(let i=0;i<6;i++) ctx.fillRect(bx+bw-5,by+5+i*((bh-10)/6),4,1);
+    for(let i=0;i<8;i++) {
+      ctx.fillStyle=`rgba(180,170,150,${0.3+i*0.04})`;
+      ctx.fillRect(bx+bw-5,by+5+i*((bh-10)/8),4,1);
+    }
     // White label area
-    roundRect(bx+11,by+8,bw-18,bh-16,4,'rgba(255,255,255,0.92)');
+    ctx.shadowColor='rgba(0,0,0,0.1)'; ctx.shadowBlur=3; ctx.shadowOffsetX=1; ctx.shadowOffsetY=1;
+    ctx.fillStyle='rgba(255,255,255,0.93)';
+    ctx.beginPath(); ctx.roundRect(bx+11,by+8,bw-18,bh-16,4); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
     // Subject icon (emoji, large)
     ctx.font=`${Math.floor(bw*.38)}px Arial`; ctx.textAlign='center';
     ctx.fillText(o.label2, bx+bw/2+2, by+bh*.44);
     // Subject name (bold, readable)
     ctx.fillStyle=shadeColor(o.color,-50);
-    // Auto-fit font size
     let fs=11; ctx.font=`bold ${fs}px 'Segoe UI',Arial`;
     while(ctx.measureText(o.label1).width>bw-22 && fs>7) { fs--; ctx.font=`bold ${fs}px 'Segoe UI',Arial`; }
     ctx.fillText(o.label1, bx+bw/2+2, by+bh*.78);
-    // Bookmark ribbon
-    ctx.fillStyle='#FFD700';
+    // Bookmark ribbon with gradient
+    const bmGrad = ctx.createLinearGradient(bx+bw-13,by,bx+bw-6,by+16);
+    bmGrad.addColorStop(0,'#FFE57F');
+    bmGrad.addColorStop(1,'#F9A825');
+    ctx.fillStyle=bmGrad;
     ctx.fillRect(bx+bw-13,by,7,16);
     ctx.beginPath(); ctx.moveTo(bx+bw-13,by+16); ctx.lineTo(bx+bw-9.5,by+12); ctx.lineTo(bx+bw-6,by+16); ctx.closePath(); ctx.fill();
 
   } else if(o.type==='paper') {
     const px=o.x, py=o.y, pw=o.w, ph=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.25)'; ctx.shadowBlur=6; ctx.shadowOffsetX=3; ctx.shadowOffsetY=3;
+    // Paper base with subtle gradient (slight curl effect)
+    const paperGrad = ctx.createLinearGradient(px,py,px+pw,py+ph);
+    paperGrad.addColorStop(0,'#fffdf8');
+    paperGrad.addColorStop(0.7,'#fff8f0');
+    paperGrad.addColorStop(1,'#f5ede0');
+    ctx.fillStyle=paperGrad;
+    ctx.beginPath(); ctx.roundRect(px,py,pw,ph,5); ctx.fill();
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    // Paper base — white with red border
-    roundRect(px,py,pw,ph,5,'#fff8f0');
+    // Red border
     ctx.strokeStyle='#EF4444'; ctx.lineWidth=2.5;
-    ctx.strokeRect(px+1,py+1,pw-2,ph-2);
+    ctx.beginPath(); ctx.roundRect(px+1,py+1,pw-2,ph-2,4); ctx.stroke();
     // Ruled lines (blue)
     ctx.strokeStyle='rgba(100,149,237,0.35)'; ctx.lineWidth=1;
     for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(px+6,py+i*(ph/6));ctx.lineTo(px+pw-6,py+i*(ph/6));ctx.stroke();}
     // Red margin line
     ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=1.5;
     ctx.beginPath();ctx.moveTo(px+14,py+4);ctx.lineTo(px+14,py+ph-4);ctx.stroke();
-    // Big red grade "2"
+    // Big red grade "2" with shadow
+    ctx.shadowColor='rgba(239,68,68,0.3)'; ctx.shadowBlur=4;
     ctx.fillStyle='#EF4444'; ctx.font=`bold ${Math.floor(pw*.7)}px Arial`; ctx.textAlign='center';
     ctx.fillText('2',px+pw/2,py+ph*.72);
-    // Red circle stamp around grade
-    ctx.strokeStyle='rgba(239,68,68,0.35)'; ctx.lineWidth=2;
+    ctx.shadowBlur=0;
+    // Red circle stamp
+    ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.arc(px+pw/2,py+ph*.55,pw*.38,0,Math.PI*2); ctx.stroke();
-    // "КОНТР." label at top
+    // "КОНТР." label
     ctx.fillStyle='#374151'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
     ctx.fillText('КОНТР.',px+pw/2,py+13);
-    // Dog-ear corner
-    ctx.fillStyle='#ffe0b2';
+    // Dog-ear corner with gradient
+    const dogGrad = ctx.createLinearGradient(px+pw-14,py,px+pw,py+14);
+    dogGrad.addColorStop(0,'#ffe0b2');
+    dogGrad.addColorStop(1,'#ffcc80');
+    ctx.fillStyle=dogGrad;
     ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw,py); ctx.lineTo(px+pw,py+14); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle='#ffcc80'; ctx.lineWidth=1;
+    ctx.strokeStyle='#ffb74d'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw-14,py+14); ctx.lineTo(px+pw,py+14); ctx.stroke();
+    // Paper curl shadow
+    ctx.fillStyle='rgba(0,0,0,0.06)';
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw-14,py+14); ctx.lineTo(px+pw,py+14); ctx.closePath(); ctx.fill();
 
   } else if(o.type==='teacher') {
     const tx=o.x, ty=o.y;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.3)'; ctx.shadowBlur=8; ctx.shadowOffsetX=3; ctx.shadowOffsetY=4;
+    // Body (dark suit) with gradient
+    const suitGrad = ctx.createLinearGradient(tx+6,ty+22,tx+36,ty+60);
+    suitGrad.addColorStop(0,'#2d4fad');
+    suitGrad.addColorStop(0.4,'#1E3A8A');
+    suitGrad.addColorStop(1,'#0f2060');
+    ctx.fillStyle=suitGrad;
+    ctx.beginPath(); ctx.roundRect(tx+6,ty+22,30,38,4); ctx.fill();
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    // Body (dark suit)
-    roundRect(tx+6,ty+22,30,38,4,'#1E3A8A');
+    // Suit highlight
+    ctx.fillStyle='rgba(100,140,255,0.2)';
+    ctx.beginPath(); ctx.roundRect(tx+7,ty+22,12,10,3); ctx.fill();
     // Lapels
-    ctx.fillStyle='#fff';
+    ctx.fillStyle='#f5f5f5';
     ctx.beginPath(); ctx.moveTo(tx+16,ty+22); ctx.lineTo(tx+21,ty+34); ctx.lineTo(tx+12,ty+22); ctx.closePath(); ctx.fill();
     ctx.beginPath(); ctx.moveTo(tx+26,ty+22); ctx.lineTo(tx+21,ty+34); ctx.lineTo(tx+30,ty+22); ctx.closePath(); ctx.fill();
-    // Tie
-    ctx.fillStyle='#EF4444';
+    // Tie with gradient
+    const tieGrad = ctx.createLinearGradient(tx+19,ty+24,tx+23,ty+40);
+    tieGrad.addColorStop(0,'#f87171');
+    tieGrad.addColorStop(0.5,'#EF4444');
+    tieGrad.addColorStop(1,'#b91c1c');
+    ctx.fillStyle=tieGrad;
     ctx.beginPath(); ctx.moveTo(tx+19,ty+24); ctx.lineTo(tx+23,ty+24); ctx.lineTo(tx+22,ty+38); ctx.lineTo(tx+21,ty+40); ctx.lineTo(tx+20,ty+38); ctx.closePath(); ctx.fill();
-    // Head
-    ctx.fillStyle='#FDBCB4';
+    ctx.fillStyle='rgba(255,180,180,0.4)';
+    ctx.fillRect(tx+20,ty+25,2,3);
+    // Head with gradient
+    const headGrad = ctx.createRadialGradient(tx+18,ty+10,1,tx+21,ty+13,12);
+    headGrad.addColorStop(0,'#f5c9a0');
+    headGrad.addColorStop(0.6,'#FDBCB4');
+    headGrad.addColorStop(1,'#d4845a');
+    ctx.fillStyle=headGrad;
     ctx.beginPath(); ctx.ellipse(tx+21,ty+13,11,13,0,0,Math.PI*2); ctx.fill();
-    // Hair (gray)
-    ctx.fillStyle='#9CA3AF';
+    // Hair (gray) with gradient
+    const hairGrad = ctx.createLinearGradient(tx+10,ty+0,tx+32,ty+8);
+    hairGrad.addColorStop(0,'#d1d5db');
+    hairGrad.addColorStop(0.5,'#9CA3AF');
+    hairGrad.addColorStop(1,'#6B7280');
+    ctx.fillStyle=hairGrad;
     ctx.beginPath(); ctx.ellipse(tx+21,ty+3,11,8,0,0,Math.PI); ctx.fill();
-    // Glasses
-    ctx.strokeStyle='#374151'; ctx.lineWidth=1.5; ctx.shadowBlur=0;
+    // Glasses with metallic shine
+    ctx.strokeStyle='#4B5563'; ctx.lineWidth=1.5;
     ctx.strokeRect(tx+13,ty+10,8,6); ctx.strokeRect(tx+22,ty+10,8,6);
     ctx.beginPath(); ctx.moveTo(tx+21,ty+13); ctx.lineTo(tx+22,ty+13); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(tx+13,ty+13); ctx.lineTo(tx+11,ty+12); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(tx+30,ty+13); ctx.lineTo(tx+32,ty+12); ctx.stroke();
+    // Glass lens glint
+    ctx.fillStyle='rgba(200,230,255,0.35)';
+    ctx.fillRect(tx+14,ty+11,3,2); ctx.fillRect(tx+23,ty+11,3,2);
     // Eyes
     ctx.fillStyle='#1a1a2e';
     ctx.fillRect(tx+15,ty+11,3,3); ctx.fillRect(tx+24,ty+11,3,3);
-    // Pointer stick
-    ctx.strokeStyle='#92400e'; ctx.lineWidth=2.5;
+    ctx.fillStyle='rgba(255,255,255,0.8)';
+    ctx.fillRect(tx+16,ty+11,1,1); ctx.fillRect(tx+25,ty+11,1,1);
+    // Pointer stick with wood texture
+    ctx.strokeStyle='#a16207'; ctx.lineWidth=2.5;
     ctx.beginPath(); ctx.moveTo(tx+36,ty+18); ctx.lineTo(tx+44,ty+6); ctx.stroke();
-    ctx.fillStyle='#EF4444'; ctx.beginPath(); ctx.arc(tx+44,ty+6,3,0,Math.PI*2); ctx.fill();
-    // Legs
-    roundRect(tx+8,ty+58,11,22,3,'#1e3a8a');
-    roundRect(tx+23,ty+58,11,22,3,'#1e3a8a');
-    // Shoes
-    roundRect(tx+6,ty+76,14,6,2,'#1a1a1a');
-    roundRect(tx+21,ty+76,14,6,2,'#1a1a1a');
+    ctx.strokeStyle='#ca8a04'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(tx+36,ty+18); ctx.lineTo(tx+44,ty+6); ctx.stroke();
+    ctx.shadowColor='rgba(239,68,68,0.5)'; ctx.shadowBlur=4;
+    ctx.fillStyle='#EF4444';
+    ctx.beginPath(); ctx.arc(tx+44,ty+6,3,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    // Legs with gradient
+    const legGrad = ctx.createLinearGradient(tx+8,ty+58,tx+20,ty+80);
+    legGrad.addColorStop(0,'#2d4fad');
+    legGrad.addColorStop(1,'#0f2060');
+    ctx.fillStyle=legGrad;
+    ctx.beginPath(); ctx.roundRect(tx+8,ty+58,11,22,3); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(tx+23,ty+58,11,22,3); ctx.fill();
+    // Leg highlights
+    ctx.fillStyle='rgba(100,140,255,0.2)';
+    ctx.fillRect(tx+9,ty+59,4,8); ctx.fillRect(tx+24,ty+59,4,8);
+    // Shoes with gradient
+    const shoeGrad = ctx.createLinearGradient(tx+6,ty+76,tx+20,ty+82);
+    shoeGrad.addColorStop(0,'#374151');
+    shoeGrad.addColorStop(1,'#111827');
+    ctx.fillStyle=shoeGrad;
+    ctx.beginPath(); ctx.roundRect(tx+6,ty+76,14,6,2); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(tx+21,ty+76,14,6,2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.15)';
+    ctx.fillRect(tx+7,ty+77,5,1); ctx.fillRect(tx+22,ty+77,5,1);
     // Label
     ctx.fillStyle='#EF4444'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
-    ctx.fillText('👩‍🏫 УЧИТЕЛЬ',tx+22,ty+o.h+13);
+    ctx.fillText('👩\u200d🏫 УЧИТЕЛЬ',tx+22,ty+o.h+13);
 
   } else if(o.type==='phone') {
     const px=o.x, py=o.y, pw=o.w, ph=o.h;
-    // Phone body
-    roundRect(px+3,py,pw-6,ph,10,'#111827','#374151',2);
-    // Screen
-    roundRect(px+6,py+6,pw-12,ph-18,6,'#1e40af');
-    // Screen glow
-    ctx.fillStyle='rgba(99,179,237,0.3)';
-    roundRect(px+6,py+6,pw-12,(ph-18)/2,6,'rgba(99,179,237,0.3)');
-    // TikTok logo area
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=8; ctx.shadowOffsetX=3; ctx.shadowOffsetY=4;
+    // Phone body with gradient (glossy plastic)
+    const phoneGrad = ctx.createLinearGradient(px+3,py,px+pw-3,py+ph);
+    phoneGrad.addColorStop(0,'#374151');
+    phoneGrad.addColorStop(0.3,'#1f2937');
+    phoneGrad.addColorStop(0.7,'#111827');
+    phoneGrad.addColorStop(1,'#0a0f1a');
+    ctx.fillStyle=phoneGrad;
+    ctx.beginPath(); ctx.roundRect(px+3,py,pw-6,ph,10); ctx.fill();
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Phone body edge highlight
+    ctx.strokeStyle='rgba(100,120,150,0.5)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(px+3,py,pw-6,ph,10); ctx.stroke();
+    // Screen bezel
+    ctx.fillStyle='#0a0f1a';
+    ctx.beginPath(); ctx.roundRect(px+5,py+4,pw-10,ph-10,8); ctx.fill();
+    // Screen with gradient (AMOLED glow)
+    const screenGrad = ctx.createLinearGradient(px+6,py+6,px+pw-6,py+ph-18);
+    screenGrad.addColorStop(0,'#1e3a8a');
+    screenGrad.addColorStop(0.3,'#1d4ed8');
+    screenGrad.addColorStop(0.7,'#2563eb');
+    screenGrad.addColorStop(1,'#1e40af');
+    ctx.fillStyle=screenGrad;
+    ctx.beginPath(); ctx.roundRect(px+6,py+6,pw-12,ph-18,6); ctx.fill();
+    // Screen glare (top-left reflection)
+    const glareGrad = ctx.createLinearGradient(px+6,py+6,px+pw-6,py+(ph-18)*.5);
+    glareGrad.addColorStop(0,'rgba(255,255,255,0.22)');
+    glareGrad.addColorStop(0.5,'rgba(255,255,255,0.06)');
+    glareGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=glareGrad;
+    ctx.beginPath(); ctx.roundRect(px+6,py+6,pw-12,(ph-18)*.45,6); ctx.fill();
+    // TikTok logo area
     ctx.fillStyle='#fff'; ctx.font='bold 7px Arial'; ctx.textAlign='center';
     ctx.fillText('TikTok',px+pw/2,py+ph*.3);
     // Musical note icon
     ctx.fillStyle='#fff'; ctx.font='14px Arial';
     ctx.fillText('🎵',px+pw/2,py+ph*.58);
     // Home bar
-    ctx.fillStyle='rgba(255,255,255,0.4)';
-    roundRect(px+pw/2-8,py+ph-8,16,3,2,'rgba(255,255,255,0.4)');
-    // Side buttons
-    ctx.fillStyle='#374151';
-    ctx.fillRect(px+pw-3,py+ph*.25,3,8);
-    ctx.fillRect(px+pw-3,py+ph*.4,3,8);
+    ctx.fillStyle='rgba(255,255,255,0.45)';
+    ctx.beginPath(); ctx.roundRect(px+pw/2-8,py+ph-8,16,3,2); ctx.fill();
+    // Side buttons with gradient
+    const btnGrad = ctx.createLinearGradient(px+pw-3,py,px+pw,py);
+    btnGrad.addColorStop(0,'#4B5563');
+    btnGrad.addColorStop(1,'#374151');
+    ctx.fillStyle=btnGrad;
+    ctx.beginPath(); ctx.roundRect(px+pw-3,py+ph*.25,3,8,1); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(px+pw-3,py+ph*.4,3,8,1); ctx.fill();
     ctx.fillStyle='#EF4444'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
     ctx.fillText('📵 ТЕЛЕФОН',px+pw/2,py+ph+13);
 
   } else if(o.type==='diary') {
     const dx=o.x, dy=o.y, dw=o.w, dh=o.h;
-    roundRect(dx,dy,dw,dh,4,o.color);
-    // Spine
-    ctx.fillStyle=shadeColor(o.color,-40);
-    ctx.fillRect(dx,dy,8,dh);
-    // Metal rings (diary binding)
-    ctx.fillStyle='#9CA3AF';
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=7; ctx.shadowOffsetX=4; ctx.shadowOffsetY=4;
+    // 3D side edge
+    ctx.fillStyle=shadeColor(o.color,-55);
+    ctx.beginPath(); ctx.roundRect(dx+4,dy+4,dw,dh,4); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Main cover with gradient
+    const diaryGrad = ctx.createLinearGradient(dx,dy,dx+dw,dy+dh);
+    diaryGrad.addColorStop(0,shadeColor(o.color,25));
+    diaryGrad.addColorStop(0.5,o.color);
+    diaryGrad.addColorStop(1,shadeColor(o.color,-30));
+    ctx.fillStyle=diaryGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,dw,dh,4); ctx.fill();
+    // Cover highlight
+    const dhlGrad = ctx.createLinearGradient(dx,dy,dx+dw,dy+dh*.4);
+    dhlGrad.addColorStop(0,'rgba(255,255,255,0.3)');
+    dhlGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=dhlGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,dw,dh*.4,4); ctx.fill();
+    // Spine with gradient
+    const spineGrad = ctx.createLinearGradient(dx,dy,dx+8,dy);
+    spineGrad.addColorStop(0,shadeColor(o.color,-55));
+    spineGrad.addColorStop(1,shadeColor(o.color,-25));
+    ctx.fillStyle=spineGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,8,dh,[4,0,0,4]); ctx.fill();
+    // Metal rings (diary binding) with 3D look
     for(let i=0;i<3;i++) {
+      // Ring shadow
+      ctx.fillStyle='rgba(0,0,0,0.3)';
+      ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,4.5,0,Math.PI*2); ctx.fill();
+      // Ring body
+      const ringGrad = ctx.createRadialGradient(dx+3,dy+11+i*16,0,dx+4,dy+12+i*16,4);
+      ringGrad.addColorStop(0,'#e5e7eb');
+      ringGrad.addColorStop(0.5,'#9CA3AF');
+      ringGrad.addColorStop(1,'#4B5563');
+      ctx.fillStyle=ringGrad;
       ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,4,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#6B7280'; ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,2,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle='#9CA3AF';
+      // Ring hole
+      ctx.fillStyle=shadeColor(o.color,-20);
+      ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,2,0,Math.PI*2); ctx.fill();
     }
     // Pages
-    ctx.fillStyle='#f0f0f0';
+    const pagesGrad = ctx.createLinearGradient(dx+dw-7,dy,dx+dw,dy);
+    pagesGrad.addColorStop(0,'#e0e0e0');
+    pagesGrad.addColorStop(1,'#f5f5f5');
+    ctx.fillStyle=pagesGrad;
     ctx.fillRect(dx+dw-5,dy+2,4,dh-4);
-    // Lines on cover
-    ctx.fillStyle='rgba(255,255,255,0.15)';
-    for(let i=1;i<4;i++) ctx.fillRect(dx+10,dy+i*(dh/4),dw-20,1);
+    for(let i=0;i<6;i++) ctx.fillRect(dx+dw-5,dy+4+i*((dh-8)/6),4,1);
     // White label area
-    roundRect(dx+10,dy+8,dw-18,dh-16,4,'rgba(255,255,255,0.92)');
-    // Emoji icon
+    ctx.shadowColor='rgba(0,0,0,0.1)'; ctx.shadowBlur=2; ctx.shadowOffsetX=1; ctx.shadowOffsetY=1;
+    ctx.fillStyle='rgba(255,255,255,0.93)';
+    ctx.beginPath(); ctx.roundRect(dx+10,dy+8,dw-18,dh-16,4); ctx.fill();
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Emoji icon
     ctx.font=`${Math.floor(dw*.35)}px Arial`; ctx.textAlign='center';
     ctx.fillText(o.label2||'📓', dx+dw/2, dy+dh*.44);
     // Subject name
-    ctx.fillStyle=shadeColor(o.color,-30);
+    ctx.fillStyle=shadeColor(o.color,-40);
     let dfs=11; ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;
     while(ctx.measureText(o.label1).width>dw-22 && dfs>7){dfs--;ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;}
     ctx.fillText(o.label1,dx+dw/2,dy+dh*.78);
-    // Red exclamation badge
-    ctx.fillStyle='#EF4444';
+    // Red exclamation badge with glow
+    ctx.shadowColor='rgba(239,68,68,0.5)'; ctx.shadowBlur=5;
+    const badgeGrad = ctx.createRadialGradient(dx+dw-7,dy+7,0,dx+dw-6,dy+8,7);
+    badgeGrad.addColorStop(0,'#f87171');
+    badgeGrad.addColorStop(1,'#b91c1c');
+    ctx.fillStyle=badgeGrad;
     ctx.beginPath(); ctx.arc(dx+dw-6,dy+8,7,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
     ctx.fillStyle='#fff'; ctx.font='bold 10px Arial';
     ctx.fillText('!',dx+dw-6,dy+12);
 
   } else if(o.type==='fatigue') {
     const fx=o.x, fy=o.y, fw=o.w, fh=o.h;
-    // Dark sleep cloud
-    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    const grad = ctx.createRadialGradient(fx+fw/2,fy+fh/2,0,fx+fw/2,fy+fh/2,fw/2);
-    grad.addColorStop(0,'rgba(75,85,99,0.95)');
-    grad.addColorStop(1,'rgba(55,65,81,0.7)');
-    ctx.fillStyle=grad;
+    // Outer glow
+    ctx.shadowColor='rgba(75,85,99,0.5)'; ctx.shadowBlur=12;
+    // Main cloud body with radial gradient
+    const cloudGrad = ctx.createRadialGradient(fx+fw*.4,fy+fh*.4,0,fx+fw/2,fy+fh/2,fw*.6);
+    cloudGrad.addColorStop(0,'rgba(100,110,125,0.98)');
+    cloudGrad.addColorStop(0.5,'rgba(75,85,99,0.92)');
+    cloudGrad.addColorStop(1,'rgba(45,55,72,0.75)');
+    ctx.fillStyle=cloudGrad;
     ctx.beginPath(); ctx.ellipse(fx+fw/2,fy+fh/2,fw/2,fh/2,0,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='rgba(156,163,175,0.5)';
+    ctx.shadowBlur=0;
+    // Lighter sub-clouds
+    ctx.fillStyle='rgba(156,163,175,0.55)';
     ctx.beginPath(); ctx.ellipse(fx+fw*.3,fy+fh*.4,fw*.22,fh*.35,0,0,Math.PI*2); ctx.fill();
-    ctx.beginPath(); ctx.ellipse(fx+fw*.7,fy+fh*.4,fw*.2,fh*.3,0,0,Math.PI*2); ctx.fill();
-    // Z letters floating
-    ctx.fillStyle='rgba(255,255,255,0.9)'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
+    ctx.beginPath(); ctx.ellipse(fx+fw*.72,fy+fh*.38,fw*.2,fh*.3,0,0,Math.PI*2); ctx.fill();
+    // Top highlight
+    const cloudHl = ctx.createRadialGradient(fx+fw*.35,fy+fh*.25,0,fx+fw*.35,fy+fh*.25,fw*.3);
+    cloudHl.addColorStop(0,'rgba(200,210,230,0.4)');
+    cloudHl.addColorStop(1,'rgba(200,210,230,0)');
+    ctx.fillStyle=cloudHl;
+    ctx.beginPath(); ctx.ellipse(fx+fw*.35,fy+fh*.3,fw*.3,fh*.25,0,0,Math.PI*2); ctx.fill();
+    // Z letters floating with shadow
+    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=3;
+    ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
     ctx.fillText('Z',fx+fw*.65,fy+fh*.3);
     ctx.font='bold 10px Arial';
-    ctx.fillText('z',fx+fw*.75,fy+fh*.15);
+    ctx.fillText('z',fx+fw*.78,fy+fh*.14);
+    ctx.shadowBlur=0;
     ctx.font='bold 16px Arial';
     ctx.fillText('😴',fx+fw/2,fy+fh*.65);
 
   } else if(o.type==='bookstack') {
     const sx=o.x, sy=o.y, sw=o.w, sh=o.h;
-    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=8; ctx.shadowOffsetX=4; ctx.shadowOffsetY=5;
+
+    function draw3DBook(bx, by, bw, bh, color, label, icon, indent) {
+      // 3D side edge
+      ctx.fillStyle=shadeColor(color,-55);
+      ctx.beginPath(); ctx.roundRect(bx+4,by+4,bw,bh,4); ctx.fill();
+      ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+      // Cover gradient
+      const cg = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+      cg.addColorStop(0,shadeColor(color,30));
+      cg.addColorStop(0.5,color);
+      cg.addColorStop(1,shadeColor(color,-35));
+      ctx.fillStyle=cg;
+      ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,4); ctx.fill();
+      // Spine
+      const sg = ctx.createLinearGradient(bx,by,bx+9,by);
+      sg.addColorStop(0,shadeColor(color,-50));
+      sg.addColorStop(1,shadeColor(color,-20));
+      ctx.fillStyle=sg;
+      ctx.beginPath(); ctx.roundRect(bx,by,9,bh,[4,0,0,4]); ctx.fill();
+      // Highlight
+      const hg = ctx.createLinearGradient(bx+9,by,bx+bw,by+bh*.5);
+      hg.addColorStop(0,'rgba(255,255,255,0.3)');
+      hg.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath(); ctx.roundRect(bx+9,by,bw-9,bh,[0,4,4,0]); ctx.fill();
+      // Label area
+      ctx.fillStyle='rgba(255,255,255,0.92)';
+      ctx.beginPath(); ctx.roundRect(bx+11,by+4,bw-18,bh-8,3); ctx.fill();
+      // Icon
+      ctx.font=`${Math.floor(bw*.32)}px Arial`; ctx.textAlign='center';
+      ctx.fillText(icon, bx+bw/2, by+bh*.45);
+      // Label
+      ctx.fillStyle=shadeColor(color,-50);
+      ctx.font=`bold 9px 'Segoe UI',Arial`;
+      ctx.fillText(label, bx+bw/2, by+bh*.75);
+    }
+
     // Bottom book (green)
-    const b1y=sy+sh*.58, b1h=sh*.42;
-    roundRect(sx,b1y,sw,b1h,5,'#16a34a');
-    roundRect(sx,b1y,9,b1h,5,'#15803d');
-    roundRect(sx+11,b1y+4,sw-18,b1h-8,3,'rgba(255,255,255,0.9)');
-    ctx.fillStyle='#14532d'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
-    ctx.fillText('БИОЛ.',sx+sw/2,b1y+b1h*.6);
-    ctx.font='11px Arial'; ctx.fillText('🌱',sx+sw/2,b1y+b1h*.35);
-    // Middle book (purple)
-    const b2y=sy+sh*.3, b2h=sh*.3;
-    roundRect(sx+3,b2y,sw-6,b2h,5,'#7c3aed');
-    roundRect(sx+3,b2y,9,b2h,5,'#6d28d9');
-    roundRect(sx+14,b2y+4,sw-24,b2h-8,3,'rgba(255,255,255,0.9)');
-    ctx.fillStyle='#4c1d95'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
-    ctx.fillText('ИСТ.',sx+sw/2,b2y+b2h*.62);
-    ctx.font='11px Arial'; ctx.fillText('🏰',sx+sw/2,b2y+b2h*.35);
-    // Top book (blue)
-    const b3y=sy, b3h=sh*.32;
-    roundRect(sx+6,b3y,sw-12,b3h,5,'#2563eb');
-    roundRect(sx+6,b3y,9,b3h,5,'#1d4ed8');
-    roundRect(sx+17,b3y+4,sw-30,b3h-8,3,'rgba(255,255,255,0.9)');
-    ctx.fillStyle='#1e3a8a'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
-    ctx.fillText('ГЕО.',sx+sw/2,b3y+b3h*.62);
-    ctx.font='11px Arial'; ctx.fillText('🌍',sx+sw/2,b3y+b3h*.35);
+    draw3DBook(sx, sy+sh*.58, sw, sh*.42, '#16a34a', 'БИОЛ.', '🌱', 0);
+    // Middle book (purple) — slightly indented
+    draw3DBook(sx+3, sy+sh*.3, sw-6, sh*.3, '#7c3aed', 'ИСТ.', '🏰', 3);
+    // Top book (blue) — most indented
+    draw3DBook(sx+6, sy, sw-12, sh*.32, '#2563eb', 'ГЕО.', '🌍', 6);
   }
   ctx.textAlign='left';
   ctx.restore();
