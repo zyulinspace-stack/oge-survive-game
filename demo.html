@@ -159,6 +159,158 @@
       margin-bottom: 22px;
       box-shadow: 0 2px 10px rgba(7,179,150,0.18);
     }
+
+    /* ===== WELCOME-BACK BANNER ===== */
+    .wb-banner {
+      max-width: 800px;
+      margin: 18px auto -10px;
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFFBEB 100%);
+      border: 2px solid var(--orange);
+      border-radius: 16px;
+      padding: 16px 22px;
+      display: none;
+      align-items: center;
+      gap: 16px;
+      box-shadow: 0 6px 20px rgba(251,129,37,0.15);
+      animation: wbSlide 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .wb-banner.show { display: flex; }
+    @keyframes wbSlide {
+      from { opacity: 0; transform: translateY(-12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .wb-icon {
+      width: 48px; height: 48px; flex-shrink: 0;
+      background: var(--orange); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .wb-text { flex: 1; }
+    .wb-title { font-size: 15px; font-weight: 900; color: var(--dark); margin-bottom: 2px; }
+    .wb-sub { font-size: 13px; color: #6B5340; font-weight: 600; }
+    .wb-cta {
+      background: var(--orange); color: white;
+      border: none; border-radius: 10px;
+      padding: 10px 18px; font-size: 13px; font-weight: 800;
+      cursor: pointer; flex-shrink: 0;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+    }
+    .wb-cta:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .wb-close {
+      background: transparent; border: none; cursor: pointer;
+      color: var(--gray); font-size: 18px; padding: 4px 8px;
+      flex-shrink: 0;
+    }
+
+    /* ===== STEP-ACTION MODAL ===== */
+    .sa-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(4px);
+      z-index: 600;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .sa-overlay.open { opacity: 1; pointer-events: auto; }
+    .sa-modal {
+      background: white; border-radius: 22px;
+      padding: 32px 32px 28px;
+      max-width: 460px; width: 100%;
+      position: relative;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+    }
+    .sa-overlay.open .sa-modal { transform: scale(1) translateY(0); }
+    .sa-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: #F3F4F6; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px; color: var(--gray);
+    }
+    .sa-close:hover { background: #E5E7EB; }
+    .sa-step-tag {
+      display: inline-block;
+      background: #FFF7ED; color: var(--orange);
+      font-size: 10px; font-weight: 800;
+      text-transform: uppercase; letter-spacing: 1px;
+      padding: 5px 12px; border-radius: 50px;
+      margin-bottom: 12px;
+    }
+    .sa-title {
+      font-size: 22px; font-weight: 900;
+      color: var(--dark); line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    .sa-desc {
+      font-size: 14px; color: #4B5563;
+      font-weight: 500; line-height: 1.55;
+      margin-bottom: 22px;
+    }
+    .sa-instructions {
+      background: #F9FAFB;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 22px;
+      font-size: 13px;
+      color: #374151;
+      line-height: 1.55;
+    }
+    .sa-instructions strong { color: var(--dark); font-weight: 800; }
+    .sa-actions {
+      display: flex; flex-direction: column; gap: 10px;
+    }
+    .sa-btn-primary {
+      background: var(--teal); color: white;
+      border: none; border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+      text-decoration: none;
+    }
+    .sa-btn-primary:hover { background: #069680; transform: translateY(-1px); }
+    .sa-btn-secondary {
+      background: white; color: var(--dark);
+      border: 2px solid var(--border); border-radius: 12px;
+      padding: 13px 20px;
+      font-size: 14px; font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .sa-btn-secondary:hover { border-color: var(--orange); color: var(--orange); }
+    .sa-btn-done {
+      background: var(--orange); color: white;
+      border: none; border-radius: 12px;
+      padding: 14px 20px;
+      font-size: 14px; font-weight: 900;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      font-family: inherit;
+      display: none;
+    }
+    .sa-btn-done.visible { display: block; }
+    .sa-btn-done:hover { background: var(--orange-dark); transform: translateY(-1px); }
+    .sa-tip {
+      font-size: 12px; color: var(--gray);
+      text-align: center; margin-top: 12px;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 600px) {
+      .wb-banner { margin: 14px 16px -8px; padding: 14px 16px; gap: 12px; }
+      .wb-icon { width: 40px; height: 40px; font-size: 18px; }
+      .wb-cta { padding: 9px 14px; font-size: 12px; }
+      .sa-modal { padding: 26px 22px 22px; }
+      .sa-title { font-size: 19px; }
+    }
     .welcome-dot {
       width: 8px; height: 8px;
       background: var(--teal);
@@ -817,6 +969,17 @@
   <a href="https://get.onlinecollege-1.ru/demodostuplid" class="btn-orange">Начать бесплатно</a>
 </header>
 
+<!-- WELCOME-BACK BANNER -->
+<div class="wb-banner" id="wbBanner">
+  <div class="wb-icon">👋</div>
+  <div class="wb-text">
+    <div class="wb-title" id="wbTitle">С возвращением!</div>
+    <div class="wb-sub" id="wbSub">Ты на шаге 0 из 5 — продолжим?</div>
+  </div>
+  <button class="wb-cta" onclick="continueProgress()">Продолжить</button>
+  <button class="wb-close" onclick="closeWb()" title="Закрыть">✕</button>
+</div>
+
 <!-- HERO -->
 <section class="hero">
   <div class="hero-inner">
@@ -873,7 +1036,7 @@
   <div class="steps-grid" id="stepsGrid">
 
     <!-- ШАГ 1 -->
-    <div class="step" data-step="1" onclick="toggleStep(this)">
+    <div class="step" data-step="1" onclick="openStepModal(1)">
       <div class="step-row">
         <div class="step-side">+1 бонус</div>
         <div class="step-body">
@@ -890,7 +1053,7 @@
     </div>
 
     <!-- ШАГ 2 -->
-    <div class="step" data-step="2" onclick="toggleStep(this)">
+    <div class="step" data-step="2" onclick="openStepModal(2)">
       <div class="step-row">
         <div class="step-side">+1 бонус</div>
         <div class="step-body">
@@ -907,7 +1070,7 @@
     </div>
 
     <!-- ШАГ 3 -->
-    <div class="step" data-step="3" onclick="toggleStep(this)">
+    <div class="step" data-step="3" onclick="openStepModal(3)">
       <div class="step-row">
         <div class="step-side">+1 бонус</div>
         <div class="step-body">
@@ -924,7 +1087,7 @@
     </div>
 
     <!-- ШАГ 4 -->
-    <div class="step" data-step="4" onclick="toggleStep(this)">
+    <div class="step" data-step="4" onclick="openStepModal(4)">
       <div class="step-row">
         <div class="step-side">+1 бонус</div>
         <div class="step-body">
@@ -941,7 +1104,7 @@
     </div>
 
     <!-- ШАГ 5 — full width -->
-    <div class="step full" data-step="5" onclick="toggleStep(this)">
+    <div class="step full" data-step="5" onclick="openStepModal(5)">
       <div class="step-row">
         <div class="step-side">+1 бонус</div>
         <div class="step-body">
@@ -1001,6 +1164,32 @@
     </div>
   </div>
 </section>
+
+<!-- STEP-ACTION MODAL: инструкция и кнопки для каждого шага -->
+<div class="sa-overlay" id="saOverlay" onclick="closeSaOnBg(event)">
+  <div class="sa-modal">
+    <button class="sa-close" onclick="closeStepModal()">✕</button>
+    <div class="sa-step-tag" id="saTag">Шаг 01 · +1 бонус</div>
+    <div class="sa-title" id="saTitle">Заголовок</div>
+    <div class="sa-desc" id="saDesc">Описание</div>
+    <div class="sa-instructions" id="saInstructions">
+      <strong>Что делать:</strong> <span id="saInstrText">…</span>
+    </div>
+    <div class="sa-actions">
+      <a class="sa-btn-primary" id="saOpenBtn" href="#" target="_blank" rel="noopener" onclick="onStepOpened()">
+        Открыть в новой вкладке
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+      </a>
+      <button class="sa-btn-done" id="saDoneBtn" onclick="confirmStepDone()">
+        Я выполнил — засчитать бонус
+      </button>
+      <button class="sa-btn-secondary" onclick="closeStepModal()">Отмена</button>
+    </div>
+    <div class="sa-tip" id="saTip">
+      Эта вкладка останется открытой — вернись и нажми «Я выполнил»
+    </div>
+  </div>
+</div>
 
 <!-- MODAL: форма получения скидки -->
 <div class="modal-overlay" id="modalOverlay" onclick="closeOnBg(event)">
@@ -1073,22 +1262,111 @@
   const TOTAL = 5;
   let done = new Set();
   let toastTimer = null;
+  let currentStep = null;
 
-  function toggleStep(card) {
-    const step = card.dataset.step;
-    if (card.classList.contains('done')) {
-      card.classList.remove('done');
-      done.delete(step);
-    } else {
+  // Конфигурация шагов: что делать, куда вести, как формулировать
+  const STEPS = {
+    1: {
+      title: 'Посмотри живую лекцию',
+      desc: 'Подключись к ближайшей live-трансляции или открой запись прошлой лекции — почувствуй, как у нас проходят занятия.',
+      instr: 'Открой расписание лекций, выбери любую и посмотри хотя бы 5–10 минут. Этого достаточно, чтобы понять формат и стиль преподавателей.',
+      url: 'https://onlinecollege-1.ru/#process'
+    },
+    2: {
+      title: 'Оцени платформу',
+      desc: 'Зайди в личный кабинет, осмотрись: меню, материалы, личный профиль. Удобно ли всё устроено?',
+      instr: 'Походи по разделам платформы 2–3 минуты. Попробуй найти расписание, материалы курса и кнопку чата с куратором.',
+      url: 'https://onlinecollege-1.ru/#about'
+    },
+    3: {
+      title: 'Посмотри расписание',
+      desc: 'Открой расписание занятий и проверь — впишется ли учёба в твой день. Когда лекции? Когда практика?',
+      instr: 'Посмотри расписание на 1–2 недели вперёд. Прикинь, успеваешь ли ты в эти часы. Если что-то не подходит — это нормально, скажи куратору на шаге 5.',
+      url: 'https://onlinecollege-1.ru/#process'
+    },
+    4: {
+      title: 'Загляни в раздел практики',
+      desc: 'Посмотри, какие реальные кейсы от Яндекса, Озона и других компаний студенты решают на практических занятиях.',
+      instr: 'Открой раздел практики и пробеги 2–3 кейса. Обрати внимание: задачи реальные, не учебные. Именно с такими ты будешь работать.',
+      url: 'https://onlinecollege-1.ru/#specialties'
+    },
+    5: {
+      title: 'Напиши куратору',
+      desc: 'Задай куратору любой вопрос о поступлении, программе или формате — оцени, насколько быстро и понятно отвечает живой человек.',
+      instr: 'Напиши в Telegram любой вопрос — про специальности, стоимость, диплом, что угодно. Куратор обычно отвечает в течение нескольких минут в рабочее время.',
+      url: 'https://t.me/onlinecollege1'
+    }
+  };
+
+  // Открыть модалку шага
+  function openStepModal(stepNum) {
+    // Если уже выполнен — спросим, отменить ли
+    const card = document.querySelector(`[data-step="${stepNum}"]`);
+    if (card && card.classList.contains('done')) {
+      if (confirm(`Шаг ${stepNum} уже выполнен. Отменить отметку?`)) {
+        card.classList.remove('done');
+        done.delete(String(stepNum));
+        updateProgress();
+      }
+      return;
+    }
+
+    currentStep = stepNum;
+    const cfg = STEPS[stepNum];
+    document.getElementById('saTag').textContent = `Шаг 0${stepNum} · +1 бонус`;
+    document.getElementById('saTitle').textContent = cfg.title;
+    document.getElementById('saDesc').textContent = cfg.desc;
+    document.getElementById('saInstrText').textContent = cfg.instr;
+    document.getElementById('saOpenBtn').href = cfg.url;
+    // Кнопка "Я выполнил" пока скрыта — появится после клика на "Открыть"
+    document.getElementById('saDoneBtn').classList.remove('visible');
+    document.getElementById('saTip').textContent = 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
+
+    document.getElementById('saOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeStepModal() {
+    document.getElementById('saOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+    currentStep = null;
+  }
+
+  function closeSaOnBg(e) {
+    if (e.target === document.getElementById('saOverlay')) closeStepModal();
+  }
+
+  // Когда пользователь нажал "Открыть в новой вкладке"
+  function onStepOpened() {
+    // Показываем кнопку "Я выполнил" и меняем подсказку
+    document.getElementById('saDoneBtn').classList.add('visible');
+    document.getElementById('saTip').textContent = 'Когда вернёшься — нажми оранжевую кнопку, чтобы засчитать бонус';
+    // Сохраняем что пользователь "открыл" этот шаг — для welcome-back
+    try {
+      const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
+      if (!opened.includes(currentStep)) {
+        opened.push(currentStep);
+        localStorage.setItem('oc1_demo_opened', JSON.stringify(opened));
+      }
+    } catch(e) {}
+    // Не закрываем модалку — пусть остаётся, чтобы было куда вернуться
+  }
+
+  // Подтвердить выполнение шага
+  function confirmStepDone() {
+    if (!currentStep) return;
+    const card = document.querySelector(`[data-step="${currentStep}"]`);
+    if (card && !card.classList.contains('done')) {
       card.classList.add('done');
-      done.add(step);
+      done.add(String(currentStep));
       // Pop animation
       const ring = document.createElement('div');
       ring.className = 'pop-ring';
       card.appendChild(ring);
       setTimeout(() => ring.remove(), 600);
-      showToast('⭐', `+1 бонус! Шаг ${step} выполнен`);
+      showToast('⭐', `+1 бонус! Шаг ${currentStep} выполнен`);
     }
+    closeStepModal();
     updateProgress();
   }
 
@@ -1155,6 +1433,56 @@
     toastTimer = setTimeout(() => t.classList.remove('show'), 3200);
   }
 
+  // Welcome-back banner logic
+  function showWelcomeBack() {
+    const banner = document.getElementById('wbBanner');
+    const count = done.size;
+    let title, sub;
+
+    if (count === 0) {
+      // Никогда не начинал — не показываем баннер
+      return;
+    } else if (count === TOTAL) {
+      title = 'Ты выполнил все шаги!';
+      sub = 'Скидка ждёт — осталось оставить контакт';
+      document.querySelector('.wb-cta').textContent = 'Получить скидку';
+    } else {
+      const left = TOTAL - count;
+      title = `С возвращением! Ты на шаге ${count} из ${TOTAL}`;
+      sub = `Осталось всего ${left} шаг${left === 1 ? '' : 'a'} до скидки`;
+    }
+
+    document.getElementById('wbTitle').textContent = title;
+    document.getElementById('wbSub').textContent = sub;
+    banner.classList.add('show');
+  }
+
+  function continueProgress() {
+    if (done.size === TOTAL) {
+      openModal();
+    } else {
+      // Скролл к первому невыполненному шагу
+      for (let i = 1; i <= TOTAL; i++) {
+        if (!done.has(String(i))) {
+          const card = document.querySelector(`[data-step="${i}"]`);
+          if (card) {
+            card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // Подсветка
+            card.style.transition = 'box-shadow 0.4s';
+            card.style.boxShadow = '0 0 0 4px rgba(251,129,37,0.4), 0 12px 32px rgba(251,129,37,0.25)';
+            setTimeout(() => { card.style.boxShadow = ''; }, 1800);
+          }
+          break;
+        }
+      }
+    }
+    closeWb();
+  }
+
+  function closeWb() {
+    document.getElementById('wbBanner').classList.remove('show');
+  }
+
   // Restore saved progress
   window.addEventListener('DOMContentLoaded', () => {
     try {
@@ -1163,13 +1491,34 @@
         const card = document.querySelector(`[data-step="${step}"]`);
         if (card) { card.classList.add('done'); done.add(step); }
       });
-      if (done.size) updateProgress();
+      if (done.size) {
+        updateProgress();
+        // Показываем welcome-back через 0.5с для эффекта
+        setTimeout(showWelcomeBack, 500);
+      }
+
+      // Проверяем: есть ли открытые но не подтверждённые шаги
+      const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
+      const pending = opened.filter(s => !done.has(String(s)));
+      if (pending.length > 0 && done.size === 0) {
+        // Пользователь открывал шаг, но не вернулся чтобы подтвердить
+        const banner = document.getElementById('wbBanner');
+        const stepNum = pending[0];
+        document.getElementById('wbTitle').textContent = `Нажми «Я выполнил» на шаге ${stepNum}`;
+        document.getElementById('wbSub').textContent = 'Чтобы засчитать бонус за выполненный шаг';
+        document.querySelector('.wb-cta').textContent = 'Открыть';
+        document.querySelector('.wb-cta').onclick = () => { closeWb(); openStepModal(stepNum); };
+        setTimeout(() => banner.classList.add('show'), 500);
+      }
     } catch(e) {}
   });
 
   // Close modal on Escape
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeModal();
+    if (e.key === 'Escape') {
+      closeModal();
+      closeStepModal();
+    }
   });
 </script>
 </body>
