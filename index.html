@@ -583,10 +583,10 @@ const OGE_QUESTIONS = [
 // ══════════════════════════════════════════
 const OBS_TYPES = [
   // Books (original)
-  {type:'book', w:48, h:62, color:'#EF4444', label1:'АЛГЕ-', label2:'БРА'},
-  {type:'book', w:48, h:62, color:'#3B82F6', label1:'ФИ-',   label2:'ЗИКА'},
-  {type:'book', w:48, h:62, color:'#8B5CF6', label1:'ХИ-',   label2:'МИЯ'},
-  {type:'book', w:48, h:62, color:'#EC4899', label1:'РУС-',  label2:'ЯЗ'},
+  {type:'book', w:52, h:68, color:'#EF4444', label1:'АЛГЕБРА', label2:'📐', icon:'📐'},
+  {type:'book', w:52, h:68, color:'#3B82F6', label1:'ФИЗИКА',  label2:'⚡', icon:'⚡'},
+  {type:'book', w:52, h:68, color:'#8B5CF6', label1:'ХИМИЯ',   label2:'🧪', icon:'🧪'},
+  {type:'book', w:52, h:68, color:'#EC4899', label1:'РУС.ЯЗ',  label2:'✏️', icon:'✏️'},
   // Fail grade paper
   {type:'paper', w:48, h:58},
   // Teacher (tall obstacle)
@@ -594,7 +594,7 @@ const OBS_TYPES = [
   // Phone (medium)
   {type:'phone', w:36, h:62},
   // Diary / gradebook
-  {type:'diary', w:52, h:56, color:'#065f46', label1:'ДНЕВ-', label2:'НИК'},
+  {type:'diary', w:52, h:60, color:'#065f46', label1:'ДНЕВНИК', label2:'📓', icon:'📓'},
   // Fatigue cloud (wide low obstacle)
   {type:'fatigue', w:80, h:44},
   // Double book stack (tall)
@@ -830,56 +830,65 @@ function drawObs(o) {
   ctx.shadowOffsetY = 3;
 
   if(o.type==='book') {
-    // Pixel-art book with spine, pages, and label
     const bx=o.x, by=o.y, bw=o.w, bh=o.h;
-    // Main cover
-    roundRect(bx,by,bw,bh,4,o.color);
-    // Spine (left side, darker)
-    ctx.fillStyle=shadeColor(o.color,-30);
-    ctx.fillRect(bx,by,8,bh);
-    // Pages (right side, white)
-    ctx.fillStyle='#f0f0f0';
-    ctx.fillRect(bx+bw-5,by+2,4,bh-4);
-    // Page lines
-    ctx.fillStyle='rgba(200,200,200,0.8)';
-    for(let i=0;i<5;i++) ctx.fillRect(bx+bw-4,by+4+i*((bh-8)/5),3,1);
-    // Highlight on cover
-    ctx.fillStyle='rgba(255,255,255,0.25)';
-    ctx.fillRect(bx+10,by+4,bw-20,4);
-    // Label
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    ctx.fillStyle='rgba(0,0,0,0.5)';
-    roundRect(bx+10,by+bh*.3,bw-20,bh*.4,3,'rgba(0,0,0,0.25)');
-    ctx.fillStyle='#fff'; ctx.font=`bold 9px 'Segoe UI',Arial`; ctx.textAlign='center';
-    ctx.fillText(o.label1,bx+bw/2,by+bh*.48);
-    ctx.fillText(o.label2,bx+bw/2,by+bh*.68);
+    // Main cover with rounded corners
+    roundRect(bx,by,bw,bh,6,o.color);
+    // Spine (left side, darker)
+    ctx.fillStyle=shadeColor(o.color,-40);
+    roundRect(bx,by,10,bh,6,shadeColor(o.color,-40));
+    // Highlight stripe on cover
+    ctx.fillStyle='rgba(255,255,255,0.18)';
+    ctx.fillRect(bx+12,by+4,bw-18,5);
+    // Pages (right edge)
+    ctx.fillStyle='#f5f0e8';
+    ctx.fillRect(bx+bw-6,by+3,5,bh-6);
+    // Page lines
+    ctx.fillStyle='rgba(180,170,150,0.6)';
+    for(let i=0;i<6;i++) ctx.fillRect(bx+bw-5,by+5+i*((bh-10)/6),4,1);
+    // White label area
+    roundRect(bx+11,by+8,bw-18,bh-16,4,'rgba(255,255,255,0.92)');
+    // Subject icon (emoji, large)
+    ctx.font=`${Math.floor(bw*.38)}px Arial`; ctx.textAlign='center';
+    ctx.fillText(o.label2, bx+bw/2+2, by+bh*.44);
+    // Subject name (bold, readable)
+    ctx.fillStyle=shadeColor(o.color,-50);
+    // Auto-fit font size
+    let fs=11; ctx.font=`bold ${fs}px 'Segoe UI',Arial`;
+    while(ctx.measureText(o.label1).width>bw-22 && fs>7) { fs--; ctx.font=`bold ${fs}px 'Segoe UI',Arial`; }
+    ctx.fillText(o.label1, bx+bw/2+2, by+bh*.78);
     // Bookmark ribbon
     ctx.fillStyle='#FFD700';
-    ctx.fillRect(bx+bw-12,by,6,14);
-    ctx.beginPath(); ctx.moveTo(bx+bw-12,by+14); ctx.lineTo(bx+bw-9,by+10); ctx.lineTo(bx+bw-6,by+14); ctx.closePath(); ctx.fill();
+    ctx.fillRect(bx+bw-13,by,7,16);
+    ctx.beginPath(); ctx.moveTo(bx+bw-13,by+16); ctx.lineTo(bx+bw-9.5,by+12); ctx.lineTo(bx+bw-6,by+16); ctx.closePath(); ctx.fill();
 
   } else if(o.type==='paper') {
-    // Crumpled test paper with big red 2
     const px=o.x, py=o.y, pw=o.w, ph=o.h;
-    // Paper base
-    roundRect(px,py,pw,ph,4,'#fffde7','#EF4444',3);
-    // Ruled lines
-    ctx.fillStyle='rgba(173,216,230,0.5)';
-    for(let i=1;i<5;i++) ctx.fillRect(px+4,py+i*(ph/5),pw-8,1);
-    // Big red grade
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    ctx.fillStyle='#EF4444'; ctx.font=`bold ${pw*.65}px Arial`; ctx.textAlign='center';
-    ctx.fillText('2',px+pw/2,py+ph*.7);
-    // Stamp effect
-    ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=2;
-    ctx.beginPath(); ctx.arc(px+pw/2,py+ph*.5,pw*.4,0,Math.PI*2); ctx.stroke();
-    ctx.fillStyle='#6B7280'; ctx.font='bold 8px Arial';
-    ctx.fillText('КОНТР.',px+pw/2,py+ph*.92);
+    // Paper base — white with red border
+    roundRect(px,py,pw,ph,5,'#fff8f0');
+    ctx.strokeStyle='#EF4444'; ctx.lineWidth=2.5;
+    ctx.strokeRect(px+1,py+1,pw-2,ph-2);
+    // Ruled lines (blue)
+    ctx.strokeStyle='rgba(100,149,237,0.35)'; ctx.lineWidth=1;
+    for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(px+6,py+i*(ph/6));ctx.lineTo(px+pw-6,py+i*(ph/6));ctx.stroke();}
+    // Red margin line
+    ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(px+14,py+4);ctx.lineTo(px+14,py+ph-4);ctx.stroke();
+    // Big red grade "2"
+    ctx.fillStyle='#EF4444'; ctx.font=`bold ${Math.floor(pw*.7)}px Arial`; ctx.textAlign='center';
+    ctx.fillText('2',px+pw/2,py+ph*.72);
+    // Red circle stamp around grade
+    ctx.strokeStyle='rgba(239,68,68,0.35)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(px+pw/2,py+ph*.55,pw*.38,0,Math.PI*2); ctx.stroke();
+    // "КОНТР." label at top
+    ctx.fillStyle='#374151'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
+    ctx.fillText('КОНТР.',px+pw/2,py+13);
     // Dog-ear corner
-    ctx.fillStyle='#f5f5dc';
-    ctx.beginPath(); ctx.moveTo(px+pw-12,py); ctx.lineTo(px+pw,py); ctx.lineTo(px+pw,py+12); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle='#ddd'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.moveTo(px+pw-12,py); ctx.lineTo(px+pw-12,py+12); ctx.lineTo(px+pw,py+12); ctx.stroke();
+    ctx.fillStyle='#ffe0b2';
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw,py); ctx.lineTo(px+pw,py+14); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#ffcc80'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw-14,py+14); ctx.lineTo(px+pw,py+14); ctx.stroke();
 
   } else if(o.type==='teacher') {
     const tx=o.x, ty=o.y;
@@ -967,11 +976,17 @@ function drawObs(o) {
     // Lines on cover
     ctx.fillStyle='rgba(255,255,255,0.15)';
     for(let i=1;i<4;i++) ctx.fillRect(dx+10,dy+i*(dh/4),dw-20,1);
-    // Label
+    // White label area
+    roundRect(dx+10,dy+8,dw-18,dh-16,4,'rgba(255,255,255,0.92)');
+    // Emoji icon
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    ctx.fillStyle='#fff'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
-    ctx.fillText(o.label1,dx+dw/2,dy+dh*.42);
-    ctx.fillText(o.label2,dx+dw/2,dy+dh*.65);
+    ctx.font=`${Math.floor(dw*.35)}px Arial`; ctx.textAlign='center';
+    ctx.fillText(o.label2||'📓', dx+dw/2, dy+dh*.44);
+    // Subject name
+    ctx.fillStyle=shadeColor(o.color,-30);
+    let dfs=11; ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;
+    while(ctx.measureText(o.label1).width>dw-22 && dfs>7){dfs--;ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;}
+    ctx.fillText(o.label1,dx+dw/2,dy+dh*.78);
     // Red exclamation badge
     ctx.fillStyle='#EF4444';
     ctx.beginPath(); ctx.arc(dx+dw-6,dy+8,7,0,Math.PI*2); ctx.fill();
@@ -1000,28 +1015,31 @@ function drawObs(o) {
 
   } else if(o.type==='bookstack') {
     const sx=o.x, sy=o.y, sw=o.w, sh=o.h;
-    // Bottom book
-    roundRect(sx,sy+sh*.55,sw,sh*.45,4,o.color);
-    ctx.fillStyle=shadeColor(o.color,-20);
-    ctx.fillRect(sx,sy+sh*.55,7,sh*.45);
-    ctx.fillStyle='rgba(255,255,255,0.15)';
-    ctx.fillRect(sx+9,sy+sh*.57,sw-16,3);
-    // Middle book
-    roundRect(sx+3,sy+sh*.28,sw-6,sh*.3,4,'#7c3aed');
-    ctx.fillStyle='#6d28d9';
-    ctx.fillRect(sx+3,sy+sh*.28,7,sh*.3);
-    ctx.fillStyle='rgba(255,255,255,0.15)';
-    ctx.fillRect(sx+12,sy+sh*.3,sw-22,3);
-    // Top book
-    roundRect(sx+6,sy,sw-12,sh*.3,4,'#2563eb');
-    ctx.fillStyle='#1d4ed8';
-    ctx.fillRect(sx+6,sy,7,sh*.3);
-    ctx.fillStyle='rgba(255,255,255,0.15)';
-    ctx.fillRect(sx+15,sy+2,sw-28,3);
-    // Label
     ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
-    ctx.fillStyle='#fff'; ctx.font='bold 8px Arial'; ctx.textAlign='center';
-    ctx.fillText('📚 СТОПКА',sx+sw/2,sy+sh+13);
+    // Bottom book (green)
+    const b1y=sy+sh*.58, b1h=sh*.42;
+    roundRect(sx,b1y,sw,b1h,5,'#16a34a');
+    roundRect(sx,b1y,9,b1h,5,'#15803d');
+    roundRect(sx+11,b1y+4,sw-18,b1h-8,3,'rgba(255,255,255,0.9)');
+    ctx.fillStyle='#14532d'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
+    ctx.fillText('БИОЛ.',sx+sw/2,b1y+b1h*.6);
+    ctx.font='11px Arial'; ctx.fillText('🌱',sx+sw/2,b1y+b1h*.35);
+    // Middle book (purple)
+    const b2y=sy+sh*.3, b2h=sh*.3;
+    roundRect(sx+3,b2y,sw-6,b2h,5,'#7c3aed');
+    roundRect(sx+3,b2y,9,b2h,5,'#6d28d9');
+    roundRect(sx+14,b2y+4,sw-24,b2h-8,3,'rgba(255,255,255,0.9)');
+    ctx.fillStyle='#4c1d95'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
+    ctx.fillText('ИСТ.',sx+sw/2,b2y+b2h*.62);
+    ctx.font='11px Arial'; ctx.fillText('🏰',sx+sw/2,b2y+b2h*.35);
+    // Top book (blue)
+    const b3y=sy, b3h=sh*.32;
+    roundRect(sx+6,b3y,sw-12,b3h,5,'#2563eb');
+    roundRect(sx+6,b3y,9,b3h,5,'#1d4ed8');
+    roundRect(sx+17,b3y+4,sw-30,b3h-8,3,'rgba(255,255,255,0.9)');
+    ctx.fillStyle='#1e3a8a'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
+    ctx.fillText('ГЕО.',sx+sw/2,b3y+b3h*.62);
+    ctx.font='11px Arial'; ctx.fillText('🌍',sx+sw/2,b3y+b3h*.35);
   }
   ctx.textAlign='left';
   ctx.restore();
