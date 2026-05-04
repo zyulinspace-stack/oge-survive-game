@@ -185,10 +185,21 @@
 
   .hero-title{
     text-align:center;
-    font-size:clamp(54px, 9.5vw, 132px);
+    font-size:clamp(38px, 7vw, 92px);
     color:var(--violet);
     margin:60px auto 30px;
     max-width:980px;
+    word-wrap:break-word;
+    overflow-wrap:break-word;
+  }
+  .hero-title .mark-pink{
+    display:inline-block;
+    line-height:1.05;
+    padding:.04em .25em;
+    margin-top:.1em;
+  }
+  @media(max-width:760px){
+    .hero-title{ font-size:clamp(32px, 9vw, 56px); margin-top:90px; }
   }
   .hero-sub{
     text-align:center;
@@ -610,7 +621,7 @@
     <span class="sticker follow">Follow!</span>
 
     <h1 class="display hero-title">
-      Добро пожаловать в&nbsp;<span class="mark-pink">Онлайн-колледж&nbsp;№1</span>
+      Добро пожаловать<br/>в&nbsp;<span class="mark-pink">Онлайн-колледж&nbsp;№1</span>
     </h1>
     <p class="hero-sub">
       Ты уже внутри! Пройди <b>5 простых шагов</b> — познакомься с форматом, платформой и командой. За каждый шаг — <span class="mark-lime">+1 бонус</span>. Собери все&nbsp;5 → получи <b>скидку</b> на обучение.
