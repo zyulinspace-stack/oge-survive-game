@@ -87,15 +87,24 @@
     .logo-bottom {
       display: flex;
       align-items: center;
-      gap: 4px;
+      gap: 3px;
+    }
+    /* "N°" in dark, then orange circle, then "1" */
+    .logo-no {
+      font-size: 18px;
+      font-weight: 900;
+      color: #1A1A1A;
+      letter-spacing: -0.5px;
+      line-height: 1.18;
+      text-transform: uppercase;
     }
     .logo-dot {
-      width: 16px;
-      height: 16px;
+      width: 15px;
+      height: 15px;
       background: #FB8125;
       border-radius: 50%;
       flex-shrink: 0;
-      margin-top: 1px;
+      display: inline-block;
     }
     .logo-one {
       font-size: 18px;
@@ -776,6 +785,7 @@
       gap: 0;
     }
     .footer-logo .logo-word { color: white; font-size: 15px; }
+    .footer-logo .logo-no { color: white; font-size: 15px; }
     .footer-logo .logo-one { color: white; font-size: 15px; }
     .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
     .footer-links a { font-size: 13px; color: rgba(255,255,255,0.45); text-decoration: none; font-weight: 500; }
@@ -820,11 +830,12 @@
 
 <!-- HEADER -->
 <header>
-  <!-- LOGO: exact brand — 3 lines, orange circle before "1" -->
+  <!-- LOGO: exact brand — 3 lines, dark bold, third line: N° + orange circle + 1 -->
   <a href="https://onlinecollege-1.ru/" class="logo" title="Онлайн-колледж №1">
     <span class="logo-word">онлайн</span>
     <span class="logo-word">колледж</span>
     <span class="logo-bottom">
+      <span class="logo-no">N°</span>
       <span class="logo-dot"></span>
       <span class="logo-one">1</span>
     </span>
@@ -1085,6 +1096,7 @@
     <span class="logo-word">онлайн</span>
     <span class="logo-word">колледж</span>
     <span class="logo-bottom">
+      <span class="logo-no">N°</span>
       <span class="logo-dot"></span>
       <span class="logo-one">1</span>
     </span>
