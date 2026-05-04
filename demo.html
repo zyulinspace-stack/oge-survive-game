@@ -83,6 +83,37 @@
       width: auto;
     }
 
+    /* HTML logo */
+    .logo-html {
+      text-decoration: none;
+      display: inline-flex;
+      flex-direction: column;
+      line-height: 1;
+      gap: 0;
+    }
+    .logo-line {
+      font-family: 'Nunito', sans-serif;
+      font-size: 17px;
+      font-weight: 900;
+      color: #131D0E;
+      text-transform: lowercase;
+      letter-spacing: -0.3px;
+      line-height: 1.15;
+    }
+    .logo-line-num {
+      display: flex;
+      align-items: center;
+      gap: 3px;
+    }
+    .logo-circle {
+      width: 14px;
+      height: 14px;
+      background: #FB8125;
+      border-radius: 50%;
+      display: inline-block;
+      flex-shrink: 0;
+    }
+
     nav {
       display: flex;
       align-items: center;
@@ -604,7 +635,13 @@
   <!-- HEADER -->
   <header>
     <!-- EXACT BRAND LOGO: онлайн / колледж / №1 with orange circle -->
-    <a href="https://onlinecollege-1.ru/" class="logo" title="Онлайн-колледж №1">
+    <a href="https://onlinecollege-1.ru/" class="logo-html" title="Онлайн-колледж №1">
+      <span class="logo-line">онлайн</span>
+      <span class="logo-line">колледж</span>
+      <span class="logo-line logo-line-num"><span class="logo-circle"></span>1</span>
+    </a>
+    <!-- OLD SVG LOGO (hidden) -->
+    <a href="https://onlinecollege-1.ru/" class="logo" title="Онлайн-колледж №1" style="display:none">
       <svg class="logo-svg" viewBox="0 0 132 76" fill="none" xmlns="http://www.w3.org/2000/svg">
         <!-- Row 1: ОНЛАЙН -->
         <!-- О -->
