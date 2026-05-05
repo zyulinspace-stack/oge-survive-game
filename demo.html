@@ -1398,12 +1398,12 @@
     </div>
     <div class="reward-text">
       <div class="reward-tag">Финал — все бонусы собраны!</div>
-      <div class="reward-title">Получи скидку на поступление</div>
-      <div class="reward-sub">Ты прошёл все шаги — оставь контакты и мы свяжемся с тобой с лучшим предложением</div>
+      <div class="reward-title">Получи грант на обучение — 60 000 ₽</div>
+      <div class="reward-sub">Ты прошёл все шаги — в ближайшее время с тобой свяжется менеджер</div>
     </div>
     <button class="reward-cta" id="rewardBtn" onclick="openModal()">
-      Получить скидку
-      <small>оставить контакты</small>
+      Получить грант
+      <small>бесплатно</small>
     </button>
   </div>
 </div>
@@ -1412,7 +1412,7 @@
 <section class="how-section">
   <div class="how-inner">
     <div class="how-tag">Как это работает</div>
-    <div class="how-title">Три простых шага к скидке</div>
+    <div class="how-title">Три простых шага к гранту</div>
     <div class="how-cards">
       <div class="how-card">
         <div class="how-num">1</div>
@@ -1426,8 +1426,8 @@
       </div>
       <div class="how-card">
         <div class="how-num">3</div>
-        <h4>Получи скидку</h4>
-        <p>Собери все 5 бонусов, оставь контакты — и мы дадим лучшую цену на поступление</p>
+        <h4>Получи грант</h4>
+        <p>Собери все 5 бонусов — и менеджер свяжется с тобой с персональным предложением по гранту</p>
       </div>
     </div>
   </div>
@@ -1520,10 +1520,9 @@
     <!-- Form state -->
     <div id="modalForm">
       <div class="modal-badge">🎉 Все 5 бонусов собраны!</div>
-      <h2>Получи <span>скидку</span><br>на поступление</h2>
+      <h2>Получи <span>грант</span><br>на обучение — 60 000 ₽</h2>
       <p class="modal-sub">
-        Ты прошёл все шаги демо-доступа — это значит, ты уже знаешь, как у нас всё устроено.
-        Оставь контакты, и мы свяжемся с тобой с персональным предложением.
+        Ты прошёл все шаги демо-доступа — оставь контакты, и менеджер свяжется с тобой в ближайшее время.
       </p>
 
       <form id="discountForm" onsubmit="submitForm(event)">
@@ -1539,7 +1538,7 @@
           <label for="femail">Email <span style="color:#9CA3AF;font-weight:500">(необязательно)</span></label>
           <input type="email" id="femail" name="email" placeholder="example@mail.ru">
         </div>
-        <button type="submit" class="form-submit">Получить скидку</button>
+        <button type="submit" class="form-submit">Получить грант</button>
         <p class="form-agree">
           Нажимая кнопку, вы соглашаетесь на обработку
           <a href="https://onlinecollege-1.ru/privacy" target="_blank">персональных данных</a>
@@ -1550,8 +1549,8 @@
     <!-- Success state -->
     <div class="modal-success" id="modalSuccess">
       <div class="success-icon">✓</div>
-      <h3>Отлично! Мы свяжемся с тобой</h3>
-      <p>Наш менеджер позвонит в течение рабочего дня и расскажет о специальных условиях поступления для тебя.</p>
+      <h3>Заявка принята!</h3>
+      <p>В ближайшее время с тобой свяжется менеджер и расскажет о гранте 60 000 ₽ на обучение.</p>
       <a href="https://onlinecollege-1.ru/" class="btn-orange" style="display:inline-block;text-align:center">
         Вернуться на сайт
       </a>
@@ -1837,7 +1836,7 @@
       rb.classList.add('unlocked');
       // Scroll to reward block
       setTimeout(() => rb.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
-      showToast('🎉', 'Все бонусы собраны! Получи скидку');
+      showToast('🎉', 'Все бонусы собраны! Получи грант 60 000 ₽');
     } else {
       rb.classList.add('locked');
       rb.classList.remove('unlocked');
@@ -1847,6 +1846,19 @@
   }
 
   function openModal() {
+    // Если контакты уже есть — не спрашиваем повторно
+    const regName = localStorage.getItem('oc1_reg_name');
+    const regPhone = localStorage.getItem('oc1_reg_phone');
+    if (regName && regPhone) {
+      document.getElementById('modalForm').style.display = 'none';
+      document.getElementById('modalSuccess').style.display = 'block';
+      // Отправить заявку в Telegram
+      const text = encodeURIComponent(`🎓 Грант 60 000 ₽ — заявка\n\n👤 Имя: ${regName}\n📱 Тел.: ${regPhone}\n\nonlinecollege1.ru/demo`);
+      fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`).catch(() => {});
+    } else {
+      document.getElementById('modalForm').style.display = 'block';
+      document.getElementById('modalSuccess').style.display = 'none';
+    }
     document.getElementById('modalOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
   }
@@ -1897,12 +1909,12 @@
       return;
     } else if (count === TOTAL) {
       title = 'Ты выполнил все шаги!';
-      sub = 'Скидка ждёт — осталось оставить контакт';
-      document.querySelector('.wb-cta').textContent = 'Получить скидку';
+      sub = 'Грант ждёт — в ближайшее время свяжется менеджер';
+      document.querySelector('.wb-cta').textContent = 'Получить грант';
     } else {
       const left = TOTAL - count;
       title = `С возвращением! Ты на шаге ${count} из ${TOTAL}`;
-      sub = `Осталось всего ${left} шаг${left === 1 ? '' : 'a'} до скидки`;
+      sub = `Осталось всего ${left} шаг${left === 1 ? '' : 'a'} до гранта 60 000 ₽`;
     }
 
     document.getElementById('wbTitle').textContent = title;
