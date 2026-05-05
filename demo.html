@@ -1483,8 +1483,59 @@
     document.getElementById('wbBanner').classList.remove('show');
   }
 
-  // Restore saved progress
+  // ===== REGISTRATION POPUP =====
+  const TG_BOT = '8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM';
+  const TG_CHAT = '1342421992';
+
+  function sendToTelegram(name, phone) {
+    const text = encodeURIComponent(
+      `🎓 Новая заявка с демо-доступа\n\n👤 Имя: ${name}\n📱 Телефон: ${phone}\n\n🌐 onlinecollege1.ru/demo`
+    );
+    fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`)
+      .catch(() => {});
+  }
+
+  function openReg() {
+    document.getElementById('regOverlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeReg() {
+    document.getElementById('regOverlay').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function submitReg(e) {
+    e.preventDefault();
+    const name = document.getElementById('regName').value.trim();
+    const phone = document.getElementById('regPhone').value.trim();
+    if (!name || name.length < 2) {
+      document.getElementById('regName').focus();
+      return;
+    }
+    if (phone.replace(/\D/g,'').length < 10) {
+      document.getElementById('regPhone').focus();
+      return;
+    }
+    const btn = document.getElementById('regSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Отправляем...';
+
+    sendToTelegram(name, phone);
+    localStorage.setItem('oc1_reg', JSON.stringify({ name, phone, ts: Date.now() }));
+
+    document.getElementById('regForm').style.display = 'none';
+    document.getElementById('regSuccess').style.display = 'block';
+  }
+
+  // ===== RESTORE SAVED PROGRESS =====
   window.addEventListener('DOMContentLoaded', () => {
+    // Показываем попап регистрации если не зарегистрирован
+    const regData = localStorage.getItem('oc1_reg');
+    if (!regData) {
+      setTimeout(openReg, 600);
+    }
+
     try {
       const saved = JSON.parse(localStorage.getItem('oc1_demo') || '[]');
       saved.forEach(step => {
@@ -1493,15 +1544,12 @@
       });
       if (done.size) {
         updateProgress();
-        // Показываем welcome-back через 0.5с для эффекта
         setTimeout(showWelcomeBack, 500);
       }
 
-      // Проверяем: есть ли открытые но не подтверждённые шаги
       const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
       const pending = opened.filter(s => !done.has(String(s)));
       if (pending.length > 0 && done.size === 0) {
-        // Пользователь открывал шаг, но не вернулся чтобы подтвердить
         const banner = document.getElementById('wbBanner');
         const stepNum = pending[0];
         document.getElementById('wbTitle').textContent = `Нажми «Я выполнил» на шаге ${stepNum}`;
@@ -1518,6 +1566,7 @@
     if (e.key === 'Escape') {
       closeModal();
       closeStepModal();
+      // Reg popup не закрываем по Escape — обязательная форма
     }
   });
 </script>
