@@ -305,6 +305,100 @@
       line-height: 1.4;
     }
 
+    /* ===== STEP PREVIEW ===== */
+    .sa-preview {
+      margin-bottom: 18px;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1.5px solid var(--border);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    }
+    .sa-preview-inner { background: white; }
+    .sa-preview-bar {
+      background: #F3F4F6;
+      padding: 7px 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sa-preview-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .sa-preview-url {
+      flex: 1;
+      background: white;
+      border-radius: 4px;
+      padding: 3px 8px;
+      font-size: 11px;
+      color: #6B7280;
+      font-weight: 600;
+      margin-left: 4px;
+      border: 1px solid #E5E7EB;
+    }
+    .sa-preview-body {
+      padding: 14px 14px 10px;
+      background: #FAFAFA;
+      min-height: 90px;
+    }
+    .sa-preview-skeleton {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sk-line {
+      height: 10px;
+      border-radius: 5px;
+      background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+    }
+    .sk-line.wide { width: 90%; }
+    .sk-line.medium { width: 65%; }
+    .sk-line.short { width: 45%; }
+    .sk-block {
+      height: 48px;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #E5E7EB 25%, #F3F4F6 50%, #E5E7EB 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.5s infinite;
+      margin: 4px 0;
+    }
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* ===== FAKE VERIFY ===== */
+    .sa-verify {
+      background: #F0FDF4;
+      border: 1.5px solid #86EFAC;
+      border-radius: 10px;
+      padding: 12px 16px;
+      margin-bottom: 14px;
+    }
+    .sa-verify-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: #15803D;
+      margin-bottom: 8px;
+    }
+    .sa-verify-bar {
+      height: 6px;
+      background: #DCFCE7;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+    .sa-verify-fill {
+      height: 100%;
+      width: 0%;
+      background: #22C55E;
+      border-radius: 3px;
+      transition: width 0.1s linear;
+    }
+
     @media (max-width: 600px) {
       .wb-banner { margin: 14px 16px -8px; padding: 14px 16px; gap: 12px; }
       .wb-icon { width: 40px; height: 40px; font-size: 18px; }
@@ -1090,7 +1184,9 @@
 
 <!-- WELCOME-BACK BANNER -->
 <div class="wb-banner" id="wbBanner">
-  <div class="wb-icon">👋</div>
+  <div class="wb-icon">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+  </div>
   <div class="wb-text">
     <div class="wb-title" id="wbTitle">С возвращением!</div>
     <div class="wb-sub" id="wbSub">Ты на шаге 0 из 5 — продолжим?</div>
@@ -1291,18 +1387,50 @@
     <div class="sa-step-tag" id="saTag">Шаг 01 · +1 бонус</div>
     <div class="sa-title" id="saTitle">Заголовок</div>
     <div class="sa-desc" id="saDesc">Описание</div>
+
+    <!-- PREVIEW SCREENSHOT -->
+    <div class="sa-preview" id="saPreview">
+      <div class="sa-preview-inner">
+        <div class="sa-preview-bar">
+          <div class="sa-preview-dot" style="background:#FF5F57"></div>
+          <div class="sa-preview-dot" style="background:#FFBD2E"></div>
+          <div class="sa-preview-dot" style="background:#28CA41"></div>
+          <div class="sa-preview-url" id="saPreviewUrl">onlinecollege-1.ru</div>
+        </div>
+        <div class="sa-preview-body" id="saPreviewBody">
+          <div class="sa-preview-skeleton">
+            <div class="sk-line wide"></div>
+            <div class="sk-line medium"></div>
+            <div class="sk-line short"></div>
+            <div class="sk-block"></div>
+            <div class="sk-line wide"></div>
+            <div class="sk-line medium"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="sa-instructions" id="saInstructions">
       <strong>Что делать:</strong> <span id="saInstrText">…</span>
     </div>
+
+    <!-- FAKE VERIFY BLOCK (hidden by default) -->
+    <div class="sa-verify" id="saVerify" style="display:none;">
+      <div class="sa-verify-label" id="saVerifyLabel">Проверяем выполнение...</div>
+      <div class="sa-verify-bar">
+        <div class="sa-verify-fill" id="saVerifyFill"></div>
+      </div>
+    </div>
+
     <div class="sa-actions">
       <a class="sa-btn-primary" id="saOpenBtn" href="#" target="_blank" rel="noopener" onclick="onStepOpened()">
         Открыть в новой вкладке
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
       </a>
-      <button class="sa-btn-done" id="saDoneBtn" onclick="confirmStepDone()">
+      <button class="sa-btn-done" id="saDoneBtn" onclick="startVerify()">
         Я выполнил — засчитать бонус
       </button>
-      <button class="sa-btn-secondary" onclick="closeStepModal()">Отмена</button>
+      <button class="sa-btn-secondary" id="saCancelBtn" onclick="closeStepModal()">Отмена</button>
     </div>
     <div class="sa-tip" id="saTip">
       Эта вкладка останется открытой — вернись и нажми «Я выполнил»
@@ -1480,6 +1608,12 @@
     // Кнопка "Я выполнил" пока скрыта — появится после клика на "Открыть"
     document.getElementById('saDoneBtn').classList.remove('visible');
     document.getElementById('saTip').textContent = 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
+    // Обновить preview URL
+    try { document.getElementById('saPreviewUrl').textContent = new URL(cfg.url).hostname; } catch(e) {}
+    // Сбросить verify блок
+    document.getElementById('saVerify').style.display = 'none';
+    document.getElementById('saDoneBtn').style.display = '';
+    document.getElementById('saCancelBtn').style.display = '';
 
     document.getElementById('saOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1509,6 +1643,41 @@
       }
     } catch(e) {}
     // Не закрываем модалку — пусть остаётся, чтобы было куда вернуться
+  }
+
+  // Фейковая проверка выполнения
+  function startVerify() {
+    if (!currentStep) return;
+    const verifyEl = document.getElementById('saVerify');
+    const fillEl = document.getElementById('saVerifyFill');
+    const labelEl = document.getElementById('saVerifyLabel');
+    const doneBtn = document.getElementById('saDoneBtn');
+    const cancelBtn = document.getElementById('saCancelBtn');
+
+    // Скрываем кнопки, показываем прогресс
+    doneBtn.style.display = 'none';
+    cancelBtn.style.display = 'none';
+    verifyEl.style.display = 'block';
+    fillEl.style.width = '0%';
+    fillEl.style.transition = 'none';
+
+    const steps = [
+      { pct: 30, label: 'Проверяем активность...', delay: 0 },
+      { pct: 65, label: 'Анализируем данные...', delay: 600 },
+      { pct: 90, label: 'Почти готово...', delay: 1200 },
+      { pct: 100, label: 'Бонус засчитан! +1 звезда ⭐', delay: 1800 },
+    ];
+
+    steps.forEach(({ pct, label, delay }) => {
+      setTimeout(() => {
+        fillEl.style.transition = 'width 0.5s ease';
+        fillEl.style.width = pct + '%';
+        labelEl.textContent = label;
+        if (pct === 100) {
+          setTimeout(() => confirmStepDone(), 500);
+        }
+      }, delay);
+    });
   }
 
   // Подтвердить выполнение шага
