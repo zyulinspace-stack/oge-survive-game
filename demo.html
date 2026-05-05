@@ -399,6 +399,59 @@
       transition: width 0.1s linear;
     }
 
+    /* ===== STAR RATING ===== */
+    .sa-rating {
+      background: #FFFBEB;
+      border: 1.5px solid #FDE68A;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .sa-rating-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .sa-stars {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .sa-star {
+      font-size: 32px;
+      color: #D1D5DB;
+      cursor: pointer;
+      transition: color 0.15s, transform 0.15s;
+      line-height: 1;
+    }
+    .sa-star:hover, .sa-star.active { color: #F59E0B; transform: scale(1.15); }
+    .sa-rating-hint {
+      font-size: 12px;
+      color: var(--gray);
+      font-weight: 600;
+    }
+
+    /* ===== TRUST BLOCK ===== */
+    .sa-trust {
+      margin-bottom: 16px;
+    }
+    .sa-trust-inner {
+      background: #F0FDFA;
+      border: 1.5px solid #99F6E4;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+
     @media (max-width: 600px) {
       .wb-banner { margin: 14px 16px -8px; padding: 14px 16px; gap: 12px; }
       .wb-icon { width: 40px; height: 40px; font-size: 18px; }
@@ -1414,6 +1467,27 @@
       <strong>Что делать:</strong> <span id="saInstrText">…</span>
     </div>
 
+    <!-- RATING BLOCK (шаг 2) -->
+    <div class="sa-rating" id="saRating" style="display:none;">
+      <div class="sa-rating-label">Оцени платформу:</div>
+      <div class="sa-stars">
+        <span class="sa-star" data-val="1" onclick="setRating(1)">&#9733;</span>
+        <span class="sa-star" data-val="2" onclick="setRating(2)">&#9733;</span>
+        <span class="sa-star" data-val="3" onclick="setRating(3)">&#9733;</span>
+        <span class="sa-star" data-val="4" onclick="setRating(4)">&#9733;</span>
+        <span class="sa-star" data-val="5" onclick="setRating(5)">&#9733;</span>
+      </div>
+      <div class="sa-rating-hint" id="saRatingHint">Нажми на звёзду</div>
+    </div>
+
+    <!-- TRUST BLOCK (шаг 5 — на веру) -->
+    <div class="sa-trust" id="saTrustBlock" style="display:none;">
+      <div class="sa-trust-inner">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0AB4A0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13.5a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.69h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 10.1a16 16 0 0 0 6 6l.91-1.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.5 16.5z"/></svg>
+        <span>Напиши нашему куратору в Telegram: <a href="https://t.me/onlinecollege1" target="_blank" style="color:var(--teal);font-weight:800;">@onlinecollege1</a></span>
+      </div>
+    </div>
+
     <!-- FAKE VERIFY BLOCK (hidden by default) -->
     <div class="sa-verify" id="saVerify" style="display:none;">
       <div class="sa-verify-label" id="saVerifyLabel">Проверяем выполнение...</div>
@@ -1550,6 +1624,25 @@
   let done = new Set();
   let toastTimer = null;
   let currentStep = null;
+  let selectedRating = 0;
+
+  const RATING_LABELS = ['', 'Плохо', 'Ниже среднего', 'Нормально', 'Хорошо', 'Отлично!'];
+
+  function setRating(val) {
+    selectedRating = val;
+    document.querySelectorAll('.sa-star').forEach(s => {
+      s.classList.toggle('active', parseInt(s.dataset.val) <= val);
+    });
+    document.getElementById('saRatingHint').textContent = RATING_LABELS[val];
+    // Показываем кнопку "Я выполнил"
+    document.getElementById('saDoneBtn').classList.add('visible');
+    // Отправляем оценку в Telegram
+    const name = localStorage.getItem('oc1_reg_name') || 'Аноним';
+    const phone = localStorage.getItem('oc1_reg_phone') || 'не указан';
+    const stars = '⭐'.repeat(val);
+    const text = encodeURIComponent(`⭐ Оценка платформы: ${stars} (${val}/5)\n\nИмя: ${name}\nТел.: ${phone}\n\nonlinecollege1.ru/demo`);
+    fetch(`https://api.telegram.org/bot8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM/sendMessage?chat_id=1342421992&text=${text}`).catch(() => {});
+  }
 
   // Конфигурация шагов: что делать, куда вести, как формулировать
   const STEPS = {
@@ -1557,31 +1650,33 @@
       title: 'Посмотри живую лекцию',
       desc: 'Подключись к ближайшей live-трансляции или открой запись прошлой лекции — почувствуй, как у нас проходят занятия.',
       instr: 'Открой расписание лекций, выбери любую и посмотри хотя бы 5–10 минут. Этого достаточно, чтобы понять формат и стиль преподавателей.',
-      url: 'https://onlinecollege-1.ru/#process'
+      url: 'https://onlinecollege-1.ru/study/dashboard'
     },
     2: {
       title: 'Оцени платформу',
-      desc: 'Зайди в личный кабинет, осмотрись: меню, материалы, личный профиль. Удобно ли всё устроено?',
-      instr: 'Походи по разделам платформы 2–3 минуты. Попробуй найти расписание, материалы курса и кнопку чата с куратором.',
-      url: 'https://onlinecollege-1.ru/#about'
+      desc: 'Посмотри на платформу и оцени — насколько удобно всё устроено? Твоя оценка поможет нам стать лучше.',
+      instr: 'Поставь оценку от 1 до 5 звёзд — насколько тебе понравилась платформа демо-доступа.',
+      url: null,
+      type: 'rating'
     },
     3: {
       title: 'Посмотри расписание',
       desc: 'Открой расписание занятий и проверь — впишется ли учёба в твой день. Когда лекции? Когда практика?',
       instr: 'Посмотри расписание на 1–2 недели вперёд. Прикинь, успеваешь ли ты в эти часы. Если что-то не подходит — это нормально, скажи куратору на шаге 5.',
-      url: 'https://onlinecollege-1.ru/#process'
+      url: 'https://onlinecollege-1.ru/study/schedule'
     },
     4: {
-      title: 'Загляни в раздел практики',
-      desc: 'Посмотри, какие реальные кейсы от Яндекса, Озона и других компаний студенты решают на практических занятиях.',
-      instr: 'Открой раздел практики и пробеги 2–3 кейса. Обрати внимание: задачи реальные, не учебные. Именно с такими ты будешь работать.',
-      url: 'https://onlinecollege-1.ru/#specialties'
+      title: 'Посмотри свой прогресс',
+      desc: 'Открой журнал успеваемости — посмотри, какие задания выполнены, какие оценки выставлены и что впереди.',
+      instr: 'Открой журнал и посмотри на свои оценки и выполненные работы. Посмотри, что запланировано на следующую неделю.',
+      url: 'https://onlinecollege-1.ru/study/journal'
     },
     5: {
       title: 'Напиши куратору',
       desc: 'Задай куратору любой вопрос о поступлении, программе или формате — оцени, насколько быстро и понятно отвечает живой человек.',
-      instr: 'Напиши в Telegram любой вопрос — про специальности, стоимость, диплом, что угодно. Куратор обычно отвечает в течение нескольких минут в рабочее время.',
-      url: 'https://t.me/onlinecollege1'
+      instr: 'Напиши нашему куратору любой вопрос — про специальности, стоимость, диплом, что угодно. Куратор обычно отвечает в течение нескольких минут в рабочее время.',
+      url: null,
+      type: 'trust'
     }
   };
 
@@ -1604,16 +1699,44 @@
     document.getElementById('saTitle').textContent = cfg.title;
     document.getElementById('saDesc').textContent = cfg.desc;
     document.getElementById('saInstrText').textContent = cfg.instr;
-    document.getElementById('saOpenBtn').href = cfg.url;
-    // Кнопка "Я выполнил" пока скрыта — появится после клика на "Открыть"
-    document.getElementById('saDoneBtn').classList.remove('visible');
-    document.getElementById('saTip').textContent = 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
     // Обновить preview URL
-    try { document.getElementById('saPreviewUrl').textContent = new URL(cfg.url).hostname; } catch(e) {}
+    try { document.getElementById('saPreviewUrl').textContent = cfg.url ? new URL(cfg.url).hostname : 'onlinecollege-1.ru'; } catch(e) {}
     // Сбросить verify блок
     document.getElementById('saVerify').style.display = 'none';
     document.getElementById('saDoneBtn').style.display = '';
     document.getElementById('saCancelBtn').style.display = '';
+
+    const openBtn = document.getElementById('saOpenBtn');
+    const ratingBlock = document.getElementById('saRating');
+    const trustBlock = document.getElementById('saTrustBlock');
+
+    // Сброс звёзд
+    document.querySelectorAll('.sa-star').forEach(s => s.classList.remove('active'));
+    selectedRating = 0;
+
+    if (cfg.type === 'rating') {
+      // Шаг 2: звёздочки, без кнопки Открыть
+      openBtn.style.display = 'none';
+      ratingBlock.style.display = 'block';
+      trustBlock.style.display = 'none';
+      document.getElementById('saDoneBtn').classList.remove('visible');
+      document.getElementById('saTip').textContent = 'Поставь оценку — и бонус будет засчитан';
+    } else if (cfg.type === 'trust') {
+      // Шаг 5: на веру, без ссылки
+      openBtn.style.display = 'none';
+      ratingBlock.style.display = 'none';
+      trustBlock.style.display = 'block';
+      document.getElementById('saDoneBtn').classList.add('visible');
+      document.getElementById('saTip').textContent = 'Напиши куратору и вернись — нажми «Я выполнил»';
+    } else {
+      // Обычный шаг со ссылкой
+      openBtn.href = cfg.url;
+      openBtn.style.display = '';
+      ratingBlock.style.display = 'none';
+      trustBlock.style.display = 'none';
+      document.getElementById('saDoneBtn').classList.remove('visible');
+      document.getElementById('saTip').textContent = 'Эта вкладка останется открытой — вернись и нажми «Я выполнил»';
+    }
 
     document.getElementById('saOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
@@ -1763,6 +1886,8 @@
 
   // Welcome-back banner logic
   function showWelcomeBack() {
+    // Если пользователь закрыл баннер — не показываем снова в эту сессию
+    if (sessionStorage.getItem('oc1_wb_closed')) return;
     const banner = document.getElementById('wbBanner');
     const count = done.size;
     let title, sub;
@@ -1809,6 +1934,7 @@
 
   function closeWb() {
     document.getElementById('wbBanner').classList.remove('show');
+    try { sessionStorage.setItem('oc1_wb_closed', '1'); } catch(e) {}
   }
 
   // ===== REGISTRATION POPUP =====
@@ -1877,7 +2003,7 @@
 
       const opened = JSON.parse(localStorage.getItem('oc1_demo_opened') || '[]');
       const pending = opened.filter(s => !done.has(String(s)));
-      if (pending.length > 0 && done.size === 0) {
+      if (pending.length > 0 && done.size === 0 && !sessionStorage.getItem('oc1_wb_closed')) {
         const banner = document.getElementById('wbBanner');
         const stepNum = pending[0];
         document.getElementById('wbTitle').textContent = `Нажми «Я выполнил» на шаге ${stepNum}`;
