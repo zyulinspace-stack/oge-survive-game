@@ -1079,14 +1079,14 @@
       .how-cards { grid-template-columns: 1fr; }
       footer { padding: 20px 16px; flex-direction: column; text-align: center; }
       .modal { padding: 28px 20px; }
-      .reg-modal { padding: 28px 20px; }
+      .name-modal { padding: 24px 18px; }
     }
 
-    /* ===== REGISTRATION POPUP ===== */
-    .reg-overlay {
+    /* ===== NAME POPUP ===== */
+    .name-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.6);
+      background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
       z-index: 600;
       display: flex;
@@ -1097,22 +1097,22 @@
       pointer-events: none;
       transition: opacity 0.3s;
     }
-    .reg-overlay.open {
+    .name-overlay.open {
       opacity: 1;
       pointer-events: auto;
     }
-    .reg-modal {
+    .name-modal {
       background: white;
       border-radius: 24px;
-      padding: 36px 32px 30px;
-      max-width: 420px;
+      padding: 32px 28px 28px;
+      max-width: 380px;
       width: 100%;
       position: relative;
       transform: scale(0.92) translateY(20px);
       transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
       box-shadow: 0 32px 80px rgba(0,0,0,0.25);
     }
-    .reg-overlay.open .reg-modal {
+    .name-overlay.open .name-modal {
       transform: scale(1) translateY(0);
     }
     .reg-badge {
@@ -1129,73 +1129,19 @@
       border-radius: 50px;
       margin-bottom: 14px;
     }
-    .reg-title {
-      font-size: 26px;
+    .name-modal h2 {
+      font-size: 22px;
       font-weight: 900;
       color: var(--dark);
-      line-height: 1.25;
-      margin-bottom: 8px;
+      line-height: 1.3;
+      margin-bottom: 6px;
     }
-    .reg-title span { color: var(--orange); }
-    .reg-sub {
-      font-size: 14px;
+    .name-modal h2 span { color: var(--orange); }
+    .name-modal p {
+      font-size: 13px;
       color: var(--gray);
       font-weight: 500;
-      line-height: 1.55;
-      margin-bottom: 20px;
-    }
-    .reg-perks {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 22px;
-    }
-    .reg-perk {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--dark);
-    }
-    .reg-perk-icon {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
-      background: var(--orange);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: 800;
-      flex-shrink: 0;
-    }
-    .reg-success {
-      text-align: center;
-      padding: 20px 0;
-    }
-    .reg-success .success-icon {
-      width: 56px;
-      height: 56px;
-      background: #D1FAE5;
-      color: #059669;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 24px;
-      margin: 0 auto 16px;
-    }
-    .reg-success h3 {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--dark);
-      margin-bottom: 8px;
-    }
-    .reg-success p {
-      font-size: 14px;
-      color: var(--gray);
+      line-height: 1.5;
       margin-bottom: 20px;
     }
   </style>
@@ -1558,43 +1504,23 @@
   </div>
 </div>
 
-<!-- REGISTRATION POPUP -->
-<div class="reg-overlay" id="regOverlay">
-  <div class="reg-modal">
-    <div style="display:flex;justify-content:center;margin-bottom:20px;">
-      <img src="/assets/logo.png" alt="Онлайн-колледж №1" style="height:44px;">
-    </div>
-    <div class="reg-badge">Демо-доступ</div>
-    <h2 class="reg-title">Зарегистрируйся,<br>чтобы <span>начать</span></h2>
-    <p class="reg-sub">Оставь имя и телефон — и сразу получишь доступ к 5 шагам знакомства с колледжем.</p>
-    <div class="reg-perks">
-      <div class="reg-perk"><div class="reg-perk-icon">1</div>5 шагов — 5 бонусов</div>
-      <div class="reg-perk"><div class="reg-perk-icon">2</div>Скидка на поступление за все шаги</div>
-      <div class="reg-perk"><div class="reg-perk-icon">3</div>Без обязательств — просто посмотри</div>
-    </div>
-    <!-- Form state -->
-    <form id="regForm" onsubmit="submitReg(event)">
+<!-- NAME POPUP -->
+<div class="name-overlay" id="nameOverlay">
+  <div class="name-modal">
+    <div class="reg-badge">Шаг 1 — Живая лекция</div>
+    <h2>Как тебя <span>зовут?</span></h2>
+    <p>Чтобы мы знали, кто проходит демо-доступ — напиши имя и фамилию.</p>
+    <form id="nameForm" onsubmit="submitName(event)">
       <div class="form-group">
-        <label for="regName">Как тебя зовут?</label>
-        <input type="text" id="regName" name="name" placeholder="Имя" required>
+        <label for="nameFirst">Имя</label>
+        <input type="text" id="nameFirst" placeholder="Например, Анна" required autocomplete="given-name">
       </div>
       <div class="form-group">
-        <label for="regPhone">Телефон</label>
-        <input type="tel" id="regPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
+        <label for="nameLast">Фамилия</label>
+        <input type="text" id="nameLast" placeholder="Например, Иванова" required autocomplete="family-name">
       </div>
-      <button type="submit" class="form-submit" id="regSubmitBtn">Начать демо-доступ →</button>
-      <p class="form-agree">
-        Нажимая кнопку, вы соглашаетесь на обработку
-        <a href="https://onlinecollege-1.ru/privacy" target="_blank">персональных данных</a>
-      </p>
+      <button type="submit" class="form-submit">Начать →</button>
     </form>
-    <!-- Success state -->
-    <div class="reg-success" id="regSuccess" style="display:none;">
-      <div class="success-icon">✓</div>
-      <h3>Добро пожаловать!</h3>
-      <p>Отлично! Начинай проходить шаги и собирай бонусы.</p>
-      <button class="form-submit" onclick="closeReg()">Начать →</button>
-    </div>
   </div>
 </div>
 
@@ -1636,11 +1562,10 @@
     // Показываем кнопку "Я выполнил"
     document.getElementById('saDoneBtn').classList.add('visible');
     // Отправляем оценку в Telegram
-    const name = localStorage.getItem('oc1_reg_name') || 'Аноним';
-    const phone = localStorage.getItem('oc1_reg_phone') || 'не указан';
-    const stars = '⭐'.repeat(val);
-    const text = encodeURIComponent(`⭐ Оценка платформы: ${stars} (${val}/5)\n\nИмя: ${name}\nТел.: ${phone}\n\nonlinecollege1.ru/demo`);
-    fetch(`https://api.telegram.org/bot8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM/sendMessage?chat_id=1342421992&text=${text}`).catch(() => {});
+    const uFirst = localStorage.getItem('oc1_user_first') || 'Аноним';
+    const uLast = localStorage.getItem('oc1_user_last') || '';
+    const rText = encodeURIComponent(`⭐ Оценка платформы: ${val}/5 (${RATING_LABELS[val]})\n👤 ${uFirst} ${uLast}\nonlinecollege1.ru/demo`);
+    fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${rText}`).catch(() => {});
   }
 
   // Конфигурация шагов: что делать, куда вести, как формулировать
@@ -1681,6 +1606,11 @@
 
   // Открыть модалку шага
   function openStepModal(stepNum) {
+    // Если шаг 1 и имя ещё не заполнено — спрашиваем имя/фамилию
+    if (stepNum === 1 && !localStorage.getItem('oc1_user_first')) {
+      openNamePopup(1);
+      return;
+    }
     // Если уже выполнен — спросим, отменить ли
     const card = document.querySelector(`[data-step="${stepNum}"]`);
     if (card && card.classList.contains('done')) {
@@ -1837,6 +1767,11 @@
       // Scroll to reward block
       setTimeout(() => rb.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
       showToast('🎉', 'Все бонусы собраны! Получи грант 60 000 ₽');
+      // Отправить отчёт в Telegram (один раз)
+      if (!localStorage.getItem('oc1_report_sent')) {
+        localStorage.setItem('oc1_report_sent', '1');
+        sendCompletionReport();
+      }
     } else {
       rb.classList.add('locked');
       rb.classList.remove('unlocked');
@@ -1846,15 +1781,18 @@
   }
 
   function openModal() {
-    // Если контакты уже есть — не спрашиваем повторно
-    const regName = localStorage.getItem('oc1_reg_name');
-    const regPhone = localStorage.getItem('oc1_reg_phone');
-    if (regName && regPhone) {
+    // Если имя уже есть — не спрашиваем повторно
+    const first = localStorage.getItem('oc1_user_first');
+    const last = localStorage.getItem('oc1_user_last');
+    if (first) {
       document.getElementById('modalForm').style.display = 'none';
       document.getElementById('modalSuccess').style.display = 'block';
-      // Отправить заявку в Telegram
-      const text = encodeURIComponent(`🎓 Грант 60 000 ₽ — заявка\n\n👤 Имя: ${regName}\n📱 Тел.: ${regPhone}\n\nonlinecollege1.ru/demo`);
-      fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`).catch(() => {});
+      // Отправить заявку на грант в Telegram
+      if (!localStorage.getItem('oc1_grant_sent')) {
+        localStorage.setItem('oc1_grant_sent', '1');
+        const text = encodeURIComponent(`🎓 Грант 60 000 ₽ — заявка\n\n👤 ${first} ${last || ''}\n\nonlinecollege1.ru/demo`);
+        fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`).catch(() => {});
+      }
     } else {
       document.getElementById('modalForm').style.display = 'block';
       document.getElementById('modalSuccess').style.display = 'none';
@@ -1878,13 +1816,19 @@
     const phone = document.getElementById('fphone').value.trim();
     const email = document.getElementById('femail').value.trim();
 
-    // Here you could send data to a backend/webhook
-    // For now, show success state
+    // Сохранить в localStorage
+    localStorage.setItem('oc1_user_first', name);
+    if (phone) localStorage.setItem('oc1_user_phone', phone);
+
+    // Отправить заявку на грант в Telegram
+    if (!localStorage.getItem('oc1_grant_sent')) {
+      localStorage.setItem('oc1_grant_sent', '1');
+      const text = encodeURIComponent(`🎓 Грант 60 000 ₽ — заявка\n\n👤 ${name}\n📱 ${phone}\n📧 ${email}\n\nonlinecollege1.ru/demo`);
+      fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`).catch(() => {});
+    }
+
     document.getElementById('modalForm').style.display = 'none';
     document.getElementById('modalSuccess').style.display = 'block';
-
-    // Optional: send to Telegram bot or webhook
-    // fetch('https://your-webhook.com', { method: 'POST', body: JSON.stringify({name, phone, email}) });
   }
 
   function showToast(icon, msg) {
@@ -1953,54 +1897,48 @@
   const TG_BOT = '8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM';
   const TG_CHAT = '1342421992';
 
-  function sendToTelegram(name, phone) {
-    const text = encodeURIComponent(
-      `🎓 Новая заявка с демо-доступа\n\n👤 Имя: ${name}\n📱 Телефон: ${phone}\n\n🌐 onlinecollege1.ru/demo`
-    );
-    fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`)
-      .catch(() => {});
-  }
+  // ===== NAME POPUP =====
+  let pendingStepAfterName = null;
 
-  function openReg() {
-    document.getElementById('regOverlay').classList.add('open');
+  function openNamePopup(afterStep) {
+    pendingStepAfterName = afterStep;
+    document.getElementById('nameOverlay').classList.add('open');
     document.body.style.overflow = 'hidden';
+    setTimeout(() => document.getElementById('nameFirst').focus(), 300);
   }
 
-  function closeReg() {
-    document.getElementById('regOverlay').classList.remove('open');
+  function closeNamePopup() {
+    document.getElementById('nameOverlay').classList.remove('open');
     document.body.style.overflow = '';
   }
 
-  function submitReg(e) {
+  function submitName(e) {
     e.preventDefault();
-    const name = document.getElementById('regName').value.trim();
-    const phone = document.getElementById('regPhone').value.trim();
-    if (!name || name.length < 2) {
-      document.getElementById('regName').focus();
-      return;
+    const first = document.getElementById('nameFirst').value.trim();
+    const last = document.getElementById('nameLast').value.trim();
+    if (!first || first.length < 2) { document.getElementById('nameFirst').focus(); return; }
+    if (!last || last.length < 2) { document.getElementById('nameLast').focus(); return; }
+    localStorage.setItem('oc1_user_first', first);
+    localStorage.setItem('oc1_user_last', last);
+    closeNamePopup();
+    // Открыть модалку шага, который был нажать
+    if (pendingStepAfterName) {
+      setTimeout(() => openStepModal(pendingStepAfterName), 200);
+      pendingStepAfterName = null;
     }
-    if (phone.replace(/\D/g,'').length < 10) {
-      document.getElementById('regPhone').focus();
-      return;
-    }
-    const btn = document.getElementById('regSubmitBtn');
-    btn.disabled = true;
-    btn.textContent = 'Отправляем...';
+  }
 
-    sendToTelegram(name, phone);
-    localStorage.setItem('oc1_reg', JSON.stringify({ name, phone, ts: Date.now() }));
-
-    document.getElementById('regForm').style.display = 'none';
-    document.getElementById('regSuccess').style.display = 'block';
+  function sendCompletionReport() {
+    const first = localStorage.getItem('oc1_user_first') || 'Аноним';
+    const last = localStorage.getItem('oc1_user_last') || '';
+    const text = encodeURIComponent(
+      `🎓 Демо-доступ завершён!\n\n👤 ${first} ${last}\n✅ Пройдено все 5 шагов\n\nonlinecollege1.ru/demo`
+    );
+    fetch(`https://api.telegram.org/bot${TG_BOT}/sendMessage?chat_id=${TG_CHAT}&text=${text}`).catch(() => {});
   }
 
   // ===== RESTORE SAVED PROGRESS =====
   window.addEventListener('DOMContentLoaded', () => {
-    // Показываем попап регистрации если не зарегистрирован
-    const regData = localStorage.getItem('oc1_reg');
-    if (!regData) {
-      setTimeout(openReg, 600);
-    }
 
     try {
       const saved = JSON.parse(localStorage.getItem('oc1_demo') || '[]');
@@ -2032,7 +1970,7 @@
     if (e.key === 'Escape') {
       closeModal();
       closeStepModal();
-      // Reg popup не закрываем по Escape — обязательная форма
+      closeNamePopup();
     }
   });
 </script>
