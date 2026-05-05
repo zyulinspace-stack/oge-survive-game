@@ -932,6 +932,122 @@
       .how-cards { grid-template-columns: 1fr; }
       footer { padding: 20px 16px; flex-direction: column; text-align: center; }
       .modal { padding: 28px 20px; }
+      .reg-modal { padding: 28px 20px; }
+    }
+
+    /* ===== REGISTRATION POPUP ===== */
+    .reg-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      z-index: 600;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+    .reg-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .reg-modal {
+      background: white;
+      border-radius: 24px;
+      padding: 36px 32px 30px;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+      transform: scale(0.92) translateY(20px);
+      transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: 0 32px 80px rgba(0,0,0,0.25);
+    }
+    .reg-overlay.open .reg-modal {
+      transform: scale(1) translateY(0);
+    }
+    .reg-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF7ED;
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .reg-title {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.25;
+      margin-bottom: 8px;
+    }
+    .reg-title span { color: var(--orange); }
+    .reg-sub {
+      font-size: 14px;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+    .reg-perks {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 22px;
+    }
+    .reg-perk {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+    }
+    .reg-perk-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: #C2F5FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+    .reg-success {
+      text-align: center;
+      padding: 20px 0;
+    }
+    .reg-success .success-icon {
+      width: 56px;
+      height: 56px;
+      background: #D1FAE5;
+      color: #059669;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 16px;
+    }
+    .reg-success h3 {
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 8px;
+    }
+    .reg-success p {
+      font-size: 14px;
+      color: var(--gray);
+      margin-bottom: 20px;
     }
   </style>
 </head>
@@ -1235,6 +1351,46 @@
       <a href="https://onlinecollege-1.ru/" class="btn-orange" style="display:inline-block;text-align:center">
         Вернуться на сайт
       </a>
+    </div>
+  </div>
+</div>
+
+<!-- REGISTRATION POPUP -->
+<div class="reg-overlay" id="regOverlay">
+  <div class="reg-modal">
+    <div style="display:flex;justify-content:center;margin-bottom:20px;">
+      <img src="/assets/logo.png" alt="Онлайн-колледж №1" style="height:44px;">
+    </div>
+    <div class="reg-badge">🎓 Демо-доступ</div>
+    <h2 class="reg-title">Зарегистрируйся,<br>чтобы <span>начать</span></h2>
+    <p class="reg-sub">Оставь имя и телефон — и сразу получишь доступ к 5 шагам знакомства с колледжем.</p>
+    <div class="reg-perks">
+      <div class="reg-perk"><div class="reg-perk-icon">🎯</div>5 шагов — 5 бонусов</div>
+      <div class="reg-perk"><div class="reg-perk-icon">🎁</div>Скидка на поступление за все шаги</div>
+      <div class="reg-perk"><div class="reg-perk-icon">⚡</div>Без обязательств — просто посмотри</div>
+    </div>
+    <!-- Form state -->
+    <form id="regForm" onsubmit="submitReg(event)">
+      <div class="form-group">
+        <label for="regName">Как тебя зовут?</label>
+        <input type="text" id="regName" name="name" placeholder="Имя" required>
+      </div>
+      <div class="form-group">
+        <label for="regPhone">Телефон</label>
+        <input type="tel" id="regPhone" name="phone" placeholder="+7 (___) ___-__-__" required>
+      </div>
+      <button type="submit" class="form-submit" id="regSubmitBtn">Начать демо-доступ →</button>
+      <p class="form-agree">
+        Нажимая кнопку, вы соглашаетесь на обработку
+        <a href="https://onlinecollege-1.ru/privacy" target="_blank">персональных данных</a>
+      </p>
+    </form>
+    <!-- Success state -->
+    <div class="reg-success" id="regSuccess" style="display:none;">
+      <div class="success-icon">✓</div>
+      <h3>Добро пожаловать!</h3>
+      <p>Отлично! Начинай проходить шаги и собирай бонусы.</p>
+      <button class="form-submit" onclick="closeReg()">Начать →</button>
     </div>
   </div>
 </div>
