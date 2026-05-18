@@ -8,6 +8,8 @@
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/demo", "dest": "/demo.html" },
     { "src": "/demo.html", "dest": "/demo.html" },
+    { "src": "/game", "dest": "/game.html" },
+    { "src": "/game.html", "dest": "/game.html" },
     {
       "src": "/things/(.*)",
       "dest": "https://stranger-quiz.vercel.app/$1"

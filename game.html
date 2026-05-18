@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Выживи до ОГЭ — Онлайн-колледж №1</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --orange:#FB8023;--green:#2ECC71;--purple:#A855F7;
+  --teal:#14B8A6;--blue:#3B82F6;--dark:#1E1E1E;
+  --gray:#6B7280;--lgray:#E5E7EB;--lgray2:#F3F4F6;
+  --red:#EF4444;--yellow:#F59E0B;
+  --grad1:#00C9A7;--grad2:#00B4D8;
+}
+body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;width:100vw;height:100vh;display:flex;flex-direction:column;}
+
+/* ── NAVBAR ── */
+.navbar{height:60px;background:#fff;border-bottom:2px solid var(--lgray);display:flex;align-items:center;padding:0 28px;gap:0;flex-shrink:0;z-index:10;}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer;}
+.nav-logo-img{height:46px;width:auto;display:block;}
+.nav-menu{display:flex;gap:22px;margin-left:36px;flex:1;}
+.nav-menu a{text-decoration:none;color:var(--dark);font-size:13px;font-weight:600;transition:color .2s;}
+.nav-menu a:hover{color:var(--orange);}
+.nav-cta{background:var(--orange);color:#fff;border:none;border-radius:22px;padding:9px 22px;font-size:13px;font-weight:700;cursor:pointer;text-decoration:none;transition:transform .15s,box-shadow .15s;}
+.nav-cta:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(251,128,35,.4);}
+
+/* ── SCREENS ── */
+.screen{display:none;flex:1;overflow:hidden;flex-direction:column;align-items:center;justify-content:center;}
+.screen.active{display:flex;}
+
+/* ── START ── */
+#startScreen{background:linear-gradient(135deg,#f0fdf4 0%,#faf5ff 60%,#eff6ff 100%);position:relative;overflow:hidden;}
+#startScreen::before{content:'';position:absolute;top:-80px;right:-80px;width:500px;height:500px;background:rgba(168,85,247,.07);border-radius:60px;transform:rotate(20deg);}
+#startScreen::after{content:'';position:absolute;bottom:-60px;right:40px;width:340px;height:340px;background:rgba(46,204,113,.08);border-radius:50%;}
+.start-inner{display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center;max-width:1100px;width:100%;padding:0 32px;position:relative;z-index:1;}
+.start-tag{display:inline-flex;align-items:center;gap:6px;background:var(--purple);color:#fff;border-radius:20px;padding:5px 16px;font-size:12px;font-weight:700;margin-bottom:18px;}
+.start-title{font-size:clamp(44px,5vw,80px);font-weight:900;line-height:1.05;color:var(--dark);margin-bottom:14px;}
+.start-title .row2{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.badge{display:inline-block;border-radius:14px;padding:2px 18px;font-size:clamp(40px,4.5vw,74px);font-weight:900;line-height:1.15;}
+.bg-green{background:var(--green);color:#fff;}
+.bg-orange{background:var(--orange);color:#fff;}
+.start-sub{font-size:16px;color:var(--gray);font-weight:600;margin-bottom:20px;line-height:1.6;}
+
+/* Difficulty selector */
+.diff-label{font-size:13px;font-weight:700;color:var(--gray);margin-bottom:8px;}
+.diff-btns{display:flex;gap:8px;margin-bottom:20px;}
+.diff-btn{border:2.5px solid var(--lgray);background:#fff;border-radius:14px;padding:8px 18px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;color:var(--dark);}
+.diff-btn.active{border-color:var(--orange);background:var(--orange);color:#fff;}
+.diff-btn:hover:not(.active){border-color:var(--orange);color:var(--orange);}
+
+.start-btns{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:32px;}
+.btn-play{background:var(--orange);color:#fff;border:none;border-radius:22px;padding:14px 38px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(251,128,35,.35);transition:transform .15s,box-shadow .15s;}
+.btn-play:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(251,128,35,.5);}
+.btn-how{background:transparent;color:var(--green);border:2.5px solid var(--green);border-radius:22px;padding:14px 28px;font-size:16px;font-weight:700;cursor:pointer;transition:background .2s,color .2s;}
+.btn-how:hover{background:var(--green);color:#fff;}
+.start-stats{display:flex;gap:28px;padding-top:20px;border-top:1px solid var(--lgray);}
+.stat-val{font-size:20px;font-weight:800;}
+.stat-lbl{font-size:12px;color:var(--gray);font-weight:600;}
+
+/* Превью-арена */
+.preview-arena{width:100%;max-width:480px;background:linear-gradient(180deg,#bfdbfe 0%,#ddd6fe 100%);border-radius:24px;height:360px;position:relative;overflow:hidden;box-shadow:0 16px 48px rgba(0,0,0,.12);cursor:pointer;}
+.pa-floor{position:absolute;bottom:0;left:0;right:0;height:72px;background:linear-gradient(180deg,#a7f3d0,#6ee7b7);border-top:3px solid #34d399;}
+.pa-char{position:absolute;bottom:72px;left:60px;width:60px;height:80px;animation:idleBob 1s ease-in-out infinite alternate;image-rendering:pixelated;}
+@keyframes idleBob{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+.pa-obs{position:absolute;bottom:72px;animation:obsSlide linear infinite;}
+@keyframes obsSlide{from{left:110%}to{left:-80px}}
+.pa-book{width:52px;height:68px;background:var(--red);border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(0,0,0,.2);position:relative;overflow:hidden;}
+.pa-book::before{content:'';position:absolute;left:0;top:0;width:9px;height:100%;background:rgba(0,0,0,0.2);border-radius:6px 0 0 6px;}
+.pa-book span{background:rgba(255,255,255,0.92);color:#1a1a2e;font-size:9px;font-weight:800;text-align:center;border-radius:3px;padding:2px 3px;line-height:1.3;margin-left:4px;}
+.pa-paper{width:50px;height:60px;background:#fff;border-radius:6px;border:3px solid var(--red);display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:3px 3px 0 rgba(0,0,0,.1);}
+.pa-paper .grade{font-size:28px;font-weight:900;color:var(--red);}
+.pa-paper .glbl{font-size:8px;color:var(--gray);font-weight:700;}
+.pa-star{position:absolute;width:34px;height:34px;background:var(--yellow);clip-path:polygon(50% 0%,61% 35%,98% 35%,68% 57%,79% 91%,50% 70%,21% 91%,32% 57%,2% 35%,39% 35%);animation:starFloat linear infinite;}
+@keyframes starFloat{0%{left:110%;bottom:160px}50%{bottom:200px}100%{left:-50px;bottom:160px}}
+.pa-hint{position:absolute;bottom:86px;right:14px;background:rgba(255,255,255,.92);border-radius:12px;padding:8px 14px;font-size:12px;font-weight:700;color:var(--dark);box-shadow:0 4px 12px rgba(0,0,0,.1);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.04)}}
+.key-badge{display:inline-block;background:var(--dark);color:#fff;border-radius:5px;padding:1px 7px;font-size:11px;margin:0 2px;}
+.pa-click-hint{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(251,128,35,.9);color:#fff;border-radius:16px;padding:10px 20px;font-size:14px;font-weight:800;pointer-events:none;opacity:0;transition:opacity .3s;}
+.preview-arena:hover .pa-click-hint{opacity:1;}
+
+/* ── GAME ── */
+#gameScreen{background:#000;position:relative;}
+#gameCanvas{display:block;}
+.game-hud{position:absolute;top:0;left:0;right:0;height:54px;background:rgba(255,255,255,.97);border-bottom:2px solid var(--green);display:flex;align-items:center;padding:0 14px;gap:10px;z-index:5;}
+.hud-logo{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.hud-logo-img{height:36px;width:auto;display:block;}
+.hud-box{background:var(--lgray2);border-radius:10px;padding:4px 12px;display:flex;flex-direction:column;align-items:flex-start;min-width:72px;}
+.hud-lbl{font-size:9px;color:var(--gray);font-weight:700;text-transform:uppercase;}
+.hud-val{font-size:17px;font-weight:800;line-height:1.1;}
+.hud-lives{display:flex;gap:3px;align-items:center;}
+.hud-heart{font-size:18px;}
+.hud-progress-wrap{flex:1;background:var(--lgray2);border-radius:10px;padding:4px 12px;min-width:100px;}
+.hud-progress-bar{height:8px;background:var(--lgray);border-radius:4px;margin-top:4px;}
+.hud-progress-fill{height:100%;background:var(--green);border-radius:4px;transition:width .3s;}
+.hud-level-badge{background:var(--purple);color:#fff;border-radius:8px;padding:2px 8px;font-size:10px;font-weight:800;margin-top:2px;}
+.hud-timer{background:var(--orange);color:#fff;border-radius:10px;padding:6px 16px;font-size:19px;font-weight:800;}
+.hud-pause{background:var(--lgray2);border:none;border-radius:10px;padding:6px 12px;font-size:17px;cursor:pointer;font-weight:700;color:var(--dark);}
+
+/* ── QUIZ POPUP (in-game OGE question) ── */
+.quiz-popup{display:none;position:absolute;inset:0;z-index:25;background:rgba(0,0,0,.7);align-items:center;justify-content:center;}
+.quiz-popup.show{display:flex;}
+.quiz-box{background:#fff;border-radius:24px;padding:32px 36px;max-width:480px;width:90%;animation:popIn .3s ease;}
+.quiz-timer-bar{height:6px;background:var(--lgray);border-radius:3px;margin-bottom:16px;}
+.quiz-timer-fill{height:100%;background:var(--orange);border-radius:3px;transition:width .1s linear;}
+.quiz-subject{display:inline-block;background:var(--purple);color:#fff;border-radius:12px;padding:3px 12px;font-size:11px;font-weight:700;margin-bottom:10px;}
+.quiz-q{font-size:18px;font-weight:800;color:var(--dark);margin-bottom:18px;line-height:1.4;}
+.quiz-opts{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{border:2px solid var(--lgray);background:#fff;border-radius:12px;padding:11px 16px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s;text-align:left;}
+.quiz-opt:hover{border-color:var(--orange);background:#fff8f3;}
+.quiz-opt.correct{border-color:var(--green);background:#f0fdf4;color:var(--green);}
+.quiz-opt.wrong{border-color:var(--red);background:#fef2f2;color:var(--red);}
+.quiz-reward{text-align:center;margin-top:14px;font-size:15px;font-weight:800;color:var(--green);display:none;}
+
+/* ── OVERLAYS ── */
+.overlay{display:none;position:absolute;inset:0;z-index:20;background:rgba(0,0,0,.6);align-items:center;justify-content:center;}
+.overlay.show{display:flex;}
+.overlay-box{background:#fff;border-radius:28px;padding:40px 48px;max-width:440px;width:90%;text-align:center;animation:popIn .3s ease;}
+@keyframes popIn{from{transform:scale(.8);opacity:0}to{transform:scale(1);opacity:1}}
+.overlay-box h2{font-size:28px;font-weight:900;color:var(--dark);margin-bottom:8px;}
+.overlay-box p{font-size:15px;color:var(--gray);margin-bottom:28px;}
+.ov-btn{width:100%;border:none;border-radius:18px;padding:14px;font-size:17px;font-weight:800;cursor:pointer;margin-bottom:10px;transition:transform .15s;}
+.ov-btn:hover{transform:translateY(-2px);}
+.ov-primary{background:var(--orange);color:#fff;box-shadow:0 4px 16px rgba(251,128,35,.35);}
+.ov-secondary{background:var(--lgray2);color:var(--dark);}
+
+/* Level up flash */
+.level-flash{position:absolute;inset:0;background:rgba(251,128,35,.18);z-index:15;pointer-events:none;opacity:0;transition:opacity .3s;}
+.level-flash.show{opacity:1;}
+
+/* ── TEST SCREEN ── */
+#testScreen{background:linear-gradient(135deg,var(--grad1) 0%,var(--grad2) 100%);overflow-y:auto;}
+.test-wrap{max-width:560px;width:100%;padding:24px 20px;}
+.test-progress-bar{height:8px;background:rgba(255,255,255,.3);border-radius:4px;margin-bottom:6px;}
+.test-progress-fill{height:100%;background:var(--orange);border-radius:4px;transition:width .4s;}
+.test-progress-label{font-size:13px;font-weight:700;color:rgba(255,255,255,.9);margin-bottom:20px;display:flex;justify-content:space-between;}
+.test-card{background:#fff;border-radius:24px;padding:28px 28px 24px;box-shadow:0 8px 32px rgba(0,0,0,.12);}
+.test-tag{display:inline-block;background:var(--teal);color:#fff;border-radius:20px;padding:4px 14px;font-size:11px;font-weight:700;margin-bottom:14px;}
+.test-question{font-size:20px;font-weight:800;color:var(--dark);margin-bottom:20px;line-height:1.35;}
+.test-options{display:flex;flex-direction:column;gap:10px;}
+.test-option{display:flex;align-items:center;gap:12px;padding:13px 16px;border:2px solid var(--lgray);border-radius:14px;cursor:pointer;transition:border-color .2s,background .2s;font-size:15px;font-weight:600;color:var(--dark);}
+.test-option:hover{border-color:var(--orange);background:#fff8f3;}
+.test-option.selected{border-color:var(--orange);background:#fff3e8;}
+.test-option .opt-letter{width:30px;height:30px;border-radius:8px;background:var(--lgray2);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex-shrink:0;transition:background .2s,color .2s;}
+.test-option.selected .opt-letter{background:var(--orange);color:#fff;}
+.test-nav{display:flex;justify-content:space-between;align-items:center;margin-top:22px;}
+.test-btn-back{background:transparent;color:rgba(255,255,255,.85);border:2px solid rgba(255,255,255,.5);border-radius:16px;padding:10px 22px;font-size:15px;font-weight:700;cursor:pointer;transition:background .2s;}
+.test-btn-back:hover{background:rgba(255,255,255,.15);}
+.test-btn-next{background:var(--orange);color:#fff;border:none;border-radius:16px;padding:12px 28px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(251,128,35,.4);transition:transform .15s,box-shadow .15s;display:flex;align-items:center;gap:6px;}
+.test-btn-next:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(251,128,35,.5);}
+.test-btn-next:disabled{background:var(--lgray);color:var(--gray);box-shadow:none;cursor:not-allowed;transform:none;}
+.test-score-badge{background:rgba(255,255,255,.2);color:#fff;border-radius:12px;padding:6px 14px;font-size:13px;font-weight:700;}
+
+/* ── END SCREEN ── */
+#endScreen{background:linear-gradient(135deg,#faf5ff 0%,#f0fdf4 100%);overflow-y:auto;}
+.end-inner{max-width:640px;width:100%;text-align:center;padding:28px 20px;}
+.end-score-badge{display:inline-flex;align-items:center;gap:8px;background:var(--yellow);color:#fff;border-radius:20px;padding:8px 24px;font-size:14px;font-weight:800;margin-bottom:20px;}
+.end-title{font-size:clamp(26px,4vw,44px);font-weight:900;color:var(--dark);margin-bottom:8px;}
+.end-sub{font-size:15px;color:var(--gray);margin-bottom:24px;}
+.result-card{background:#fff;border-radius:24px;padding:26px 28px;margin-bottom:20px;box-shadow:0 8px 32px rgba(0,0,0,.08);text-align:left;}
+.result-card h3{font-size:17px;font-weight:800;color:var(--dark);margin-bottom:18px;text-align:center;}
+.prof-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.prof-icon{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.prof-info{flex:1;}
+.prof-name{font-size:14px;font-weight:700;color:var(--dark);}
+.prof-bar-wrap{height:8px;background:var(--lgray);border-radius:4px;margin-top:4px;}
+.prof-bar{height:100%;border-radius:4px;transition:width 1.2s ease;}
+.prof-pct{font-size:14px;font-weight:800;margin-left:auto;flex-shrink:0;min-width:38px;text-align:right;}
+.end-cta{background:var(--orange);color:#fff;border:none;border-radius:22px;padding:16px 40px;font-size:17px;font-weight:800;cursor:pointer;box-shadow:0 4px 18px rgba(251,128,35,.35);transition:transform .15s,box-shadow .15s;margin-bottom:12px;width:100%;}
+.end-cta:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(251,128,35,.5);}
+.end-replay{background:transparent;color:var(--purple);border:2px solid var(--purple);border-radius:22px;padding:14px 40px;font-size:15px;font-weight:700;cursor:pointer;width:100%;transition:background .2s,color .2s;}
+.end-replay:hover{background:var(--purple);color:#fff;}
+
+/* ── HOW-TO MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.5);align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:#fff;border-radius:28px;padding:38px 42px;max-width:500px;width:90%;position:relative;animation:popIn .3s ease;}
+.modal h2{font-size:24px;font-weight:900;color:var(--dark);margin-bottom:20px;}
+.modal-close{position:absolute;top:14px;right:18px;background:var(--lgray2);border:none;border-radius:50%;width:34px;height:34px;font-size:16px;cursor:pointer;}
+.how-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:16px;}
+.how-num{width:32px;height:32px;border-radius:50%;background:var(--purple);color:#fff;font-size:14px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.how-text{font-size:14px;font-weight:600;color:var(--dark);line-height:1.5;}
+.how-text span{color:var(--gray);font-weight:400;font-size:13px;display:block;}
+.modal-cta{width:100%;margin-top:22px;background:var(--orange);color:#fff;border:none;border-radius:18px;padding:14px;font-size:17px;font-weight:800;cursor:pointer;}
+
+@media(max-width:700px){
+  .start-inner{grid-template-columns:1fr;}
+  .preview-arena{height:240px;}
+  .nav-menu{display:none;}
+  .hud-box:nth-child(4){display:none;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="#" class="nav-logo" id="navLogo">
+    <img src="logo.png" alt="Онлайн Колледж №1" class="nav-logo-img">
+  </a>
+  <nav class="nav-menu">
+    <a href="#">Специальности</a>
+    <a href="#">О колледже</a>
+    <a href="#">Учебный процесс</a>
+    <a href="#">Стоимость</a>
+  </nav>
+  <a href="https://onlinecollege-1.ru/" target="_blank" class="nav-cta">Начать бесплатно</a>
+</nav>
+
+<!-- ══ START SCREEN ══ -->
+<div class="screen active" id="startScreen">
+  <div class="start-inner">
+    <div>
+      <div class="start-tag">🎮 МИНИ-ИГРА</div>
+      <h1 class="start-title">
+        ВЫЖИВИ<br>
+        <div class="row2">
+          <span class="badge bg-green">ДО</span>
+          <span class="badge bg-orange">ОГЭ</span>
+        </div>
+      </h1>
+      <p class="start-sub">Уворачивайся от контрольных,<br>отвечай на вопросы ОГЭ и узнай о закрытых эфирах 19 и 20 мая!</p>
+      <div class="diff-label">Уровень сложности:</div>
+      <div class="diff-btns">
+        <button class="diff-btn" data-diff="easy">Лёгкий</button>
+        <button class="diff-btn active" data-diff="normal">Нормальный</button>
+        <button class="diff-btn" data-diff="hard">Хардкор</button>
+      </div>
+      <div class="start-btns">
+        <button class="btn-play" id="startBtn">▶ ИГРАТЬ</button>
+        <button class="btn-how" id="howBtn">Как играть?</button>
+      </div>
+      <div class="start-stats">
+        <div><div class="stat-val" id="statBest" style="color:var(--yellow)">0</div><div class="stat-lbl">рекорд</div></div>
+        <div><div class="stat-val" style="color:var(--teal)">8 500+</div><div class="stat-lbl">игроков</div></div>
+        <div><div class="stat-val" style="color:var(--green)">4.8 ★</div><div class="stat-lbl">рейтинг</div></div>
+      </div>
+    </div>
+    <div>
+      <div class="preview-arena" id="previewArena">
+        <canvas id="previewCanvas" style="position:absolute;inset:0;width:100%;height:100%;"></canvas>
+        <div class="pa-obs" style="animation-duration:3s;animation-delay:0s"><div class="pa-book"><span>📐<br>АЛГЕБРА</span></div></div>
+        <div class="pa-obs" style="animation-duration:4s;animation-delay:-1.5s"><div class="pa-paper"><div class="grade">2</div><div class="glbl">КОНТР.</div></div></div>
+        <div class="pa-obs" style="animation-duration:3.5s;animation-delay:-2.8s"><div class="pa-book" style="background:var(--blue)"><span>⚡<br>ФИЗИКА</span></div></div>
+        <div class="pa-star" style="animation-duration:4.5s;animation-delay:-1s"></div>
+        <div class="pa-floor"></div>
+        <div class="pa-hint"><span class="key-badge">ПРОБЕЛ</span> / <span class="key-badge">↑</span> — прыжок</div>
+        <div class="pa-click-hint">▶ Нажми чтобы играть!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div class="screen" id="gameScreen">
+  <div class="game-hud">
+    <div class="hud-logo">
+      <img src="logo.png" alt="Онлайн Колледж №1" class="hud-logo-img">
+    </div>
+    <div class="hud-box"><div class="hud-lbl">ОЧКИ</div><div class="hud-val" id="hudScore" style="color:var(--yellow)">0</div></div>
+    <div class="hud-box"><div class="hud-lbl">РЕКОРД</div><div class="hud-val" id="hudBest">0</div></div>
+    <div class="hud-box"><div class="hud-lbl">ЖИЗНИ</div><div class="hud-lives" id="hudLives"><span class="hud-heart">❤️</span><span class="hud-heart">❤️</span><span class="hud-heart">❤️</span></div></div>
+    <div class="hud-progress-wrap">
+      <div style="display:flex;align-items:center;gap:6px;">
+        <div class="hud-lbl">УРОВЕНЬ</div>
+        <div class="hud-level-badge" id="hudLevel">1</div>
+      </div>
+      <div class="hud-progress-bar"><div class="hud-progress-fill" id="hudProgress" style="width:0%"></div></div>
+    </div>
+    <div class="hud-timer" id="hudTimer">0:00</div>
+    <button class="hud-pause" id="pauseBtn">⏸</button>
+  </div>
+  <canvas id="gameCanvas"></canvas>
+  <div class="level-flash" id="levelFlash"></div>
+
+  <!-- In-game OGE quiz popup -->
+  <div class="quiz-popup" id="quizPopup">
+    <div class="quiz-box">
+      <div class="quiz-timer-bar"><div class="quiz-timer-fill" id="quizTimerFill" style="width:100%"></div></div>
+      <div class="quiz-subject" id="quizSubject">Математика</div>
+      <div class="quiz-q" id="quizQuestion">Вопрос...</div>
+      <div class="quiz-opts" id="quizOpts"></div>
+      <div class="quiz-reward" id="quizReward">+100 очков и щит! 🛡️</div>
+    </div>
+  </div>
+
+  <div class="overlay" id="pauseOverlay">
+    <div class="overlay-box">
+      <h2>⏸ Пауза</h2><p>Игра приостановлена</p>
+      <button class="ov-btn ov-primary" id="resumeBtn">▶ Продолжить</button>
+      <button class="ov-btn ov-secondary" id="restartFromPause">🔄 Начать заново</button>
+    </div>
+  </div>
+  <div class="overlay" id="gameOverOverlay">
+    <div class="overlay-box">
+      <h2>💥 Игра окончена!</h2><p id="gameOverScore">Твой счёт: 0</p>
+      <button class="ov-btn ov-primary" id="retryBtn">🔄 Ещё раз</button>
+      <button class="ov-btn ov-secondary" id="toTestBtn">📺 Узнать о закрытых эфирах</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EVENT SCREEN ══ -->
+<div class="screen" id="testScreen" style="overflow-y:auto;background:linear-gradient(135deg,#faf5ff 0%,#f0fdf4 60%,#eff6ff 100%)">
+  <div style="max-width:720px;width:100%;padding:32px 20px;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;margin-bottom:16px;">⭐ Счёт в игре: <span id="finalScore" style="font-size:16px;">0</span></div>
+      <h2 style="font-size:clamp(24px,4vw,38px);font-weight:900;color:var(--dark);line-height:1.2;margin-bottom:10px;">Май — самый горячий месяц<br>для каждой семьи</h2>
+      <p style="font-size:15px;color:var(--gray);font-weight:500;line-height:1.6;max-width:580px;margin:0 auto;">До экзаменов остались считанные дни, а вопросов «что делать дальше?» становится только больше. Онлайн-школа №1 подготовила два закрытых эфира: отдельно для школьников и отдельно для родителей.</p>
+    </div>
+
+    <!-- Эфир  1: Школьники -->
+    <div style="background:#fff;border-radius:24px;padding:28px;margin-bottom:20px;box-shadow:0 8px 32px rgba(168,85,247,.12);border-left:5px solid var(--purple);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="background:var(--purple);color:#fff;border-radius:12px;padding:5px 14px;font-size:12px;font-weight:800;white-space:nowrap;">19 МАЯ · 19:00 МСК</div>
+        <div style="font-size:12px;color:var(--gray);font-weight:600;">Для школьников</div>
+      </div>
+      <h3 style="font-size:18px;font-weight:900;color:var(--dark);margin-bottom:10px;line-height:1.35;">«Как выбрать профессию будущего и начать зарабатывать уже в школе»</h3>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:16px;">Честный разговор о деньгах, IT и карьере. Спикер: <strong>Серафима Шумеева</strong> — HR-директор, эксперт с 10-летним опытом в Яндексе и других IT-гигантах.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="https://bot.onlinecollege-1.ru/okspec1305_1?utm_source=curators&utm_medium=mailing&utm_campaign=webinar&1305" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--purple);color:#fff;border-radius:16px;padding:14px 24px;font-size:15px;font-weight:800;text-decoration:none;transition:transform .15s,box-shadow .15s;box-shadow:0 4px 16px rgba(168,85,247,.35);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.247l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z" fill="white"/></svg> Зарегистрироваться через Telegram</a>
+        <a href="https://bot.onlinecollege-1.ru/okspec1305_0_f" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0077FF;color:#fff;border-radius:16px;padding:14px 24px;font-size:15px;font-weight:800;text-decoration:none;transition:transform .15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 7.2l-1.986 9.37c-.147.658-.537.818-1.085.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.24-.213-.054-.333-.372-.12L9.65 12.683l-2.962-.924c-.643-.204-.656-.643.136-.953l11.57-4.461c.537-.194 1.006.131.982.855z"/></svg> Зарегистрироваться через ВК</a>
+      </div>
+    </div>
+
+    <!-- Эфир 2: Родители -->
+    <div style="background:#fff;border-radius:24px;padding:28px;margin-bottom:20px;box-shadow:0 8px 32px rgba(20,184,166,.12);border-left:5px solid var(--teal);">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <div style="background:var(--teal);color:#fff;border-radius:12px;padding:5px 14px;font-size:12px;font-weight:800;white-space:nowrap;">20 МАЯ · 19:00 МСК</div>
+        <div style="font-size:12px;color:var(--gray);font-weight:600;">Для родителей</div>
+      </div>
+      <h3 style="font-size:18px;font-weight:900;color:var(--dark);margin-bottom:10px;line-height:1.35;">«Поступление в колледж — 2026: разбор правил, стратегий и типичных ошибок»</h3>
+      <p style="font-size:13px;color:var(--gray);line-height:1.6;margin-bottom:16px;">Четкий план действий на лето: новые правила приёма 2026, сравнение маршрутов (колледж или 10 класс), стратегия выбора профессии без лишнего стресса.</p>
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <a href="https://bot.onlinecollege-1.ru/okspec1205_1?utm_source=curators&utm_medium=mailing&utm_campaign=webinar&1205" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;background:var(--teal);color:#fff;border-radius:16px;padding:14px 24px;font-size:15px;font-weight:800;text-decoration:none;transition:transform .15s;box-shadow:0 4px 16px rgba(20,184,166,.35);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.562 8.247l-2.02 9.52c-.148.658-.537.818-1.084.508l-3-2.21-1.447 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.333-.373-.12l-6.871 4.326-2.962-.924c-.643-.204-.657-.643.136-.953l11.57-4.461c.537-.194 1.006.131.883.701z" fill="white"/></svg> Зарегистрироваться через Telegram</a>
+        <a href="https://bot.onlinecollege-1.ru/okspec1205_0_f" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#0077FF;color:#fff;border-radius:16px;padding:14px 24px;font-size:15px;font-weight:800;text-decoration:none;transition:transform .15s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''"><svg width="20" height="20" viewBox="0 0 24 24" fill="white"><path d="M15.684 0H8.316C1.592 0 0 1.592 0 8.316v7.368C0 22.408 1.592 24 8.316 24h7.368C22.408 24 24 22.408 24 15.684V8.316C24 1.592 22.408 0 15.684 0zm3.692 7.2l-1.986 9.37c-.147.658-.537.818-1.085.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.24-.213-.054-.333-.372-.12L9.65 12.683l-2.962-.924c-.643-.204-.656-.643.136-.953l11.57-4.461c.537-.194 1.006.131.982.855z"/></svg> Зарегистрироваться через ВК</a>
+      </div>
+    </div>
+
+    <div style="text-align:center;">
+      <button class="end-replay" id="replayBtn" style="max-width:320px;">🔄 Сыграть ещё раз</button>
+    </div>
+  </div>
+</div>
+
+<!-- HOW-TO MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <h2>🎮 Как играть?</h2>
+    <div class="how-item"><div class="how-num">1</div><div class="how-text">Прыгай через препятствия<span>Нажми <b>Пробел</b>, <b>↑</b> или <b>тап по экрану</b></span></div></div>
+    <div class="how-item"><div class="how-num">2</div><div class="how-text">Уворачивайся от врагов<span>Учебники, двойки, учитель, телефон, дневник — твои враги!</span></div></div>
+    <div class="how-item"><div class="how-num">3</div><div class="how-text">Собирай бонусы ⭐ и 📚<span>Звезда = +50 очков. Книга = вопрос ОГЭ: ответь верно — +100 и щит!</span></div></div>
+    <div class="how-item"><div class="how-num">4</div><div class="how-text">Прокачивай уровень<span>С каждым уровнем скорость растёт. Выбери сложность перед игрой!</span></div></div>
+    <div class="how-item"><div class="how-num">5</div><div class="how-text">После игры — закрытые эфиры<span>19 и 20 мая: для школьников и родителей — про профессию и поступление!</span></div></div>
+    <button class="modal-cta" id="modalPlay">▶ НАЧАТЬ ИГРУ</button>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════
+// ULTRA 3D CHARACTER — spherical volumes, rim-light, AO
+// ══════════════════════════════════════════
+function drawPixelChar(ctx, x, y, frame, jumping, shielded) {
+  const cx = Math.floor(x);
+  const cy = Math.floor(y);
+  const f = Math.floor(frame / 4) % 4;
+
+  ctx.save();
+
+  // Helper: draw a 3D cylinder-like limb
+  function drawLimb(lx, ly, lw, lh, colorTop, colorMid, colorDark, radius) {
+    const g = ctx.createLinearGradient(lx, ly, lx+lw, ly);
+    g.addColorStop(0, colorDark);   // left shadow
+    g.addColorStop(0.25, colorMid);
+    g.addColorStop(0.5, colorTop);  // center highlight
+    g.addColorStop(0.75, colorMid);
+    g.addColorStop(1, colorDark);   // right shadow
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.roundRect(lx, ly, lw, lh, radius||3); ctx.fill();
+    // Specular top edge
+    const sg = ctx.createLinearGradient(lx, ly, lx, ly+4);
+    sg.addColorStop(0,'rgba(255,255,255,0.35)');
+    sg.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.roundRect(lx+lw*.15, ly, lw*.7, 4, radius||3); ctx.fill();
+  }
+
+  // Helper: draw a 3D sphere-like shape
+  function drawSphere(sx, sy, rx, ry, lightX, lightY, baseColor, darkColor) {
+    // Base sphere
+    const g = ctx.createRadialGradient(sx+lightX, sy+lightY, 0, sx, sy, Math.max(rx,ry));
+    g.addColorStop(0, '#fff9f0');  // bright highlight
+    g.addColorStop(0.2, baseColor);
+    g.addColorStop(0.7, baseColor);
+    g.addColorStop(1, darkColor);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.ellipse(sx, sy, rx, ry, 0, 0, Math.PI*2); ctx.fill();
+    // Rim light (back-light from right)
+    const rim = ctx.createRadialGradient(sx+rx*.6, sy+ry*.5, ry*.3, sx+rx*.7, sy, ry*.9);
+    rim.addColorStop(0,'rgba(200,220,255,0)');
+    rim.addColorStop(0.7,'rgba(200,220,255,0)');
+    rim.addColorStop(1,'rgba(200,220,255,0.25)');
+    ctx.fillStyle = rim;
+    ctx.beginPath(); ctx.ellipse(sx, sy, rx, ry, 0, 0, Math.PI*2); ctx.fill();
+  }
+
+  // ── SHIELD GLOW ──
+  if (shielded) {
+    ctx.shadowColor = '#3B82F6';
+    ctx.shadowBlur = 32;
+    ctx.fillStyle = 'rgba(59,130,246,0.15)';
+    ctx.beginPath();
+    ctx.ellipse(cx+18, cy+32, 28, 38, 0, 0, Math.PI*2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+  }
+
+  // ── GROUND SHADOW (AO) ──
+  const shadowGrad = ctx.createRadialGradient(cx+18, cy+63, 0, cx+18, cy+63, 22);
+  shadowGrad.addColorStop(0, 'rgba(0,0,0,0.35)');
+  shadowGrad.addColorStop(0.5, 'rgba(0,0,0,0.15)');
+  shadowGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = shadowGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx+18, cy+63, 22, 6, 0, 0, Math.PI*2);
+  ctx.fill();
+
+  // ── BACKPACK (3D box with top face) ──
+  // AO shadow under backpack
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.beginPath(); ctx.ellipse(cx+33, cy+47, 8, 3, 0, 0, Math.PI*2); ctx.fill();
+  // Top face of backpack (isometric)
+  const bpTopGrad = ctx.createLinearGradient(cx+27, cy+22, cx+39, cy+26);
+  bpTopGrad.addColorStop(0, '#ffcc80');
+  bpTopGrad.addColorStop(1, '#ffa726');
+  ctx.fillStyle = bpTopGrad;
+  ctx.beginPath();
+  ctx.moveTo(cx+27, cy+24); ctx.lineTo(cx+39, cy+24);
+  ctx.lineTo(cx+37, cy+22); ctx.lineTo(cx+25, cy+22);
+  ctx.closePath(); ctx.fill();
+  // Main body (cylindrical gradient: dark left, bright center, dark right)
+  drawLimb(cx+27, cy+24, 12, 22, '#ff9800', '#f57c00', '#bf360c', 3);
+  // Backpack front pocket
+  const pktGrad = ctx.createLinearGradient(cx+28, cy+37, cx+38, cy+44);
+  pktGrad.addColorStop(0, '#e65100');
+  pktGrad.addColorStop(0.5, '#d84315');
+  pktGrad.addColorStop(1, '#bf360c');
+  ctx.fillStyle = pktGrad;
+  ctx.beginPath(); ctx.roundRect(cx+28, cy+38, 10, 6, 2); ctx.fill();
+  // Pocket highlight
+  ctx.fillStyle = 'rgba(255,180,80,0.4)';
+  ctx.fillRect(cx+29, cy+39, 4, 2);
+  // Pocket zipper
+  ctx.strokeStyle = 'rgba(255,220,120,0.8)';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx+29, cy+41); ctx.lineTo(cx+37, cy+41); ctx.stroke();
+  // Backpack straps (rounded, 3D)
+  ctx.strokeStyle = '#e65100'; ctx.lineWidth = 2.5; ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(cx+27, cy+26); ctx.quadraticCurveTo(cx+23, cy+30, cx+24, cy+34);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx+27, cy+34); ctx.quadraticCurveTo(cx+23, cy+38, cx+24, cy+44);
+  ctx.stroke();
+
+  // ── BODY / JACKET (cylindrical 3D) ──
+  // AO shadow at waist
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+46, 12, 3, 0, 0, Math.PI*2); ctx.fill();
+  // Jacket body — cylindrical gradient (dark edges, bright center)
+  drawLimb(cx+4, cy+24, 24, 22, '#5c6bc0', '#3949ab', '#1a237e', 4);
+  // Jacket bottom edge (AO)
+  ctx.fillStyle = 'rgba(0,0,30,0.18)';
+  ctx.beginPath(); ctx.roundRect(cx+4, cy+40, 24, 6, [0,0,4,4]); ctx.fill();
+  // Shoulder volume (top highlight arc)
+  const shoulderHl = ctx.createLinearGradient(cx+4, cy+24, cx+28, cy+28);
+  shoulderHl.addColorStop(0, 'rgba(140,158,255,0.5)');
+  shoulderHl.addColorStop(0.5, 'rgba(140,158,255,0.2)');
+  shoulderHl.addColorStop(1, 'rgba(140,158,255,0.0)');
+  ctx.fillStyle = shoulderHl;
+  ctx.beginPath(); ctx.roundRect(cx+4, cy+24, 24, 7, [4,4,0,0]); ctx.fill();
+
+  // ── SHIRT / COLLAR ──
+  const shirtGrad = ctx.createLinearGradient(cx+10, cy+24, cx+22, cy+34);
+  shirtGrad.addColorStop(0, '#ffffff');
+  shirtGrad.addColorStop(0.5, '#f0f0f0');
+  shirtGrad.addColorStop(1, '#d8d8d8');
+  ctx.fillStyle = shirtGrad;
+  ctx.beginPath(); ctx.roundRect(cx+10, cy+24, 12, 10, 2); ctx.fill();
+  // Shirt button line
+  ctx.fillStyle = 'rgba(180,180,180,0.6)';
+  ctx.fillRect(cx+15, cy+26, 1, 7);
+
+  // ── TIE (3D knot) ──
+  const tieGrad = ctx.createLinearGradient(cx+14, cy+24, cx+18, cy+40);
+  tieGrad.addColorStop(0, '#ff8a80');
+  tieGrad.addColorStop(0.3, '#ef5350');
+  tieGrad.addColorStop(0.7, '#c62828');
+  tieGrad.addColorStop(1, '#b71c1c');
+  ctx.fillStyle = tieGrad;
+  ctx.beginPath();
+  ctx.moveTo(cx+14, cy+25); ctx.lineTo(cx+18, cy+25);
+  ctx.lineTo(cx+19, cy+39); ctx.lineTo(cx+16, cy+42);
+  ctx.lineTo(cx+13, cy+39); ctx.closePath();
+  ctx.fill();
+  // Tie center highlight (3D fold)
+  ctx.fillStyle = 'rgba(255,180,180,0.45)';
+  ctx.beginPath(); ctx.moveTo(cx+15, cy+25); ctx.lineTo(cx+17, cy+25); ctx.lineTo(cx+16, cy+32); ctx.closePath(); ctx.fill();
+  // Tie knot
+  const knotGrad = ctx.createRadialGradient(cx+16, cy+26, 0, cx+16, cy+27, 4);
+  knotGrad.addColorStop(0, '#ff8a80');
+  knotGrad.addColorStop(1, '#c62828');
+  ctx.fillStyle = knotGrad;
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+27, 3, 2, 0, 0, Math.PI*2); ctx.fill();
+
+  // ── LAPELS (3D fold) ──
+  const lapelGrad = ctx.createLinearGradient(cx+8, cy+24, cx+16, cy+32);
+  lapelGrad.addColorStop(0, '#ffffff');
+  lapelGrad.addColorStop(1, '#e0e0e0');
+  ctx.fillStyle = lapelGrad;
+  ctx.beginPath(); ctx.moveTo(cx+10, cy+24); ctx.lineTo(cx+15, cy+31); ctx.lineTo(cx+8, cy+24); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx+22, cy+24); ctx.lineTo(cx+17, cy+31); ctx.lineTo(cx+24, cy+24); ctx.closePath(); ctx.fill();
+  // Lapel shadow edge
+  ctx.strokeStyle = 'rgba(180,180,180,0.5)'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(cx+10, cy+24); ctx.lineTo(cx+15, cy+31); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+22, cy+24); ctx.lineTo(cx+17, cy+31); ctx.stroke();
+
+  // ── ARMS (cylindrical 3D) ──
+  // Left arm
+  drawLimb(cx+1, cy+24, 7, 17, '#5c6bc0', '#3949ab', '#1a237e', 3);
+  // Left elbow crease
+  ctx.fillStyle = 'rgba(0,0,30,0.15)';
+  ctx.beginPath(); ctx.ellipse(cx+4, cy+35, 3, 1.5, 0, 0, Math.PI*2); ctx.fill();
+  // Left hand (sphere)
+  drawSphere(cx+4, cy+42, 4.5, 4, -1.5, -1.5, '#f5c9a0', '#c07040');
+  // Finger hint
+  ctx.fillStyle = 'rgba(200,120,60,0.4)';
+  ctx.beginPath(); ctx.roundRect(cx+1, cy+44, 3, 2, 1); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(cx+4, cy+44, 3, 2, 1); ctx.fill();
+  // Right arm (slightly behind backpack)
+  drawLimb(cx+24, cy+24, 6, 15, '#5c6bc0', '#3949ab', '#1a237e', 3);
+
+  // ── PANTS & LEGS (cylindrical 3D) ──
+  // Crotch AO
+  ctx.fillStyle = 'rgba(0,0,0,0.12)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+47, 8, 2, 0, 0, Math.PI*2); ctx.fill();
+
+  // Helper: draw 3D shoe
+  function drawShoe(sx, sy) {
+    const sg = ctx.createLinearGradient(sx, sy, sx+13, sy+7);
+    sg.addColorStop(0, '#616161');
+    sg.addColorStop(0.4, '#424242');
+    sg.addColorStop(1, '#1a1a1a');
+    ctx.fillStyle = sg;
+    ctx.beginPath(); ctx.roundRect(sx-1, sy, 14, 6, [3,3,2,2]); ctx.fill();
+    // Toe cap highlight
+    const tc = ctx.createRadialGradient(sx+3, sy+1, 0, sx+4, sy+2, 5);
+    tc.addColorStop(0, 'rgba(255,255,255,0.35)');
+    tc.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = tc;
+    ctx.beginPath(); ctx.ellipse(sx+4, sy+2, 5, 2.5, 0, 0, Math.PI*2); ctx.fill();
+    // Sole
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(sx, sy+5, 12, 1);
+  }
+
+  if (jumping) {
+    // Both legs bent up (tucked)
+    drawLimb(cx+5, cy+46, 8, 10, '#5a5a80', '#3d3d5c', '#1a1a2e', 3);
+    drawLimb(cx+18, cy+46, 8, 10, '#5a5a80', '#3d3d5c', '#1a1a2e', 3);
+    // Knee highlights
+    ctx.fillStyle = 'rgba(120,120,180,0.25)';
+    ctx.beginPath(); ctx.ellipse(cx+9, cy+50, 3, 2, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+22, cy+50, 3, 2, 0, 0, Math.PI*2); ctx.fill();
+    drawShoe(cx+3, cy+54);
+    drawShoe(cx+16, cy+54);
+  } else {
+    const legOffsets = [
+      [0, 0, 0, 0],
+      [-4, 4, -3, 3],
+      [0, 0, 0, 0],
+      [4, -4, 3, -3],
+    ];
+    const lo = legOffsets[f];
+    // Left leg (cylindrical)
+    drawLimb(cx+5, cy+46+lo[0], 8, 14+Math.abs(lo[0]), '#5a5a80', '#3d3d5c', '#1a1a2e', 3);
+    // Left knee crease
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.beginPath(); ctx.ellipse(cx+9, cy+53+lo[0], 3, 1.5, 0, 0, Math.PI*2); ctx.fill();
+    // Right leg (cylindrical)
+    drawLimb(cx+18, cy+46+lo[1], 8, 14+Math.abs(lo[1]), '#5a5a80', '#3d3d5c', '#1a1a2e', 3);
+    // Right knee crease
+    ctx.fillStyle = 'rgba(0,0,0,0.12)';
+    ctx.beginPath(); ctx.ellipse(cx+22, cy+53+lo[1], 3, 1.5, 0, 0, Math.PI*2); ctx.fill();
+    drawShoe(cx+3+lo[2], cy+58+lo[0]);
+    drawShoe(cx+16+lo[3], cy+58+lo[1]);
+  }
+
+  // ── NECK (cylindrical) ──
+  drawLimb(cx+13, cy+22, 6, 5, '#f5c9a0', '#e8a070', '#c07040', 2);
+
+  // ── HEAD (full sphere with rim-light) ──
+  // Neck-head AO shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.1)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+24, 9, 2.5, 0, 0, Math.PI*2); ctx.fill();
+  // Main head sphere
+  drawSphere(cx+16, cy+14, 12, 13, -4, -5, '#FDBCB4', '#c07040');
+  // Subtle subsurface scatter (warm glow on cheeks)
+  ctx.fillStyle = 'rgba(255,160,120,0.12)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+16, 11, 12, 0, 0, Math.PI*2); ctx.fill();
+  // Cheek blush (SSS)
+  ctx.fillStyle = 'rgba(255,130,130,0.22)';
+  ctx.beginPath(); ctx.ellipse(cx+9, cy+17, 4, 3, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+23, cy+17, 4, 3, 0, 0, Math.PI*2); ctx.fill();
+  // Chin shadow (AO)
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+24, 7, 2, 0, 0, Math.PI*2); ctx.fill();
+
+  // ── HAIR (volumetric) ──
+  // Hair base (dark, behind head)
+  ctx.fillStyle = '#1a0e00';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+7, 12, 10, 0, 0, Math.PI*2); ctx.fill();
+  // Hair volume (gradient sphere)
+  const hairGrad = ctx.createRadialGradient(cx+12, cy+5, 1, cx+15, cy+8, 12);
+  hairGrad.addColorStop(0, '#8b5e1a');  // highlight
+  hairGrad.addColorStop(0.3, '#6b4400');
+  hairGrad.addColorStop(0.7, '#4a2f00');
+  hairGrad.addColorStop(1, '#1a0e00');  // dark edge
+  ctx.fillStyle = hairGrad;
+  ctx.beginPath(); ctx.ellipse(cx+15, cy+7, 11, 9, 0, 0, Math.PI*2); ctx.fill();
+  // Hair specular highlight
+  const hairHl = ctx.createRadialGradient(cx+12, cy+4, 0, cx+12, cy+5, 5);
+  hairHl.addColorStop(0, 'rgba(200,150,60,0.55)');
+  hairHl.addColorStop(1, 'rgba(200,150,60,0)');
+  ctx.fillStyle = hairHl;
+  ctx.beginPath(); ctx.ellipse(cx+12, cy+5, 5, 3, -0.3, 0, Math.PI*2); ctx.fill();
+  // Side hair (temple)
+  ctx.fillStyle = '#2d1b00';
+  ctx.beginPath(); ctx.ellipse(cx+6, cy+12, 3, 5, 0.3, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+26, cy+12, 2.5, 4, -0.2, 0, Math.PI*2); ctx.fill();
+  // Hair rim light
+  ctx.fillStyle = 'rgba(220,180,100,0.15)';
+  ctx.beginPath(); ctx.ellipse(cx+22, cy+7, 5, 4, 0.5, 0, Math.PI*2); ctx.fill();
+
+  // ── EYES (3D spheres) ──
+  // Eye socket shadow
+  ctx.fillStyle = 'rgba(180,100,60,0.15)';
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 5, 4, 0, 0, Math.PI*2); ctx.fill();
+  // Eye whites (slightly curved)
+  const eyeWhiteG1 = ctx.createRadialGradient(cx+10, cy+14, 0, cx+11, cy+15, 4);
+  eyeWhiteG1.addColorStop(0, '#ffffff');
+  eyeWhiteG1.addColorStop(1, '#e8e0d8');
+  ctx.fillStyle = eyeWhiteG1;
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 4, 3.2, 0, 0, Math.PI*2); ctx.fill();
+  const eyeWhiteG2 = ctx.createRadialGradient(cx+20, cy+14, 0, cx+21, cy+15, 4);
+  eyeWhiteG2.addColorStop(0, '#ffffff');
+  eyeWhiteG2.addColorStop(1, '#e8e0d8');
+  ctx.fillStyle = eyeWhiteG2;
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 4, 3.2, 0, 0, Math.PI*2); ctx.fill();
+  // Iris (deep sphere)
+  const irisG1 = ctx.createRadialGradient(cx+10.5, cy+14.5, 0, cx+11, cy+15, 2.8);
+  irisG1.addColorStop(0, '#8d6e63');
+  irisG1.addColorStop(0.5, '#5d4037');
+  irisG1.addColorStop(1, '#1a0a00');
+  ctx.fillStyle = irisG1;
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 2.8, 2.8, 0, 0, Math.PI*2); ctx.fill();
+  const irisG2 = ctx.createRadialGradient(cx+20.5, cy+14.5, 0, cx+21, cy+15, 2.8);
+  irisG2.addColorStop(0, '#8d6e63');
+  irisG2.addColorStop(0.5, '#5d4037');
+  irisG2.addColorStop(1, '#1a0a00');
+  ctx.fillStyle = irisG2;
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 2.8, 2.8, 0, 0, Math.PI*2); ctx.fill();
+  // Pupil
+  ctx.fillStyle = '#0a0500';
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+15, 1.5, 1.5, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+15, 1.5, 1.5, 0, 0, Math.PI*2); ctx.fill();
+  // Eye highlight (catchlight)
+  ctx.fillStyle = 'rgba(255,255,255,0.95)';
+  ctx.beginPath(); ctx.ellipse(cx+12, cy+13.5, 1.2, 1, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+22, cy+13.5, 1.2, 1, 0, 0, Math.PI*2); ctx.fill();
+  // Secondary small highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.beginPath(); ctx.ellipse(cx+10, cy+16, 0.6, 0.6, 0, 0, Math.PI*2); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+20, cy+16, 0.6, 0.6, 0, 0, Math.PI*2); ctx.fill();
+  // Eyelids (upper)
+  ctx.fillStyle = 'rgba(180,100,60,0.2)';
+  ctx.beginPath(); ctx.ellipse(cx+11, cy+13, 4, 1.5, 0, Math.PI, 0); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx+21, cy+13, 4, 1.5, 0, Math.PI, 0); ctx.fill();
+  // Eyebrows (thick, arched)
+  ctx.strokeStyle = '#3d2200'; ctx.lineWidth = 2; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(cx+7, cy+10.5); ctx.quadraticCurveTo(cx+11, cy+9, cx+15, cy+10.5); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(cx+17, cy+10.5); ctx.quadraticCurveTo(cx+21, cy+9, cx+25, cy+10.5); ctx.stroke();
+  // Eyebrow highlight
+  ctx.strokeStyle = 'rgba(100,60,0,0.3)'; ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(cx+7.5, cy+10); ctx.quadraticCurveTo(cx+11, cy+8.5, cx+14.5, cy+10); ctx.stroke();
+
+  // ── NOSE ──
+  ctx.fillStyle = 'rgba(180,100,60,0.25)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+18, 2, 1.5, 0, 0, Math.PI*2); ctx.fill();
+  // Nose highlight
+  ctx.fillStyle = 'rgba(255,220,180,0.4)';
+  ctx.beginPath(); ctx.ellipse(cx+15.5, cy+17.5, 1, 0.8, 0, 0, Math.PI*2); ctx.fill();
+
+  // ── MOUTH (3D lips) ──
+  // Upper lip
+  ctx.fillStyle = 'rgba(180,90,60,0.5)';
+  ctx.beginPath();
+  ctx.moveTo(cx+12, cy+21); ctx.quadraticCurveTo(cx+16, cy+20, cx+20, cy+21);
+  ctx.quadraticCurveTo(cx+18, cy+22, cx+16, cy+21.5);
+  ctx.quadraticCurveTo(cx+14, cy+22, cx+12, cy+21);
+  ctx.fill();
+  // Lower lip
+  ctx.fillStyle = 'rgba(200,110,80,0.4)';
+  ctx.beginPath();
+  ctx.moveTo(cx+12.5, cy+21.5); ctx.quadraticCurveTo(cx+16, cy+23.5, cx+19.5, cy+21.5);
+  ctx.quadraticCurveTo(cx+16, cy+24, cx+12.5, cy+21.5);
+  ctx.fill();
+  // Lip highlight
+  ctx.fillStyle = 'rgba(255,200,180,0.35)';
+  ctx.beginPath(); ctx.ellipse(cx+16, cy+22.5, 3, 1, 0, 0, Math.PI*2); ctx.fill();
+
+  ctx.restore();
+}
+
+// ══════════════════════════════════════════
+// PREVIEW CANVAS
+// ══════════════════════════════════════════
+const previewCanvas = document.getElementById('previewCanvas');
+const pCtx = previewCanvas.getContext('2d');
+let previewFrame = 0;
+function animatePreview() {
+  const W = previewCanvas.offsetWidth, H = previewCanvas.offsetHeight;
+  previewCanvas.width = W; previewCanvas.height = H;
+  pCtx.clearRect(0,0,W,H);
+  const FLOOR = H - 72;
+  const bob = Math.sin(previewFrame * 0.08) * 4;
+  drawPixelChar(pCtx, 60, FLOOR - 68 + bob, Math.floor(previewFrame/6), false, false);
+  previewFrame++;
+  requestAnimationFrame(animatePreview);
+}
+animatePreview();
+
+// ══════════════════════════════════════════
+// DIFFICULTY SETTINGS
+// ══════════════════════════════════════════
+const DIFF = {
+  easy:   { startSpeed:3,   maxSpeed:9,  lives:5, obsInterval:100, starInterval:120, quizInterval:400 },
+  normal: { startSpeed:4,   maxSpeed:13, lives:3, obsInterval:80,  starInterval:150, quizInterval:300 },
+  hard:   { startSpeed:6,   maxSpeed:16, lives:2, obsInterval:55,  starInterval:200, quizInterval:500 },
+};
+let selectedDiff = 'normal';
+
+document.querySelectorAll('.diff-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedDiff = btn.dataset.diff;
+  });
+});
+
+// ══════════════════════════════════════════
+// OGE QUESTIONS BANK
+// ══════════════════════════════════════════
+const OGE_QUESTIONS = [
+  {subject:'Математика', q:'Чему равно 2³ × 5?', opts:['30','40','45','50'], correct:1},
+  {subject:'Математика', q:'Площадь квадрата со стороной 7 см?', opts:['28 см²','49 см²','14 см²','56 см²'], correct:1},
+  {subject:'Математика', q:'Сколько процентов от 200 составляет 50?', opts:['20%','25%','30%','15%'], correct:1},
+  {subject:'Математика', q:'Реши уравнение: 3x + 6 = 21', opts:['x=4','x=5','x=6','x=3'], correct:1},
+  {subject:'Русский язык', q:'В каком слове пишется "НН"?', opts:['деревяный','стеклянный','оловяный','кожаный'], correct:1},
+  {subject:'Русский язык', q:'Найди слово с приставкой "пре-":', opts:['преграда','прибежать','приехать','прилететь'], correct:0},
+  {subject:'Русский язык', q:'Сколько букв в русском алфавите?', opts:['30','32','33','34'], correct:2},
+  {subject:'Физика', q:'Единица измерения силы:', opts:['Ватт','Ньютон','Джоуль','Паскаль'], correct:1},
+  {subject:'Физика', q:'Скорость света примерно равна:', opts:['300 000 км/с','30 000 км/с','3 000 км/с','300 км/с'], correct:0},
+  {subject:'Химия', q:'Химический символ золота:', opts:['Go','Au','Ag','Gl'], correct:1},
+  {subject:'Химия', q:'Формула воды:', opts:['H₂O₂','HO','H₂O','H₃O'], correct:2},
+  {subject:'История', q:'В каком году началась Великая Отечественная война?', opts:['1939','1940','1941','1942'], correct:2},
+  {subject:'История', q:'Кто был первым президентом России?', opts:['Горбачёв','Ельцин','Путин','Медведев'], correct:1},
+  {subject:'Биология', q:'Сколько хромосом у человека?', opts:['23','44','46','48'], correct:2},
+  {subject:'Биология', q:'Как называется процесс деления клетки?', opts:['Митоз','Мейоз','Фотосинтез','Метаболизм'], correct:0},
+  {subject:'Информатика', q:'Сколько бит в одном байте?', opts:['4','8','16','32'], correct:1},
+  {subject:'Информатика', q:'Что означает аббревиатура CPU?', opts:['Центральный процессор','Сетевая карта','Видеокарта','Оперативная память'], correct:0},
+  {subject:'Обществознание', q:'Высший законодательный орган России:', opts:['Правительство','Президент','Федеральное Собрание','Конституционный суд'], correct:2},
+];
+
+// ══════════════════════════════════════════
+// OBSTACLE TYPES (expanded)
+// ══════════════════════════════════════════
+const OBS_TYPES = [
+  // Books (original)
+  {type:'book', w:52, h:68, color:'#EF4444', label1:'АЛГЕБРА', label2:'📐', icon:'📐'},
+  {type:'book', w:52, h:68, color:'#3B82F6', label1:'ФИЗИКА',  label2:'⚡', icon:'⚡'},
+  {type:'book', w:52, h:68, color:'#8B5CF6', label1:'ХИМИЯ',   label2:'🧪', icon:'🧪'},
+  {type:'book', w:52, h:68, color:'#EC4899', label1:'РУС.ЯЗ',  label2:'✏️', icon:'✏️'},
+  // Fail grade paper
+  {type:'paper', w:48, h:58},
+  // Teacher (tall obstacle)
+  {type:'teacher', w:44, h:80},
+  // Phone (medium)
+  {type:'phone', w:36, h:62},
+  // Diary / gradebook
+  {type:'diary', w:52, h:60, color:'#065f46', label1:'ДНЕВНИК', label2:'📓', icon:'📓'},
+  // Fatigue cloud (wide low obstacle)
+  {type:'fatigue', w:80, h:44},
+  // Double book stack (tall)
+  {type:'bookstack', w:52, h:90, color:'#7c3aed'},
+];
+
+// ══════════════════════════════════════════
+// BONUS TYPES
+// ══════════════════════════════════════════
+// star = existing yellow star (+50)
+// quiz = book bonus → triggers OGE question
+
+// ══════════════════════════════════════════
+// GAME ENGINE
+// ══════════════════════════════════════════
+const NAVBAR_H = 60;
+const HUD_H = 54;
+const screens = {
+  start: document.getElementById('startScreen'),
+  game:  document.getElementById('gameScreen'),
+  test:  document.getElementById('testScreen'),
+  end:   document.getElementById('endScreen'),
+};
+function showScreen(name) {
+  Object.values(screens).forEach(s => s.classList.remove('active'));
+  screens[name].classList.add('active');
+  if (name === 'game') resizeCanvas();
+}
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight - NAVBAR_H - HUD_H;
+}
+window.addEventListener('resize', () => { if (screens.game.classList.contains('active')) resizeCanvas(); });
+
+let state = {}, raf = null;
+let best = parseInt(localStorage.getItem('ogeGameBest') || '0');
+let finalGameScore = 0;
+document.getElementById('hudBest').textContent = best;
+document.getElementById('statBest').textContent = best;
+
+function initState() {
+  const W = canvas.width, H = canvas.height;
+  const FLOOR = H - 80;
+  const d = DIFF[selectedDiff];
+  return {
+    running:false, paused:false, score:0, lives:d.lives, time:0,
+    frameCount:0, speed:d.startSpeed, maxSpeed:d.maxSpeed, W, H, FLOOR,
+    char:{ x:100, y:FLOOR-72, w:32, h:72, vy:0, onGround:true, invincible:0, shielded:0 },
+    obstacles:[], stars:[], quizBonuses:[], particles:[], scorePops:[],
+    bgOffset:0,
+    nextObstacle:d.obsInterval,
+    nextStar:d.starInterval,
+    nextQuiz:d.quizInterval,
+    levelProgress:0, maxProgress:800,
+    level:1,
+    diff: selectedDiff,
+    clouds: Array.from({length:5},(_,i)=>({x:i*220+Math.random()*100,y:20+Math.random()*60,w:80+Math.random()*60,speed:0.4+Math.random()*0.3})),
+    mountains: Array.from({length:4},(_,i)=>({x:i*300,h:60+Math.random()*80,w:200+Math.random()*100})),
+  };
+}
+
+// ══════════════════════════════════════════
+// DRAWING FUNCTIONS
+// ══════════════════════════════════════════
+function roundRect(x,y,w,h,r,fill,stroke,sw){
+  ctx.beginPath(); ctx.roundRect(x,y,w,h,r);
+  if(fill){ctx.fillStyle=fill;ctx.fill();}
+  if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=sw||2;ctx.stroke();}
+}
+
+function drawBg() {
+  const {W,H,FLOOR,bgOffset,speed,clouds,mountains} = state;
+
+  // ── SKY (atmospheric gradient with horizon glow) ──
+  const sky = ctx.createLinearGradient(0,0,0,FLOOR);
+  sky.addColorStop(0,'#1e40af');       // deep blue zenith
+  sky.addColorStop(0.3,'#3b82f6');     // mid blue
+  sky.addColorStop(0.65,'#93c5fd');    // light blue
+  sky.addColorStop(0.85,'#ddd6fe');    // lavender horizon
+  sky.addColorStop(1,'#fce7f3');       // pink horizon glow
+  ctx.fillStyle=sky; ctx.fillRect(0,0,W,FLOOR);
+
+  // Atmospheric haze (horizon glow)
+  const haze = ctx.createLinearGradient(0,FLOOR*0.7,0,FLOOR);
+  haze.addColorStop(0,'rgba(255,220,200,0)');
+  haze.addColorStop(1,'rgba(255,200,180,0.18)');
+  ctx.fillStyle=haze; ctx.fillRect(0,FLOOR*0.7,W,FLOOR*0.3);
+
+  // ── SUN (volumetric with corona) ──
+  const sunX = W * 0.15, sunY = FLOOR * 0.16;
+  // Outer corona
+  const corona = ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,90);
+  corona.addColorStop(0,'rgba(255,240,150,0.5)');
+  corona.addColorStop(0.3,'rgba(255,220,80,0.2)');
+  corona.addColorStop(0.6,'rgba(255,200,50,0.08)');
+  corona.addColorStop(1,'rgba(255,200,50,0)');
+  ctx.fillStyle=corona; ctx.beginPath(); ctx.arc(sunX,sunY,90,0,Math.PI*2); ctx.fill();
+  // Inner glow
+  const sunGlow = ctx.createRadialGradient(sunX,sunY,0,sunX,sunY,55);
+  sunGlow.addColorStop(0,'rgba(255,255,220,0.9)');
+  sunGlow.addColorStop(0.4,'rgba(255,230,80,0.6)');
+  sunGlow.addColorStop(1,'rgba(255,200,50,0)');
+  ctx.fillStyle=sunGlow; ctx.beginPath(); ctx.arc(sunX,sunY,55,0,Math.PI*2); ctx.fill();
+  // Sun disc
+  const sunDisc = ctx.createRadialGradient(sunX-8,sunY-8,0,sunX,sunY,28);
+  sunDisc.addColorStop(0,'#fffde7');
+  sunDisc.addColorStop(0.5,'#fff176');
+  sunDisc.addColorStop(1,'#fdd835');
+  ctx.fillStyle=sunDisc; ctx.beginPath(); ctx.arc(sunX,sunY,28,0,Math.PI*2); ctx.fill();
+  // Sun rays (animated)
+  const rayOff = (bgOffset * 0.01) % (Math.PI/4);
+  ctx.strokeStyle='rgba(255,240,100,0.35)'; ctx.lineWidth=2.5;
+  for(let i=0;i<12;i++) {
+    const a = i*Math.PI/6 + rayOff;
+    const r1 = 32, r2 = 50 + (i%3)*8;
+    ctx.beginPath();
+    ctx.moveTo(sunX+Math.cos(a)*r1, sunY+Math.sin(a)*r1);
+    ctx.lineTo(sunX+Math.cos(a)*r2, sunY+Math.sin(a)*r2);
+    ctx.stroke();
+  }
+
+  // ── MOUNTAINS (volumetric, 3 layers) ──
+  // Far mountains (very slow, desaturated)
+  const mOff1 = (bgOffset * 0.06) % W;
+  for(let i=0;i<6;i++) {
+    const mx = ((i*220 - mOff1 + W*2) % (W+220)) - 110;
+    const mh = 70 + (i%3)*30;
+    const mw = 200 + (i%2)*60;
+    // Mountain face (lit from left)
+    const mGrad = ctx.createLinearGradient(mx, FLOOR-mh, mx+mw, FLOOR);
+    mGrad.addColorStop(0, 'rgba(120,100,160,0.22)');
+    mGrad.addColorStop(0.4, 'rgba(140,120,180,0.18)');
+    mGrad.addColorStop(1, 'rgba(100,80,140,0.12)');
+    ctx.fillStyle = mGrad;
+    ctx.beginPath(); ctx.moveTo(mx,FLOOR); ctx.lineTo(mx+mw/2,FLOOR-mh); ctx.lineTo(mx+mw,FLOOR); ctx.closePath(); ctx.fill();
+  }
+  // Mid mountains (medium speed)
+  const mOff2 = (bgOffset * 0.15) % W;
+  mountains.forEach((m,i) => {
+    const mx = ((m.x - mOff2 + W*2) % (W+m.w)) - m.w;
+    const mh = m.h;
+    const mw = m.w;
+    // Left face (lit)
+    const litGrad = ctx.createLinearGradient(mx, FLOOR-mh, mx+mw/2, FLOOR);
+    litGrad.addColorStop(0, 'rgba(167,139,250,0.5)');
+    litGrad.addColorStop(1, 'rgba(139,92,246,0.3)');
+    ctx.fillStyle = litGrad;
+    ctx.beginPath(); ctx.moveTo(mx,FLOOR); ctx.lineTo(mx+mw/2,FLOOR-mh); ctx.lineTo(mx+mw*0.52,FLOOR-mh); ctx.closePath(); ctx.fill();
+    // Right face (shadow)
+    const shadowGrad = ctx.createLinearGradient(mx+mw/2, FLOOR-mh, mx+mw, FLOOR);
+    shadowGrad.addColorStop(0, 'rgba(88,28,135,0.45)');
+    shadowGrad.addColorStop(1, 'rgba(67,20,100,0.25)');
+    ctx.fillStyle = shadowGrad;
+    ctx.beginPath(); ctx.moveTo(mx+mw/2,FLOOR-mh); ctx.lineTo(mx+mw,FLOOR); ctx.lineTo(mx+mw*0.48,FLOOR); ctx.closePath(); ctx.fill();
+    // Snow cap (3D)
+    const snowH = mh * 0.22;
+    const snowGrad = ctx.createLinearGradient(mx+mw/2-mw*0.1, FLOOR-mh, mx+mw/2+mw*0.1, FLOOR-mh+snowH);
+    snowGrad.addColorStop(0, 'rgba(255,255,255,0.95)');
+    snowGrad.addColorStop(1, 'rgba(220,220,240,0.6)');
+    ctx.fillStyle = snowGrad;
+    ctx.beginPath();
+    ctx.moveTo(mx+mw/2, FLOOR-mh);
+    ctx.lineTo(mx+mw/2-mw*0.1, FLOOR-mh+snowH);
+    ctx.lineTo(mx+mw/2+mw*0.1, FLOOR-mh+snowH);
+    ctx.closePath(); ctx.fill();
+    // Snow shadow side
+    ctx.fillStyle = 'rgba(180,180,220,0.4)';
+    ctx.beginPath();
+    ctx.moveTo(mx+mw/2, FLOOR-mh);
+    ctx.lineTo(mx+mw/2+mw*0.1, FLOOR-mh+snowH);
+    ctx.lineTo(mx+mw/2+mw*0.02, FLOOR-mh+snowH);
+    ctx.closePath(); ctx.fill();
+  });
+
+  // ── CLOUDS (volumetric, multi-layer) ──
+  function drawVolCloud(cx, cy, cw, alpha) {
+    // Cloud shadow (bottom)
+    ctx.fillStyle = `rgba(160,160,200,${alpha*0.25})`;
+    ctx.beginPath(); ctx.ellipse(cx+6, cy+12, cw/2+4, 16, 0, 0, Math.PI*2); ctx.fill();
+    // Base puffs (darker, bottom layer)
+    ctx.fillStyle = `rgba(220,225,240,${alpha*0.85})`;
+    ctx.beginPath(); ctx.ellipse(cx-cw*.25, cy+8, cw*.3, 14, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+cw*.25, cy+6, cw*.28, 13, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, cy+10, cw*.35, 12, 0, 0, Math.PI*2); ctx.fill();
+    // Mid puffs
+    ctx.fillStyle = `rgba(240,242,255,${alpha*0.92})`;
+    ctx.beginPath(); ctx.ellipse(cx-cw*.15, cy+2, cw*.32, 18, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+cw*.2, cy, cw*.28, 16, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, cy+4, cw*.4, 20, 0, 0, Math.PI*2); ctx.fill();
+    // Top bright puffs (lit by sun)
+    ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+    ctx.beginPath(); ctx.ellipse(cx-cw*.1, cy-6, cw*.25, 14, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx+cw*.12, cy-8, cw*.22, 12, 0, 0, Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(cx, cy-4, cw*.3, 16, 0, 0, Math.PI*2); ctx.fill();
+    // Specular highlight (top-left)
+    const hl = ctx.createRadialGradient(cx-cw*.15, cy-10, 0, cx-cw*.1, cy-6, cw*.2);
+    hl.addColorStop(0, `rgba(255,255,255,${alpha*0.6})`);
+    hl.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = hl;
+    ctx.beginPath(); ctx.ellipse(cx-cw*.15, cy-10, cw*.18, 10, 0, 0, Math.PI*2); ctx.fill();
+  }
+
+  clouds.forEach(c => {
+    c.x -= c.speed;
+    if (c.x < -c.w - 30) c.x = W + 30;
+    drawVolCloud(c.x, c.y, c.w, 0.9);
+  });
+
+  // ── SCHOOL BUILDING (detailed 3D) ──
+  const bOff = (bgOffset * 0.08) % (W * 1.5);
+  const bx = ((W - 260 - bOff) % (W + 300) + W + 300) % (W + 300) - 300;
+  const bH = 140, bW = 230;
+  // Building shadow (ground)
+  ctx.fillStyle = 'rgba(0,0,0,0.08)';
+  ctx.beginPath(); ctx.ellipse(bx+bW/2, FLOOR, bW/2, 8, 0, 0, Math.PI*2); ctx.fill();
+  // Main wall (lit face)
+  const wallGrad = ctx.createLinearGradient(bx, FLOOR-bH, bx+bW, FLOOR);
+  wallGrad.addColorStop(0, 'rgba(216,196,255,0.55)');
+  wallGrad.addColorStop(0.5, 'rgba(196,181,253,0.45)');
+  wallGrad.addColorStop(1, 'rgba(167,139,250,0.35)');
+  ctx.fillStyle = wallGrad;
+  ctx.fillRect(bx, FLOOR-bH, bW, bH);
+  // Side face (shadow)
+  ctx.fillStyle = 'rgba(100,60,180,0.15)';
+  ctx.beginPath();
+  ctx.moveTo(bx+bW, FLOOR-bH); ctx.lineTo(bx+bW+20, FLOOR-bH+10);
+  ctx.lineTo(bx+bW+20, FLOOR+10); ctx.lineTo(bx+bW, FLOOR);
+  ctx.closePath(); ctx.fill();
+  // Roof (3D top face)
+  const roofGrad = ctx.createLinearGradient(bx, FLOOR-bH-12, bx+bW, FLOOR-bH);
+  roofGrad.addColorStop(0, 'rgba(200,180,255,0.7)');
+  roofGrad.addColorStop(1, 'rgba(167,139,250,0.5)');
+  ctx.fillStyle = roofGrad;
+  ctx.fillRect(bx-4, FLOOR-bH-12, bW+8, 14);
+  // Roof edge highlight
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillRect(bx-4, FLOOR-bH-12, bW+8, 3);
+  // Central tower
+  const towerGrad = ctx.createLinearGradient(bx+80, FLOOR-bH-50, bx+140, FLOOR-bH);
+  towerGrad.addColorStop(0, 'rgba(210,190,255,0.6)');
+  towerGrad.addColorStop(1, 'rgba(180,160,240,0.4)');
+  ctx.fillStyle = towerGrad;
+  ctx.fillRect(bx+80, FLOOR-bH-50, 60, 52);
+  // Tower side
+  ctx.fillStyle = 'rgba(100,60,180,0.15)';
+  ctx.beginPath();
+  ctx.moveTo(bx+140, FLOOR-bH-50); ctx.lineTo(bx+155, FLOOR-bH-40);
+  ctx.lineTo(bx+155, FLOOR-bH+2); ctx.lineTo(bx+140, FLOOR-bH);
+  ctx.closePath(); ctx.fill();
+  // Tower roof
+  ctx.fillStyle = 'rgba(180,160,240,0.65)';
+  ctx.fillRect(bx+76, FLOOR-bH-62, 68, 14);
+  ctx.fillStyle = 'rgba(255,255,255,0.2)';
+  ctx.fillRect(bx+76, FLOOR-bH-62, 68, 3);
+  // Flag pole
+  ctx.strokeStyle='rgba(167,139,250,0.7)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(bx+110,FLOOR-bH-62); ctx.lineTo(bx+110,FLOOR-bH-88); ctx.stroke();
+  // Flag (waving)
+  const flagWave = Math.sin(bgOffset * 0.05) * 3;
+  ctx.fillStyle='rgba(239,68,68,0.7)';
+  ctx.beginPath();
+  ctx.moveTo(bx+110,FLOOR-bH-88);
+  ctx.quadraticCurveTo(bx+120+flagWave,FLOOR-bH-84, bx+126,FLOOR-bH-80);
+  ctx.quadraticCurveTo(bx+120+flagWave,FLOOR-bH-76, bx+110,FLOOR-bH-78);
+  ctx.closePath(); ctx.fill();
+  // Windows (3D inset)
+  for(let i=0;i<4;i++) for(let j=0;j<2;j++) {
+    const wx = bx+14+i*54, wy = FLOOR-108+j*46;
+    // Window inset shadow
+    ctx.fillStyle='rgba(60,20,100,0.25)';
+    ctx.fillRect(wx-2, wy-2, 34, 30);
+    // Window frame
+    ctx.fillStyle='rgba(180,160,230,0.5)';
+    ctx.fillRect(wx, wy, 30, 26);
+    // Glass (glowing warm)
+    const winGrad = ctx.createLinearGradient(wx, wy, wx+30, wy+26);
+    winGrad.addColorStop(0, 'rgba(255,240,150,0.7)');
+    winGrad.addColorStop(0.5, 'rgba(255,220,80,0.5)');
+    winGrad.addColorStop(1, 'rgba(200,160,40,0.3)');
+    ctx.fillStyle = winGrad;
+    ctx.fillRect(wx+2, wy+2, 26, 22);
+    // Window reflection
+    ctx.fillStyle='rgba(255,255,255,0.2)';
+    ctx.fillRect(wx+3, wy+3, 10, 8);
+    // Window cross
+    ctx.strokeStyle='rgba(180,160,230,0.4)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(wx+15,wy+2); ctx.lineTo(wx+15,wy+24); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(wx+2,wy+13); ctx.lineTo(wx+28,wy+13); ctx.stroke();
+  }
+  // Door (arched, 3D)
+  ctx.fillStyle='rgba(80,50,20,0.5)';
+  ctx.fillRect(bx+95,FLOOR-52,32,52);
+  // Door arch
+  ctx.fillStyle='rgba(100,70,30,0.4)';
+  ctx.beginPath(); ctx.arc(bx+111,FLOOR-52,16,Math.PI,0); ctx.fill();
+  // Door highlight
+  const doorHl = ctx.createLinearGradient(bx+95,FLOOR-52,bx+127,FLOOR);
+  doorHl.addColorStop(0,'rgba(255,200,100,0.15)');
+  doorHl.addColorStop(1,'rgba(255,200,100,0)');
+  ctx.fillStyle=doorHl; ctx.fillRect(bx+95,FLOOR-52,32,52);
+  // Door handle
+  ctx.fillStyle='rgba(255,200,80,0.6)';
+  ctx.beginPath(); ctx.arc(bx+120,FLOOR-26,2,0,Math.PI*2); ctx.fill();
+  // Steps (3D)
+  ctx.fillStyle='rgba(210,210,220,0.4)';
+  ctx.fillRect(bx+88,FLOOR-10,46,10);
+  ctx.fillStyle='rgba(240,240,255,0.3)';
+  ctx.fillRect(bx+84,FLOOR-5,54,5);
+  // Step edge highlight
+  ctx.fillStyle='rgba(255,255,255,0.2)';
+  ctx.fillRect(bx+88,FLOOR-10,46,2);
+
+  // ── TREES (volumetric, 3D crowns) ──
+  const tOff = (bgOffset * 0.35) % (W + 200);
+  const treePositions = [W*0.08, W*0.28, W*0.5, W*0.72, W*0.95, W*1.18, W*1.4];
+  treePositions.forEach((tp, ti) => {
+    const tx = ((tp - tOff + W*3) % (W+200)) - 100;
+    const th = 60 + (ti%3)*18;
+    const tw = 38 + (ti%2)*12;
+    // Trunk (cylindrical)
+    const trunkG = ctx.createLinearGradient(tx+tw/2-6, FLOOR-th*0.4, tx+tw/2+6, FLOOR);
+    trunkG.addColorStop(0,'rgba(100,65,30,0.85)');
+    trunkG.addColorStop(0.5,'rgba(140,95,50,0.75)');
+    trunkG.addColorStop(1,'rgba(80,50,20,0.7)');
+    ctx.fillStyle=trunkG;
+    ctx.beginPath(); ctx.roundRect(tx+tw/2-5, FLOOR-th*0.42, 10, th*0.42, [0,0,3,3]); ctx.fill();
+    // Trunk highlight
+    ctx.fillStyle='rgba(180,130,70,0.3)';
+    ctx.fillRect(tx+tw/2-2, FLOOR-th*0.38, 3, th*0.3);
+    // Crown shadow (AO under crown)
+    ctx.fillStyle='rgba(0,0,0,0.1)';
+    ctx.beginPath(); ctx.ellipse(tx+tw/2, FLOOR-th*0.42, tw/2, 5, 0, 0, Math.PI*2); ctx.fill();
+    // Crown back (darker)
+    ctx.fillStyle='rgba(15,100,40,0.55)';
+    ctx.beginPath(); ctx.ellipse(tx+tw/2+4, FLOOR-th*0.65, tw/2, th*0.38, 0, 0, Math.PI*2); ctx.fill();
+    // Crown mid
+    const crownG = ctx.createRadialGradient(tx+tw/2-4, FLOOR-th*0.75, 0, tx+tw/2, FLOOR-th*0.65, tw/1.8);
+    crownG.addColorStop(0,'rgba(74,222,128,0.8)');
+    crownG.addColorStop(0.4,'rgba(34,197,94,0.7)');
+    crownG.addColorStop(0.8,'rgba(22,163,74,0.55)');
+    crownG.addColorStop(1,'rgba(15,100,40,0.3)');
+    ctx.fillStyle=crownG;
+    ctx.beginPath(); ctx.ellipse(tx+tw/2, FLOOR-th*0.65, tw/2, th*0.38, 0, 0, Math.PI*2); ctx.fill();
+    // Crown top highlight (lit by sun)
+    const crownHl = ctx.createRadialGradient(tx+tw/2-5, FLOOR-th*0.82, 0, tx+tw/2-3, FLOOR-th*0.78, tw/3);
+    crownHl.addColorStop(0,'rgba(134,239,172,0.7)');
+    crownHl.addColorStop(1,'rgba(134,239,172,0)');
+    ctx.fillStyle=crownHl;
+    ctx.beginPath(); ctx.ellipse(tx+tw/2-3, FLOOR-th*0.8, tw/3, th*0.22, 0, 0, Math.PI*2); ctx.fill();
+  });
+
+  // ── GROUND (layered grass + path) ──
+  // Grass base
+  const grassGrad = ctx.createLinearGradient(0,FLOOR,0,H);
+  grassGrad.addColorStop(0,'#4ade80');
+  grassGrad.addColorStop(0.15,'#22c55e');
+  grassGrad.addColorStop(0.5,'#16a34a');
+  grassGrad.addColorStop(1,'#14532d');
+  ctx.fillStyle=grassGrad; ctx.fillRect(0,FLOOR,W,H-FLOOR);
+
+  // Grass surface highlight
+  const grassHl = ctx.createLinearGradient(0,FLOOR,0,FLOOR+12);
+  grassHl.addColorStop(0,'rgba(134,239,172,0.5)');
+  grassHl.addColorStop(1,'rgba(134,239,172,0)');
+  ctx.fillStyle=grassHl; ctx.fillRect(0,FLOOR,W,12);
+
+  // Asphalt path (with perspective)
+  const pathGrad = ctx.createLinearGradient(0,FLOOR+8,0,H);
+  pathGrad.addColorStop(0,'rgba(55,65,81,0.55)');
+  pathGrad.addColorStop(0.3,'rgba(45,55,70,0.45)');
+  pathGrad.addColorStop(1,'rgba(30,40,55,0.35)');
+  ctx.fillStyle=pathGrad;
+  ctx.fillRect(0,FLOOR+8,W,H-FLOOR-8);
+
+  // Path edge (curb)
+  const curbGrad = ctx.createLinearGradient(0,FLOOR+6,0,FLOOR+10);
+  curbGrad.addColorStop(0,'rgba(200,200,210,0.5)');
+  curbGrad.addColorStop(1,'rgba(150,155,165,0.3)');
+  ctx.fillStyle=curbGrad; ctx.fillRect(0,FLOOR+6,W,4);
+
+  // Road markings (dashed)
+  const sp2 = 80;
+  const off = bgOffset % sp2;
+  ctx.strokeStyle='rgba(255,255,255,0.45)'; ctx.lineWidth=2;
+  ctx.setLineDash([26,18]);
+  ctx.lineDashOffset = -off;
+  ctx.beginPath(); ctx.moveTo(0,FLOOR+H*0.38); ctx.lineTo(W,FLOOR+H*0.38); ctx.stroke();
+  ctx.setLineDash([]); ctx.lineDashOffset=0;
+
+  // Grass tufts (3D, varied)
+  const gOff = bgOffset % 50;
+  for(let gx=-gOff;gx<W+50;gx+=50) {
+    // Tuft shadow
+    ctx.fillStyle='rgba(0,0,0,0.08)';
+    ctx.beginPath(); ctx.ellipse(gx+6, FLOOR+3, 6, 2, 0, 0, Math.PI*2); ctx.fill();
+    // Grass blades
+    ctx.fillStyle='rgba(74,222,128,0.7)';
+    ctx.beginPath(); ctx.moveTo(gx+2,FLOOR+2); ctx.quadraticCurveTo(gx,FLOOR-7,gx+4,FLOOR-9); ctx.lineTo(gx+6,FLOOR+2); ctx.fill();
+    ctx.fillStyle='rgba(34,197,94,0.65)';
+    ctx.beginPath(); ctx.moveTo(gx+7,FLOOR+2); ctx.quadraticCurveTo(gx+9,FLOOR-5,gx+11,FLOOR-7); ctx.lineTo(gx+13,FLOOR+2); ctx.fill();
+    ctx.fillStyle='rgba(134,239,172,0.5)';
+    ctx.beginPath(); ctx.moveTo(gx+4,FLOOR+2); ctx.quadraticCurveTo(gx+5,FLOOR-4,gx+7,FLOOR-5); ctx.lineTo(gx+8,FLOOR+2); ctx.fill();
+    // Second cluster
+    ctx.fillStyle='rgba(74,222,128,0.6)';
+    ctx.beginPath(); ctx.moveTo(gx+22,FLOOR+2); ctx.quadraticCurveTo(gx+20,FLOOR-5,gx+24,FLOOR-7); ctx.lineTo(gx+26,FLOOR+2); ctx.fill();
+    ctx.fillStyle='rgba(22,163,74,0.5)';
+    ctx.beginPath(); ctx.moveTo(gx+27,FLOOR+2); ctx.quadraticCurveTo(gx+29,FLOOR-3,gx+30,FLOOR-5); ctx.lineTo(gx+32,FLOOR+2); ctx.fill();
+  }
+}
+
+function drawObs(o) {
+  ctx.save();
+
+  if(o.type==='book') {
+    const bx=o.x, by=o.y, bw=o.w, bh=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=8; ctx.shadowOffsetX=4; ctx.shadowOffsetY=4;
+    // 3D side edge (bottom-right)
+    ctx.fillStyle=shadeColor(o.color,-55);
+    ctx.beginPath(); ctx.roundRect(bx+4,by+4,bw,bh,6); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Main cover with gradient
+    const coverGrad = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+    coverGrad.addColorStop(0, shadeColor(o.color,30));
+    coverGrad.addColorStop(0.4, o.color);
+    coverGrad.addColorStop(1, shadeColor(o.color,-35));
+    ctx.fillStyle=coverGrad;
+    ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,6); ctx.fill();
+    // Spine (left side, darker + gradient)
+    const spineGrad = ctx.createLinearGradient(bx,by,bx+10,by);
+    spineGrad.addColorStop(0, shadeColor(o.color,-50));
+    spineGrad.addColorStop(1, shadeColor(o.color,-25));
+    ctx.fillStyle=spineGrad;
+    ctx.beginPath(); ctx.roundRect(bx,by,10,bh,[6,0,0,6]); ctx.fill();
+    // Specular highlight (top-left)
+    const hlGrad = ctx.createLinearGradient(bx+10,by,bx+bw,by+bh*.5);
+    hlGrad.addColorStop(0,'rgba(255,255,255,0.35)');
+    hlGrad.addColorStop(0.4,'rgba(255,255,255,0.1)');
+    hlGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=hlGrad;
+    ctx.beginPath(); ctx.roundRect(bx+10,by,bw-10,bh,[0,6,6,0]); ctx.fill();
+    // Pages (right edge) with gradient
+    const pagesGrad = ctx.createLinearGradient(bx+bw-7,by,bx+bw,by);
+    pagesGrad.addColorStop(0,'#e8e0d0');
+    pagesGrad.addColorStop(1,'#f5f0e8');
+    ctx.fillStyle=pagesGrad;
+    ctx.fillRect(bx+bw-6,by+3,5,bh-6);
+    for(let i=0;i<8;i++) {
+      ctx.fillStyle=`rgba(180,170,150,${0.3+i*0.04})`;
+      ctx.fillRect(bx+bw-5,by+5+i*((bh-10)/8),4,1);
+    }
+    // White label area
+    ctx.shadowColor='rgba(0,0,0,0.1)'; ctx.shadowBlur=3; ctx.shadowOffsetX=1; ctx.shadowOffsetY=1;
+    ctx.fillStyle='rgba(255,255,255,0.93)';
+    ctx.beginPath(); ctx.roundRect(bx+11,by+8,bw-18,bh-16,4); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Subject icon (emoji, large)
+    ctx.font=`${Math.floor(bw*.38)}px Arial`; ctx.textAlign='center';
+    ctx.fillText(o.label2, bx+bw/2+2, by+bh*.44);
+    // Subject name (bold, readable)
+    ctx.fillStyle=shadeColor(o.color,-50);
+    let fs=11; ctx.font=`bold ${fs}px 'Segoe UI',Arial`;
+    while(ctx.measureText(o.label1).width>bw-22 && fs>7) { fs--; ctx.font=`bold ${fs}px 'Segoe UI',Arial`; }
+    ctx.fillText(o.label1, bx+bw/2+2, by+bh*.78);
+    // Bookmark ribbon with gradient
+    const bmGrad = ctx.createLinearGradient(bx+bw-13,by,bx+bw-6,by+16);
+    bmGrad.addColorStop(0,'#FFE57F');
+    bmGrad.addColorStop(1,'#F9A825');
+    ctx.fillStyle=bmGrad;
+    ctx.fillRect(bx+bw-13,by,7,16);
+    ctx.beginPath(); ctx.moveTo(bx+bw-13,by+16); ctx.lineTo(bx+bw-9.5,by+12); ctx.lineTo(bx+bw-6,by+16); ctx.closePath(); ctx.fill();
+
+  } else if(o.type==='paper') {
+    const px=o.x, py=o.y, pw=o.w, ph=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.25)'; ctx.shadowBlur=6; ctx.shadowOffsetX=3; ctx.shadowOffsetY=3;
+    // Paper base with subtle gradient (slight curl effect)
+    const paperGrad = ctx.createLinearGradient(px,py,px+pw,py+ph);
+    paperGrad.addColorStop(0,'#fffdf8');
+    paperGrad.addColorStop(0.7,'#fff8f0');
+    paperGrad.addColorStop(1,'#f5ede0');
+    ctx.fillStyle=paperGrad;
+    ctx.beginPath(); ctx.roundRect(px,py,pw,ph,5); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Red border
+    ctx.strokeStyle='#EF4444'; ctx.lineWidth=2.5;
+    ctx.beginPath(); ctx.roundRect(px+1,py+1,pw-2,ph-2,4); ctx.stroke();
+    // Ruled lines (blue)
+    ctx.strokeStyle='rgba(100,149,237,0.35)'; ctx.lineWidth=1;
+    for(let i=1;i<6;i++){ctx.beginPath();ctx.moveTo(px+6,py+i*(ph/6));ctx.lineTo(px+pw-6,py+i*(ph/6));ctx.stroke();}
+    // Red margin line
+    ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(px+14,py+4);ctx.lineTo(px+14,py+ph-4);ctx.stroke();
+    // Big red grade "2" with shadow
+    ctx.shadowColor='rgba(239,68,68,0.3)'; ctx.shadowBlur=4;
+    ctx.fillStyle='#EF4444'; ctx.font=`bold ${Math.floor(pw*.7)}px Arial`; ctx.textAlign='center';
+    ctx.fillText('2',px+pw/2,py+ph*.72);
+    ctx.shadowBlur=0;
+    // Red circle stamp
+    ctx.strokeStyle='rgba(239,68,68,0.4)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.arc(px+pw/2,py+ph*.55,pw*.38,0,Math.PI*2); ctx.stroke();
+    // "КОНТР." label
+    ctx.fillStyle='#374151'; ctx.font='bold 9px \'Segoe UI\',Arial'; ctx.textAlign='center';
+    ctx.fillText('КОНТР.',px+pw/2,py+13);
+    // Dog-ear corner with gradient
+    const dogGrad = ctx.createLinearGradient(px+pw-14,py,px+pw,py+14);
+    dogGrad.addColorStop(0,'#ffe0b2');
+    dogGrad.addColorStop(1,'#ffcc80');
+    ctx.fillStyle=dogGrad;
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw,py); ctx.lineTo(px+pw,py+14); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='#ffb74d'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw-14,py+14); ctx.lineTo(px+pw,py+14); ctx.stroke();
+    // Paper curl shadow
+    ctx.fillStyle='rgba(0,0,0,0.06)';
+    ctx.beginPath(); ctx.moveTo(px+pw-14,py); ctx.lineTo(px+pw-14,py+14); ctx.lineTo(px+pw,py+14); ctx.closePath(); ctx.fill();
+
+  } else if(o.type==='teacher') {
+    const tx=o.x, ty=o.y;
+    // Ground AO shadow
+    ctx.fillStyle='rgba(0,0,0,0.15)';
+    ctx.beginPath(); ctx.ellipse(tx+21,ty+82,16,5,0,0,Math.PI*2); ctx.fill();
+
+    // Helper: cylindrical limb for teacher
+    function tLimb(lx,ly,lw,lh,c1,c2,c3) {
+      const g=ctx.createLinearGradient(lx,ly,lx+lw,ly);
+      g.addColorStop(0,c3); g.addColorStop(0.3,c2); g.addColorStop(0.5,c1); g.addColorStop(0.7,c2); g.addColorStop(1,c3);
+      ctx.fillStyle=g; ctx.beginPath(); ctx.roundRect(lx,ly,lw,lh,3); ctx.fill();
+      const sg=ctx.createLinearGradient(lx,ly,lx,ly+4);
+      sg.addColorStop(0,'rgba(255,255,255,0.2)'); sg.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.roundRect(lx+lw*.15,ly,lw*.7,4,3); ctx.fill();
+    }
+
+    // LEGS
+    tLimb(tx+8,ty+58,11,22,'#3b5fc0','#1E3A8A','#0a1840');
+    tLimb(tx+23,ty+58,11,22,'#3b5fc0','#1E3A8A','#0a1840');
+    ctx.fillStyle='rgba(0,0,0,0.12)';
+    ctx.beginPath(); ctx.ellipse(tx+13,ty+68,4,2,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(tx+28,ty+68,4,2,0,0,Math.PI*2); ctx.fill();
+    // Shoes
+    function tShoe(sx,sy) {
+      const sg=ctx.createLinearGradient(sx,sy,sx+14,sy+7);
+      sg.addColorStop(0,'#4b5563'); sg.addColorStop(0.4,'#374151'); sg.addColorStop(1,'#111827');
+      ctx.fillStyle=sg; ctx.beginPath(); ctx.roundRect(sx-1,sy,15,6,[3,3,2,2]); ctx.fill();
+      const tc=ctx.createRadialGradient(sx+3,sy+1,0,sx+4,sy+2,5);
+      tc.addColorStop(0,'rgba(255,255,255,0.3)'); tc.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=tc; ctx.beginPath(); ctx.ellipse(sx+4,sy+2,5,2.5,0,0,Math.PI*2); ctx.fill();
+    }
+    tShoe(tx+6,ty+78); tShoe(tx+21,ty+78);
+
+    // BODY / SUIT (cylindrical)
+    tLimb(tx+6,ty+22,30,38,'#3b5fc0','#1E3A8A','#0a1840');
+    ctx.fillStyle='rgba(0,0,30,0.2)';
+    ctx.beginPath(); ctx.roundRect(tx+6,ty+52,30,8,[0,0,4,4]); ctx.fill();
+    const shlHl=ctx.createLinearGradient(tx+6,ty+22,tx+36,ty+28);
+    shlHl.addColorStop(0,'rgba(100,140,255,0.45)'); shlHl.addColorStop(1,'rgba(100,140,255,0)');
+    ctx.fillStyle=shlHl; ctx.beginPath(); ctx.roundRect(tx+6,ty+22,30,8,[4,4,0,0]); ctx.fill();
+    ctx.fillStyle='rgba(0,0,30,0.12)';
+    ctx.beginPath(); ctx.roundRect(tx+28,ty+22,8,38,[0,4,4,0]); ctx.fill();
+
+    // ARMS
+    tLimb(tx+2,ty+24,7,18,'#3b5fc0','#1E3A8A','#0a1840');
+    tLimb(tx+33,ty+24,7,18,'#3b5fc0','#1E3A8A','#0a1840');
+    const hg1=ctx.createRadialGradient(tx+5,ty+43,0,tx+5,ty+43,4);
+    hg1.addColorStop(0,'#f5c9a0'); hg1.addColorStop(1,'#c07040');
+    ctx.fillStyle=hg1; ctx.beginPath(); ctx.ellipse(tx+5,ty+43,4,3.5,0,0,Math.PI*2); ctx.fill();
+    const hg2=ctx.createRadialGradient(tx+37,ty+43,0,tx+37,ty+43,4);
+    hg2.addColorStop(0,'#f5c9a0'); hg2.addColorStop(1,'#c07040');
+    ctx.fillStyle=hg2; ctx.beginPath(); ctx.ellipse(tx+37,ty+43,4,3.5,0,0,Math.PI*2); ctx.fill();
+
+    // SHIRT & LAPELS
+    const shirtG2=ctx.createLinearGradient(tx+14,ty+22,tx+28,ty+36);
+    shirtG2.addColorStop(0,'#fff'); shirtG2.addColorStop(1,'#d8d8d8');
+    ctx.fillStyle=shirtG2; ctx.beginPath(); ctx.roundRect(tx+14,ty+22,14,14,2); ctx.fill();
+    ctx.fillStyle='rgba(180,180,180,0.5)'; ctx.fillRect(tx+20,ty+24,1,11);
+    const lapG2=ctx.createLinearGradient(tx+10,ty+22,tx+21,ty+34);
+    lapG2.addColorStop(0,'#fff'); lapG2.addColorStop(1,'#ddd');
+    ctx.fillStyle=lapG2;
+    ctx.beginPath(); ctx.moveTo(tx+14,ty+22); ctx.lineTo(tx+20,ty+32); ctx.lineTo(tx+10,ty+22); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(tx+28,ty+22); ctx.lineTo(tx+22,ty+32); ctx.lineTo(tx+32,ty+22); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle='rgba(180,180,180,0.4)'; ctx.lineWidth=0.5;
+    ctx.beginPath(); ctx.moveTo(tx+14,ty+22); ctx.lineTo(tx+20,ty+32); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx+28,ty+22); ctx.lineTo(tx+22,ty+32); ctx.stroke();
+    // Tie
+    const tieG2=ctx.createLinearGradient(tx+18,ty+24,tx+23,ty+42);
+    tieG2.addColorStop(0,'#f87171'); tieG2.addColorStop(0.4,'#EF4444'); tieG2.addColorStop(1,'#991b1b');
+    ctx.fillStyle=tieG2;
+    ctx.beginPath(); ctx.moveTo(tx+18,ty+25); ctx.lineTo(tx+23,ty+25); ctx.lineTo(tx+22,ty+40); ctx.lineTo(tx+20.5,ty+42); ctx.lineTo(tx+19,ty+40); ctx.closePath(); ctx.fill();
+    ctx.fillStyle='rgba(255,180,180,0.4)'; ctx.beginPath(); ctx.moveTo(tx+19,ty+25); ctx.lineTo(tx+22,ty+25); ctx.lineTo(tx+20.5,ty+32); ctx.closePath(); ctx.fill();
+
+    // NECK
+    const nkG2=ctx.createLinearGradient(tx+17,ty+20,tx+25,ty+24);
+    nkG2.addColorStop(0,'#f5c9a0'); nkG2.addColorStop(1,'#c07040');
+    ctx.fillStyle=nkG2; ctx.beginPath(); ctx.roundRect(tx+17,ty+20,8,4,2); ctx.fill();
+
+    // HEAD (sphere)
+    ctx.fillStyle='rgba(0,0,0,0.08)';
+    ctx.beginPath(); ctx.ellipse(tx+21,ty+22,9,2.5,0,0,Math.PI*2); ctx.fill();
+    const hGrad2=ctx.createRadialGradient(tx+17,ty+10,1,tx+21,ty+13,13);
+    hGrad2.addColorStop(0,'#fff0e0'); hGrad2.addColorStop(0.2,'#f5c9a0'); hGrad2.addColorStop(0.7,'#FDBCB4'); hGrad2.addColorStop(1,'#c07040');
+    ctx.fillStyle=hGrad2; ctx.beginPath(); ctx.ellipse(tx+21,ty+13,12,13,0,0,Math.PI*2); ctx.fill();
+    const rimG2=ctx.createRadialGradient(tx+29,ty+13,4,tx+30,ty+10,12);
+    rimG2.addColorStop(0,'rgba(200,220,255,0)'); rimG2.addColorStop(0.7,'rgba(200,220,255,0)'); rimG2.addColorStop(1,'rgba(200,220,255,0.22)');
+    ctx.fillStyle=rimG2; ctx.beginPath(); ctx.ellipse(tx+21,ty+13,12,13,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,130,130,0.18)';
+    ctx.beginPath(); ctx.ellipse(tx+13,ty+15,4,3,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(tx+29,ty+15,4,3,0,0,Math.PI*2); ctx.fill();
+
+    // HAIR (volumetric gray)
+    ctx.fillStyle='#4b5563';
+    ctx.beginPath(); ctx.ellipse(tx+21,ty+4,12,9,0,0,Math.PI*2); ctx.fill();
+    const hairG2=ctx.createRadialGradient(tx+17,ty+2,0,tx+20,ty+4,13);
+    hairG2.addColorStop(0,'#d1d5db'); hairG2.addColorStop(0.4,'#9CA3AF'); hairG2.addColorStop(1,'#4b5563');
+    ctx.fillStyle=hairG2; ctx.beginPath(); ctx.ellipse(tx+20,ty+3,11,8,0,0,Math.PI*2); ctx.fill();
+    const hairHl2=ctx.createRadialGradient(tx+16,ty+1,0,tx+16,ty+2,5);
+    hairHl2.addColorStop(0,'rgba(220,225,235,0.6)'); hairHl2.addColorStop(1,'rgba(220,225,235,0)');
+    ctx.fillStyle=hairHl2; ctx.beginPath(); ctx.ellipse(tx+16,ty+2,5,3,0,0,Math.PI*2); ctx.fill();
+
+    // GLASSES (3D)
+    ctx.strokeStyle='rgba(0,0,0,0.3)'; ctx.lineWidth=2.5;
+    ctx.strokeRect(tx+12.5,ty+9.5,9,7); ctx.strokeRect(tx+21.5,ty+9.5,9,7);
+    ctx.strokeStyle='#374151'; ctx.lineWidth=1.8;
+    ctx.strokeRect(tx+13,ty+10,8,6); ctx.strokeRect(tx+22,ty+10,8,6);
+    ctx.beginPath(); ctx.moveTo(tx+21,ty+13); ctx.lineTo(tx+22,ty+13); ctx.stroke();
+    ctx.strokeStyle='#4b5563'; ctx.lineWidth=1.2;
+    ctx.beginPath(); ctx.moveTo(tx+13,ty+13); ctx.lineTo(tx+10,ty+12); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx+30,ty+13); ctx.lineTo(tx+33,ty+12); ctx.stroke();
+    ctx.fillStyle='rgba(180,220,255,0.2)';
+    ctx.fillRect(tx+13,ty+10,8,6); ctx.fillRect(tx+22,ty+10,8,6);
+    ctx.fillStyle='rgba(255,255,255,0.45)';
+    ctx.fillRect(tx+14,ty+11,3,2); ctx.fillRect(tx+23,ty+11,3,2);
+    ctx.fillStyle='#1a1a2e';
+    ctx.beginPath(); ctx.ellipse(tx+17,ty+13,2,2,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(tx+26,ty+13,2,2,0,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='rgba(255,255,255,0.8)';
+    ctx.beginPath(); ctx.ellipse(tx+17.7,ty+12.3,0.8,0.7,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(tx+26.7,ty+12.3,0.8,0.7,0,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#6b7280'; ctx.lineWidth=1.5; ctx.lineCap='round';
+    ctx.beginPath(); ctx.moveTo(tx+12,ty+9); ctx.quadraticCurveTo(tx+16,ty+8,tx+21,ty+9); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(tx+21,ty+9); ctx.quadraticCurveTo(tx+26,ty+8,tx+31,ty+9); ctx.stroke();
+
+    // POINTER (3D wooden)
+    ctx.strokeStyle='rgba(0,0,0,0.2)'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(tx+37,ty+20); ctx.lineTo(tx+46,ty+5); ctx.stroke();
+    ctx.strokeStyle='#92400e'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(tx+37,ty+20); ctx.lineTo(tx+46,ty+5); ctx.stroke();
+    ctx.strokeStyle='#b45309'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(tx+37,ty+20); ctx.lineTo(tx+46,ty+5); ctx.stroke();
+    ctx.strokeStyle='rgba(255,200,100,0.3)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(tx+37.5,ty+19); ctx.lineTo(tx+46,ty+5); ctx.stroke();
+    ctx.shadowColor='rgba(239,68,68,0.7)'; ctx.shadowBlur=8;
+    const tipG2=ctx.createRadialGradient(tx+46,ty+5,0,tx+46,ty+5,5);
+    tipG2.addColorStop(0,'#fca5a5'); tipG2.addColorStop(0.5,'#EF4444'); tipG2.addColorStop(1,'#991b1b');
+    ctx.fillStyle=tipG2; ctx.beginPath(); ctx.arc(tx+46,ty+5,4,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+
+    // Label
+    ctx.fillStyle='#EF4444'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
+    ctx.fillText('УЧИТЕЛЬ',tx+22,ty+o.h+13);
+
+    } else if(o.type==='phone') {
+    const px=o.x, py=o.y, pw=o.w, ph=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=8; ctx.shadowOffsetX=3; ctx.shadowOffsetY=4;
+    // Phone body with gradient (glossy plastic)
+    const phoneGrad = ctx.createLinearGradient(px+3,py,px+pw-3,py+ph);
+    phoneGrad.addColorStop(0,'#374151');
+    phoneGrad.addColorStop(0.3,'#1f2937');
+    phoneGrad.addColorStop(0.7,'#111827');
+    phoneGrad.addColorStop(1,'#0a0f1a');
+    ctx.fillStyle=phoneGrad;
+    ctx.beginPath(); ctx.roundRect(px+3,py,pw-6,ph,10); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Phone body edge highlight
+    ctx.strokeStyle='rgba(100,120,150,0.5)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.roundRect(px+3,py,pw-6,ph,10); ctx.stroke();
+    // Screen bezel
+    ctx.fillStyle='#0a0f1a';
+    ctx.beginPath(); ctx.roundRect(px+5,py+4,pw-10,ph-10,8); ctx.fill();
+    // Screen with gradient (AMOLED glow)
+    const screenGrad = ctx.createLinearGradient(px+6,py+6,px+pw-6,py+ph-18);
+    screenGrad.addColorStop(0,'#1e3a8a');
+    screenGrad.addColorStop(0.3,'#1d4ed8');
+    screenGrad.addColorStop(0.7,'#2563eb');
+    screenGrad.addColorStop(1,'#1e40af');
+    ctx.fillStyle=screenGrad;
+    ctx.beginPath(); ctx.roundRect(px+6,py+6,pw-12,ph-18,6); ctx.fill();
+    // Screen glare (top-left reflection)
+    const glareGrad = ctx.createLinearGradient(px+6,py+6,px+pw-6,py+(ph-18)*.5);
+    glareGrad.addColorStop(0,'rgba(255,255,255,0.22)');
+    glareGrad.addColorStop(0.5,'rgba(255,255,255,0.06)');
+    glareGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=glareGrad;
+    ctx.beginPath(); ctx.roundRect(px+6,py+6,pw-12,(ph-18)*.45,6); ctx.fill();
+    // TikTok logo area
+    ctx.fillStyle='#fff'; ctx.font='bold 7px Arial'; ctx.textAlign='center';
+    ctx.fillText('TikTok',px+pw/2,py+ph*.3);
+    // Musical note icon
+    ctx.fillStyle='#fff'; ctx.font='14px Arial';
+    ctx.fillText('🎵',px+pw/2,py+ph*.58);
+    // Home bar
+    ctx.fillStyle='rgba(255,255,255,0.45)';
+    ctx.beginPath(); ctx.roundRect(px+pw/2-8,py+ph-8,16,3,2); ctx.fill();
+    // Side buttons with gradient
+    const btnGrad = ctx.createLinearGradient(px+pw-3,py,px+pw,py);
+    btnGrad.addColorStop(0,'#4B5563');
+    btnGrad.addColorStop(1,'#374151');
+    ctx.fillStyle=btnGrad;
+    ctx.beginPath(); ctx.roundRect(px+pw-3,py+ph*.25,3,8,1); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(px+pw-3,py+ph*.4,3,8,1); ctx.fill();
+    ctx.fillStyle='#EF4444'; ctx.font='bold 9px Arial'; ctx.textAlign='center';
+    ctx.fillText('📵 ТЕЛЕФОН',px+pw/2,py+ph+13);
+
+  } else if(o.type==='diary') {
+    const dx=o.x, dy=o.y, dw=o.w, dh=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=7; ctx.shadowOffsetX=4; ctx.shadowOffsetY=4;
+    // 3D side edge
+    ctx.fillStyle=shadeColor(o.color,-55);
+    ctx.beginPath(); ctx.roundRect(dx+4,dy+4,dw,dh,4); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Main cover with gradient
+    const diaryGrad = ctx.createLinearGradient(dx,dy,dx+dw,dy+dh);
+    diaryGrad.addColorStop(0,shadeColor(o.color,25));
+    diaryGrad.addColorStop(0.5,o.color);
+    diaryGrad.addColorStop(1,shadeColor(o.color,-30));
+    ctx.fillStyle=diaryGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,dw,dh,4); ctx.fill();
+    // Cover highlight
+    const dhlGrad = ctx.createLinearGradient(dx,dy,dx+dw,dy+dh*.4);
+    dhlGrad.addColorStop(0,'rgba(255,255,255,0.3)');
+    dhlGrad.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle=dhlGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,dw,dh*.4,4); ctx.fill();
+    // Spine with gradient
+    const spineGrad = ctx.createLinearGradient(dx,dy,dx+8,dy);
+    spineGrad.addColorStop(0,shadeColor(o.color,-55));
+    spineGrad.addColorStop(1,shadeColor(o.color,-25));
+    ctx.fillStyle=spineGrad;
+    ctx.beginPath(); ctx.roundRect(dx,dy,8,dh,[4,0,0,4]); ctx.fill();
+    // Metal rings (diary binding) with 3D look
+    for(let i=0;i<3;i++) {
+      // Ring shadow
+      ctx.fillStyle='rgba(0,0,0,0.3)';
+      ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,4.5,0,Math.PI*2); ctx.fill();
+      // Ring body
+      const ringGrad = ctx.createRadialGradient(dx+3,dy+11+i*16,0,dx+4,dy+12+i*16,4);
+      ringGrad.addColorStop(0,'#e5e7eb');
+      ringGrad.addColorStop(0.5,'#9CA3AF');
+      ringGrad.addColorStop(1,'#4B5563');
+      ctx.fillStyle=ringGrad;
+      ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,4,0,Math.PI*2); ctx.fill();
+      // Ring hole
+      ctx.fillStyle=shadeColor(o.color,-20);
+      ctx.beginPath(); ctx.arc(dx+4,dy+12+i*16,2,0,Math.PI*2); ctx.fill();
+    }
+    // Pages
+    const pagesGrad = ctx.createLinearGradient(dx+dw-7,dy,dx+dw,dy);
+    pagesGrad.addColorStop(0,'#e0e0e0');
+    pagesGrad.addColorStop(1,'#f5f5f5');
+    ctx.fillStyle=pagesGrad;
+    ctx.fillRect(dx+dw-5,dy+2,4,dh-4);
+    for(let i=0;i<6;i++) ctx.fillRect(dx+dw-5,dy+4+i*((dh-8)/6),4,1);
+    // White label area
+    ctx.shadowColor='rgba(0,0,0,0.1)'; ctx.shadowBlur=2; ctx.shadowOffsetX=1; ctx.shadowOffsetY=1;
+    ctx.fillStyle='rgba(255,255,255,0.93)';
+    ctx.beginPath(); ctx.roundRect(dx+10,dy+8,dw-18,dh-16,4); ctx.fill();
+    ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+    // Emoji icon
+    ctx.font=`${Math.floor(dw*.35)}px Arial`; ctx.textAlign='center';
+    ctx.fillText(o.label2||'📓', dx+dw/2, dy+dh*.44);
+    // Subject name
+    ctx.fillStyle=shadeColor(o.color,-40);
+    let dfs=11; ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;
+    while(ctx.measureText(o.label1).width>dw-22 && dfs>7){dfs--;ctx.font=`bold ${dfs}px 'Segoe UI',Arial`;}
+    ctx.fillText(o.label1,dx+dw/2,dy+dh*.78);
+    // Red exclamation badge with glow
+    ctx.shadowColor='rgba(239,68,68,0.5)'; ctx.shadowBlur=5;
+    const badgeGrad = ctx.createRadialGradient(dx+dw-7,dy+7,0,dx+dw-6,dy+8,7);
+    badgeGrad.addColorStop(0,'#f87171');
+    badgeGrad.addColorStop(1,'#b91c1c');
+    ctx.fillStyle=badgeGrad;
+    ctx.beginPath(); ctx.arc(dx+dw-6,dy+8,7,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#fff'; ctx.font='bold 10px Arial';
+    ctx.fillText('!',dx+dw-6,dy+12);
+
+  } else if(o.type==='fatigue') {
+    const fx=o.x, fy=o.y, fw=o.w, fh=o.h;
+    // Outer glow
+    ctx.shadowColor='rgba(75,85,99,0.5)'; ctx.shadowBlur=12;
+    // Main cloud body with radial gradient
+    const cloudGrad = ctx.createRadialGradient(fx+fw*.4,fy+fh*.4,0,fx+fw/2,fy+fh/2,fw*.6);
+    cloudGrad.addColorStop(0,'rgba(100,110,125,0.98)');
+    cloudGrad.addColorStop(0.5,'rgba(75,85,99,0.92)');
+    cloudGrad.addColorStop(1,'rgba(45,55,72,0.75)');
+    ctx.fillStyle=cloudGrad;
+    ctx.beginPath(); ctx.ellipse(fx+fw/2,fy+fh/2,fw/2,fh/2,0,0,Math.PI*2); ctx.fill();
+    ctx.shadowBlur=0;
+    // Lighter sub-clouds
+    ctx.fillStyle='rgba(156,163,175,0.55)';
+    ctx.beginPath(); ctx.ellipse(fx+fw*.3,fy+fh*.4,fw*.22,fh*.35,0,0,Math.PI*2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(fx+fw*.72,fy+fh*.38,fw*.2,fh*.3,0,0,Math.PI*2); ctx.fill();
+    // Top highlight
+    const cloudHl = ctx.createRadialGradient(fx+fw*.35,fy+fh*.25,0,fx+fw*.35,fy+fh*.25,fw*.3);
+    cloudHl.addColorStop(0,'rgba(200,210,230,0.4)');
+    cloudHl.addColorStop(1,'rgba(200,210,230,0)');
+    ctx.fillStyle=cloudHl;
+    ctx.beginPath(); ctx.ellipse(fx+fw*.35,fy+fh*.3,fw*.3,fh*.25,0,0,Math.PI*2); ctx.fill();
+    // Z letters floating with shadow
+    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=3;
+    ctx.fillStyle='rgba(255,255,255,0.95)'; ctx.font='bold 13px Arial'; ctx.textAlign='center';
+    ctx.fillText('Z',fx+fw*.65,fy+fh*.3);
+    ctx.font='bold 10px Arial';
+    ctx.fillText('z',fx+fw*.78,fy+fh*.14);
+    ctx.shadowBlur=0;
+    ctx.font='bold 16px Arial';
+    ctx.fillText('😴',fx+fw/2,fy+fh*.65);
+
+  } else if(o.type==='bookstack') {
+    const sx=o.x, sy=o.y, sw=o.w, sh=o.h;
+    // Drop shadow
+    ctx.shadowColor='rgba(0,0,0,0.35)'; ctx.shadowBlur=8; ctx.shadowOffsetX=4; ctx.shadowOffsetY=5;
+
+    function draw3DBook(bx, by, bw, bh, color, label, icon, indent) {
+      // 3D side edge
+      ctx.fillStyle=shadeColor(color,-55);
+      ctx.beginPath(); ctx.roundRect(bx+4,by+4,bw,bh,4); ctx.fill();
+      ctx.shadowBlur=0; ctx.shadowOffsetX=0; ctx.shadowOffsetY=0;
+      // Cover gradient
+      const cg = ctx.createLinearGradient(bx,by,bx+bw,by+bh);
+      cg.addColorStop(0,shadeColor(color,30));
+      cg.addColorStop(0.5,color);
+      cg.addColorStop(1,shadeColor(color,-35));
+      ctx.fillStyle=cg;
+      ctx.beginPath(); ctx.roundRect(bx,by,bw,bh,4); ctx.fill();
+      // Spine
+      const sg = ctx.createLinearGradient(bx,by,bx+9,by);
+      sg.addColorStop(0,shadeColor(color,-50));
+      sg.addColorStop(1,shadeColor(color,-20));
+      ctx.fillStyle=sg;
+      ctx.beginPath(); ctx.roundRect(bx,by,9,bh,[4,0,0,4]); ctx.fill();
+      // Highlight
+      const hg = ctx.createLinearGradient(bx+9,by,bx+bw,by+bh*.5);
+      hg.addColorStop(0,'rgba(255,255,255,0.3)');
+      hg.addColorStop(1,'rgba(255,255,255,0)');
+      ctx.fillStyle=hg;
+      ctx.beginPath(); ctx.roundRect(bx+9,by,bw-9,bh,[0,4,4,0]); ctx.fill();
+      // Label area
+      ctx.fillStyle='rgba(255,255,255,0.92)';
+      ctx.beginPath(); ctx.roundRect(bx+11,by+4,bw-18,bh-8,3); ctx.fill();
+      // Icon
+      ctx.font=`${Math.floor(bw*.32)}px Arial`; ctx.textAlign='center';
+      ctx.fillText(icon, bx+bw/2, by+bh*.45);
+      // Label
+      ctx.fillStyle=shadeColor(color,-50);
+      ctx.font=`bold 9px 'Segoe UI',Arial`;
+      ctx.fillText(label, bx+bw/2, by+bh*.75);
+    }
+
+    // Bottom book (green)
+    draw3DBook(sx, sy+sh*.58, sw, sh*.42, '#16a34a', 'БИОЛ.', '🌱', 0);
+    // Middle book (purple) — slightly indented
+    draw3DBook(sx+3, sy+sh*.3, sw-6, sh*.3, '#7c3aed', 'ИСТ.', '🏰', 3);
+    // Top book (blue) — most indented
+    draw3DBook(sx+6, sy, sw-12, sh*.32, '#2563eb', 'ГЕО.', '🌍', 6);
+  }
+  ctx.textAlign='left';
+  ctx.restore();
+}
+
+function shadeColor(color, percent) {
+  const num = parseInt(color.replace('#',''),16);
+  const amt = Math.round(2.55 * percent);
+  const R = Math.min(255,Math.max(0,(num>>16)+amt));
+  const G = Math.min(255,Math.max(0,((num>>8)&0x00FF)+amt));
+  const B = Math.min(255,Math.max(0,(num&0x0000FF)+amt));
+  return '#'+(0x1000000+(R*0x10000)+(G*0x100)+B).toString(16).slice(1);
+}
+
+function drawStar(s) {
+  ctx.save(); ctx.translate(s.x+s.r,s.y+s.r); ctx.rotate(s.rot);
+  // Glow
+  ctx.shadowColor='#F59E0B'; ctx.shadowBlur=12;
+  ctx.beginPath();
+  for(let i=0;i<10;i++){
+    const a=Math.PI*i/5-Math.PI/2, r=i%2===0?s.r:s.r*.4;
+    i===0?ctx.moveTo(r*Math.cos(a),r*Math.sin(a)):ctx.lineTo(r*Math.cos(a),r*Math.sin(a));
+  }
+  ctx.closePath(); ctx.fillStyle='#F59E0B'; ctx.fill();
+  ctx.shadowBlur=0;
+  ctx.restore();
+}
+
+function drawQuizBonus(b) {
+  ctx.save();
+  // Glowing book bonus
+  ctx.shadowColor='#2ECC71'; ctx.shadowBlur=16;
+  roundRect(b.x,b.y,b.w,b.h,8,'#2ECC71');
+  ctx.shadowBlur=0;
+  ctx.fillStyle='#fff'; ctx.font=`bold ${b.w*.5}px Arial`; ctx.textAlign='center';
+  ctx.fillText('📚',b.x+b.w/2,b.y+b.h*.72);
+  ctx.font='bold 8px Arial';
+  ctx.fillText('ОГЭ',b.x+b.w/2,b.y+b.h*.9);
+  ctx.restore();
+  ctx.textAlign='left';
+}
+
+// ══════════════════════════════════════════
+// OGE QUIZ LOGIC
+// ══════════════════════════════════════════
+let quizActive = false;
+let quizTimerInterval = null;
+let quizTimeLeft = 10;
+
+function showQuizPopup() {
+  if (quizActive) return;
+  quizActive = true;
+  state.paused = true;
+
+  const q = OGE_QUESTIONS[Math.floor(Math.random() * OGE_QUESTIONS.length)];
+  document.getElementById('quizSubject').textContent = q.subject;
+  document.getElementById('quizQuestion').textContent = q.q;
+  document.getElementById('quizReward').style.display = 'none';
+
+  const optsEl = document.getElementById('quizOpts');
+  optsEl.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-opt';
+    btn.textContent = opt;
+    btn.addEventListener('click', () => answerQuiz(i, q.correct, btn));
+    optsEl.appendChild(btn);
+  });
+
+  // Timer
+  quizTimeLeft = 10;
+  document.getElementById('quizTimerFill').style.width = '100%';
+  document.getElementById('quizPopup').classList.add('show');
+
+  quizTimerInterval = setInterval(() => {
+    quizTimeLeft -= 0.1;
+    const pct = Math.max(0, quizTimeLeft / 10 * 100);
+    document.getElementById('quizTimerFill').style.width = pct + '%';
+    if (quizTimeLeft <= 0) {
+      clearInterval(quizTimerInterval);
+      closeQuizPopup(false);
+    }
+  }, 100);
+}
+
+function answerQuiz(idx, correct, btn) {
+  clearInterval(quizTimerInterval);
+  const opts = document.querySelectorAll('.quiz-opt');
+  opts.forEach((b, i) => {
+    b.style.pointerEvents = 'none';
+    if (i === correct) b.classList.add('correct');
+    else if (i === idx && idx !== correct) b.classList.add('wrong');
+  });
+
+  if (idx === correct) {
+    state.score += 100;
+    state.char.shielded = 300; // shield for 5 seconds
+    document.getElementById('quizReward').style.display = 'block';
+    document.getElementById('quizReward').textContent = '+100 очков и щит на 5 сек! 🛡️';
+    spawnParticles(state.char.x+state.char.w/2, state.char.y, '#2ECC71', 12);
+    state.scorePops.push({text:'+100 🎓',x:state.char.x,y:state.char.y-10,life:1});
+  } else {
+    document.getElementById('quizReward').style.display = 'block';
+    document.getElementById('quizReward').textContent = 'Неверно 😔 Правильный ответ выделен зелёным';
+    document.getElementById('quizReward').style.color = '#EF4444';
+  }
+
+  setTimeout(() => closeQuizPopup(true), 1800);
+}
+
+function closeQuizPopup(answered) {
+  clearInterval(quizTimerInterval);
+  document.getElementById('quizPopup').classList.remove('show');
+  document.getElementById('quizReward').style.color = '#2ECC71';
+  quizActive = false;
+  state.paused = false;
+}
+
+// ══════════════════════════════════════════
+// PARTICLES
+// ══════════════════════════════════════════
+function spawnParticles(x, y, color, n) {
+  for(let i=0;i<n;i++){
+    state.particles.push({
+      x, y,
+      vx:(Math.random()-.5)*5,
+      vy:(Math.random()-1)*5,
+      r:3+Math.random()*3,
+      life:1, color
+    });
+  }
+}
+
+// ══════════════════════════════════════════
+// UPDATE
+// ══════════════════════════════════════════
+function update() {
+  if(!state.running||state.paused) return;
+  const s=state; s.frameCount++; s.time+=1/60; s.score+=1;
+  s.levelProgress=Math.min(s.maxProgress,s.levelProgress+1);
+  s.bgOffset+=s.speed;
+
+  // Speed increase
+  if(s.frameCount%500===0) s.speed=Math.min(s.maxSpeed,s.speed+.4);
+
+  // Character physics
+  const c=s.char;
+  if(!c.onGround){ c.vy+=0.85; c.y+=c.vy; if(c.y>=s.FLOOR-c.h){c.y=s.FLOOR-c.h;c.vy=0;c.onGround=true;} }
+  if(c.invincible>0) c.invincible--;
+  if(c.shielded>0) c.shielded--;
+
+  // Spawn obstacles
+  s.nextObstacle--;
+  if(s.nextObstacle<=0){
+    const t = OBS_TYPES[Math.floor(Math.random()*OBS_TYPES.length)];
+    const o = {...t, x:s.W+20, y:0};
+    o.y = s.FLOOR - o.h;
+    s.obstacles.push(o);
+    const d = DIFF[s.diff];
+    s.nextObstacle = Math.max(30, Math.floor(d.obsInterval + Math.random()*60 - s.speed*3));
+  }
+  s.obstacles.forEach(o=>{o.x-=s.speed;}); s.obstacles=s.obstacles.filter(o=>o.x>-120);
+
+  // Spawn stars
+  s.nextStar--;
+  if(s.nextStar<=0){
+    s.stars.push({x:s.W+20, y:s.FLOOR-90-Math.random()*80, r:18, rot:0});
+    s.nextStar = Math.floor(DIFF[s.diff].starInterval + Math.random()*80);
+  }
+  s.stars.forEach(st=>{st.x-=s.speed;st.rot+=.05;}); s.stars=s.stars.filter(st=>st.x>-60);
+
+  // Spawn quiz bonuses
+  s.nextQuiz--;
+  if(s.nextQuiz<=0){
+    s.quizBonuses.push({x:s.W+20, y:s.FLOOR-100-Math.random()*60, w:44, h:50});
+    s.nextQuiz = Math.floor(DIFF[s.diff].quizInterval + Math.random()*200);
+  }
+  s.quizBonuses.forEach(b=>{b.x-=s.speed;}); s.quizBonuses=s.quizBonuses.filter(b=>b.x>-60);
+
+  // Particles & pops
+  s.particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=.18;p.life-=.045;}); s.particles=s.particles.filter(p=>p.life>0);
+  s.scorePops.forEach(p=>{p.y-=1.5;p.life-=.022;}); s.scorePops=s.scorePops.filter(p=>p.life>0);
+
+  // Collision: obstacles
+  if(c.invincible===0 && c.shielded===0){
+    for(const o of s.obstacles){
+      if(c.x+12<o.x+o.w-8 && c.x+c.w-12>o.x+8 && c.y+12<o.y+o.h-8 && c.y+c.h-12>o.y+8){
+        s.lives--; c.invincible=90;
+        spawnParticles(c.x+c.w/2,c.y+c.h/2,'#EF4444',10);
+        updateHudLives();
+        if(s.lives<=0){gameOver();return;} break;
+      }
+    }
+  } else if(c.shielded>0) {
+    // Shield absorbs hit
+    for(const o of s.obstacles){
+      if(c.x+12<o.x+o.w-8 && c.x+c.w-12>o.x+8 && c.y+12<o.y+o.h-8 && c.y+c.h-12>o.y+8){
+        c.shielded=0; c.invincible=60;
+        spawnParticles(c.x+c.w/2,c.y+c.h/2,'#3B82F6',8);
+        s.scorePops.push({text:'🛡️ Щит!',x:c.x,y:c.y-10,life:1});
+        break;
+      }
+    }
+  }
+
+  // Collision: stars
+  s.stars=s.stars.filter(st=>{
+    if(c.x+5<st.x+st.r*2-5&&c.x+c.w-5>st.x+5&&c.y+5<st.y+st.r*2-5&&c.y+c.h-5>st.y+5){
+      s.score+=50; spawnParticles(st.x+st.r,st.y+st.r,'#F59E0B',8);
+      s.scorePops.push({text:'+50 ⭐',x:st.x,y:st.y,life:1}); return false;
+    } return true;
+  });
+
+  // Collision: quiz bonuses
+  s.quizBonuses=s.quizBonuses.filter(b=>{
+    if(c.x+5<b.x+b.w-5&&c.x+c.w-5>b.x+5&&c.y+5<b.y+b.h-5&&c.y+c.h-5>b.y+5){
+      spawnParticles(b.x+b.w/2,b.y+b.h/2,'#2ECC71',10);
+      showQuizPopup();
+      return false;
+    } return true;
+  });
+
+  // HUD update
+  document.getElementById('hudScore').textContent=s.score;
+  document.getElementById('hudProgress').style.width=Math.min(100,(s.levelProgress/s.maxProgress*100)).toFixed(1)+'%';
+  const m=Math.floor(s.time/60),sec=Math.floor(s.time%60);
+  document.getElementById('hudTimer').textContent=m+':'+(sec<10?'0':'')+sec;
+
+  // Level up
+  if(s.levelProgress>=s.maxProgress){
+    s.levelProgress=0; s.maxProgress+=300; s.level++;
+    s.speed=Math.min(s.maxSpeed,s.speed+.5);
+    document.getElementById('hudLevel').textContent=s.level;
+    // Flash effect
+    const fl=document.getElementById('levelFlash');
+    fl.classList.add('show');
+    s.scorePops.push({text:`🎉 УРОВЕНЬ ${s.level}!`,x:s.W/2-60,y:s.H/2,life:1.5});
+    setTimeout(()=>fl.classList.remove('show'),300);
+  }
+}
+
+// ══════════════════════════════════════════
+// DRAW
+// ══════════════════════════════════════════
+function draw() {
+  ctx.clearRect(0,0,state.W,state.H);
+  drawBg();
+  state.stars.forEach(drawStar);
+  state.quizBonuses.forEach(drawQuizBonus);
+  state.obstacles.forEach(drawObs);
+
+  const c=state.char;
+  const alpha=(c.invincible>0&&Math.floor(c.invincible/4)%2===0)?0.35:1;
+  ctx.globalAlpha=alpha;
+
+  // Shadow
+  ctx.beginPath(); ctx.ellipse(c.x+c.w/2,state.FLOOR+5,c.w*.45,5,0,0,Math.PI*2);
+  ctx.fillStyle='rgba(0,0,0,.15)'; ctx.fill();
+
+  drawPixelChar(ctx, c.x, c.y, state.frameCount, !c.onGround, c.shielded>0);
+  ctx.globalAlpha=1;
+
+  // Particles
+  state.particles.forEach(p=>{ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();});
+  ctx.globalAlpha=1;
+
+  // Score pops
+  state.scorePops.forEach(p=>{
+    ctx.globalAlpha=Math.min(1,p.life);
+    ctx.fillStyle='#F59E0B';
+    ctx.font='bold 16px Arial';
+    ctx.textAlign='center';
+    ctx.fillText(p.text,p.x,p.y);
+  });
+  ctx.globalAlpha=1; ctx.textAlign='left';
+}
+
+function loop(){update();draw();raf=requestAnimationFrame(loop);}
+
+function gameOver(){
+  state.running=false; cancelAnimationFrame(raf);
+  finalGameScore=state.score;
+  if(state.score>best){
+    best=state.score;
+    localStorage.setItem('ogeGameBest',best);
+    document.getElementById('hudBest').textContent=best;
+    document.getElementById('statBest').textContent=best;
+  }
+  document.getElementById('gameOverScore').textContent='Твой счёт: '+state.score+' | Уровень: '+state.level;
+  document.getElementById('gameOverOverlay').classList.add('show');
+}
+
+function updateHudLives(){
+  const el=document.getElementById('hudLives'); el.innerHTML='';
+  for(let i=0;i<DIFF[selectedDiff].lives;i++){
+    const s=document.createElement('span');
+    s.className='hud-heart';
+    s.textContent=i<state.lives?'❤️':'🖤';
+    el.appendChild(s);
+  }
+}
+
+function jump(){
+  if(!state.running||state.paused||quizActive) return;
+  const c=state.char;
+  if(c.onGround){c.vy=-16;c.onGround=false;}
+}
+
+function startGame(){
+  showScreen('game'); resizeCanvas();
+  state=initState(); state.running=true;
+  updateHudLives();
+  document.getElementById('hudScore').textContent='0';
+  document.getElementById('hudBest').textContent=best;
+  document.getElementById('hudLevel').textContent='1';
+  document.getElementById('pauseOverlay').classList.remove('show');
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  document.getElementById('quizPopup').classList.remove('show');
+  quizActive=false;
+  cancelAnimationFrame(raf); loop();
+}
+
+// ══════════════════════════════════════════
+// TEST ENGINE
+// ══════════════════════════════════════════
+const QUESTIONS = [
+  {id:'heard_about',q:'Слышал(а) про онлайн-колледж №1?',opts:['Да, слышал(а)','Нет, не слышал(а)','Что-то слышал(а), но мало'],scores:[{},{},{}]},
+  {id:'grade',q:'На каком этапе обучения ты сейчас?',opts:['Учусь в 5–8 классе','Учусь в 9 классе','Учусь в 10 классе','Учусь в 11 классе'],scores:[{},{},{},{}]},
+  {id:'subjects',q:'Какие школьные предметы тебе нравятся больше всего?',opts:['Математика, физика, информатика','Литература, иностранные языки','Рисование, ИЗО, труд','История, обществознание, право','Биология, химия, география'],scores:[{it:3},{mkt:2},{design:3},{law:3},{edu:2}]},
+  {id:'free_time',q:'Что ты любишь делать в свободное время?',opts:['Играть в игры или смотреть стримы','Рисовать, фотографировать, создавать что-то своими руками','Сидеть в соцсетях, смотреть тренды, вести блог','Читать, учиться чему-то новому, смотреть обучающие видео','Разбираться в технике, программировать, чинить гаджеты'],scores:[{game:3},{design:3},{mkt:3},{edu:2},{it:3}]},
+  {id:'work_format',q:'С чем тебе больше нравится работать?',opts:['С кодом, программами и алгоритмами','С визуалом, цветами и композицией','С текстами, идеями и контентом','С людьми, помогать и объяснять','С цифрами, документами и анализом'],scores:[{it:3},{design:3},{mkt:3},{edu:3},{law:2}]},
+  {id:'project_task',q:'Тебе дали задание на свободную тему. Что выберешь?',opts:['Создам приложение или программу','Разработаю дизайн и визуальную концепцию','Придумаю рекламную кампанию','Подготовлю классную презентацию/урок','Проведу исследование и составлю отчёт'],scores:[{it:3,game:2},{design:3},{mkt:3},{edu:3},{law:2}]},
+  {id:'movie',q:'Какой фильм/сериал тебе ближе?',opts:['Фильмы про хакеров и технологии','Фэнтези и миры с собственной историей','Фильмы про искусство и творчество','Фильмы про бизнес и успех','Драмы про людей и их отношения'],scores:[{it:3},{game:3},{design:2},{mkt:3},{edu:2}]},
+  {id:'workplace',q:'Какой формат работы тебе ближе?',opts:['Удалёнка из любой точки мира','Стабильный офис с коллективом','Свой стартап или фриланс','Работа в команде над большими проектами','Гибкий график и разнообразие задач'],scores:[{it:2},{edu:2},{mkt:2,design:2},{it:2,game:2},{design:2}]},
+  {id:'challenge',q:'Что тебя больше мотивирует?',opts:['Решать сложные технические задачи','Создавать что-то красивое и уникальное','Видеть конкретный результат в цифрах','Помогать другим и видеть их прогресс','Наводить порядок и структурировать'],scores:[{it:3},{design:3},{mkt:3},{edu:3},{law:3}]},
+  {id:'million_goal',q:'Что для тебя значит «заработать первый миллион»?',opts:['Создать хитовое приложение в AppStore','Запустить вирусную рекламную кампанию с % от продаж','Разработать дизайн для мировых брендов','Создать хитовую игру','Сделать карьеру востребованного эксперта'],scores:[{it:3},{mkt:3},{design:3},{game:3},{edu:2,law:2}]},
+  {id:'learning_style',q:'Как ты предпочитаешь учиться?',opts:['Сразу практиковаться и учиться на ошибках','Смотреть видео и разбирать примеры','Сначала изучить теорию, потом применять','Обсуждать и учиться у других','Работать над реальными проектами'],scores:[{it:2},{design:2},{law:2},{edu:2},{game:2,it:2}]},
+  {id:'superpower',q:'Какая суперсила тебе ближе?',opts:['Мастерски владеть любой техникой','Создавать миры из воображения','Видеть красоту везде и создавать её','Убеждать людей и вести за собой','Объяснять сложное простыми словами'],scores:[{it:3},{game:3},{design:3},{mkt:3},{edu:3}]},
+];
+
+let testAnswers = [];
+let testCurrent = 0;
+const LETTERS = ['A','B','C','D','E'];
+
+function initTest(){
+  testAnswers = new Array(QUESTIONS.length).fill(-1);
+  testCurrent = 0;
+  renderTestQuestion();
+  showScreen('test');
+}
+
+function renderTestQuestion(){
+  const q = QUESTIONS[testCurrent];
+  const total = QUESTIONS.length;
+  const pct = Math.round(((testCurrent+1)/total)*100);
+  document.getElementById('testProgressLabel').textContent = `Вопрос ${testCurrent+1} из ${total}`;
+  document.getElementById('testProgressFill').style.width = pct+'%';
+  document.getElementById('testScoreBadge').textContent = '⭐ '+finalGameScore;
+  document.getElementById('testTag').textContent = `Вопрос ${testCurrent+1} из ${total}`;
+  document.getElementById('testQuestion').textContent = q.q;
+  const optEl = document.getElementById('testOptions');
+  optEl.innerHTML = '';
+  q.opts.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'test-option' + (testAnswers[testCurrent]===i?' selected':'');
+    btn.innerHTML = `<span class="opt-letter">${LETTERS[i]}</span>${opt}`;
+    btn.addEventListener('click',()=>selectAnswer(i));
+    optEl.appendChild(btn);
+  });
+  const isLast = testCurrent === total-1;
+  const nextBtn = document.getElementById('testNextBtn');
+  nextBtn.textContent = isLast ? 'Узнать результат ★' : 'Дальше →';
+  nextBtn.disabled = testAnswers[testCurrent] === -1;
+  document.getElementById('testBackBtn').style.visibility = testCurrent===0?'hidden':'visible';
+}
+
+function selectAnswer(i){
+  testAnswers[testCurrent] = i;
+  document.querySelectorAll('.test-option').forEach((el,idx)=>{
+    el.classList.toggle('selected', idx===i);
+    el.querySelector('.opt-letter').style.background = idx===i?'var(--orange)':'';
+    el.querySelector('.opt-letter').style.color = idx===i?'#fff':'';
+  });
+  document.getElementById('testNextBtn').disabled = false;
+}
+
+document.getElementById('testNextBtn').addEventListener('click',()=>{
+  if(testAnswers[testCurrent]===-1) return;
+  if(testCurrent < QUESTIONS.length-1){ testCurrent++; renderTestQuestion(); }
+  else { showResults(); }
+});
+document.getElementById('testBackBtn').addEventListener('click',()=>{
+  if(testCurrent>0){ testCurrent--; renderTestQuestion(); }
+});
+
+function showResults(){
+  document.getElementById('finalScore').textContent = finalGameScore;
+  showScreen('test');
+}
+
+// ══════════════════════════════════════════
+// CONTROLS
+// ══════════════════════════════════════════
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'||e.code==='ArrowUp'){e.preventDefault();jump();}
+  if(e.code==='Escape') togglePause();
+});
+document.getElementById('gameCanvas').addEventListener('touchstart',e=>{e.preventDefault();jump();},{passive:false});
+document.getElementById('gameCanvas').addEventListener('click',()=>jump());
+
+document.getElementById('startBtn').addEventListener('click',startGame);
+document.getElementById('howBtn').addEventListener('click',()=>document.getElementById('modalOverlay').classList.add('open'));
+document.getElementById('modalClose').addEventListener('click',()=>document.getElementById('modalOverlay').classList.remove('open'));
+document.getElementById('modalPlay').addEventListener('click',()=>{document.getElementById('modalOverlay').classList.remove('open');startGame();});
+document.getElementById('modalOverlay').addEventListener('click',e=>{if(e.target===document.getElementById('modalOverlay'))document.getElementById('modalOverlay').classList.remove('open');});
+document.getElementById('previewArena').addEventListener('click',startGame);
+document.getElementById('pauseBtn').addEventListener('click',togglePause);
+document.getElementById('resumeBtn').addEventListener('click',togglePause);
+document.getElementById('restartFromPause').addEventListener('click',startGame);
+document.getElementById('retryBtn').addEventListener('click',startGame);
+document.getElementById('toTestBtn').addEventListener('click',()=>{
+  document.getElementById('finalScore').textContent = finalGameScore;
+  document.getElementById('gameOverOverlay').classList.remove('show');
+  showScreen('test');
+});
+document.getElementById('replayBtn').addEventListener('click',startGame);
+document.getElementById('navLogo').addEventListener('click',e=>{e.preventDefault();cancelAnimationFrame(raf);state.running=false;showScreen('start');});
+
+function togglePause(){
+  if(!state.running||quizActive) return;
+  state.paused=!state.paused;
+  document.getElementById('pauseOverlay').classList.toggle('show',state.paused);
+  document.getElementById('pauseBtn').textContent=state.paused?'▶':'⏸';
+}
+</script>
+</body>
+</html>
