@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Выживи до ОГЭ — Онлайн-колледж №1</title>
+<!-- v3 --><title>Выживи до ОГЭ — Онлайн-колледж №1</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{
@@ -2008,62 +2008,8 @@ const QUESTIONS = [
 ];
 
 let testAnswers = [];
-let testCurrent = 0;
-const LETTERS = ['A','B','C','D','E'];
-
+// Тест профессий убран — вместо него экран эфиров (testScreen)
 function initTest(){
-  testAnswers = new Array(QUESTIONS.length).fill(-1);
-  testCurrent = 0;
-  renderTestQuestion();
-  showScreen('test');
-}
-
-function renderTestQuestion(){
-  const q = QUESTIONS[testCurrent];
-  const total = QUESTIONS.length;
-  const pct = Math.round(((testCurrent+1)/total)*100);
-  document.getElementById('testProgressLabel').textContent = `Вопрос ${testCurrent+1} из ${total}`;
-  document.getElementById('testProgressFill').style.width = pct+'%';
-  document.getElementById('testScoreBadge').textContent = '⭐ '+finalGameScore;
-  document.getElementById('testTag').textContent = `Вопрос ${testCurrent+1} из ${total}`;
-  document.getElementById('testQuestion').textContent = q.q;
-  const optEl = document.getElementById('testOptions');
-  optEl.innerHTML = '';
-  q.opts.forEach((opt,i)=>{
-    const btn = document.createElement('button');
-    btn.className = 'test-option' + (testAnswers[testCurrent]===i?' selected':'');
-    btn.innerHTML = `<span class="opt-letter">${LETTERS[i]}</span>${opt}`;
-    btn.addEventListener('click',()=>selectAnswer(i));
-    optEl.appendChild(btn);
-  });
-  const isLast = testCurrent === total-1;
-  const nextBtn = document.getElementById('testNextBtn');
-  nextBtn.textContent = isLast ? 'Узнать результат ★' : 'Дальше →';
-  nextBtn.disabled = testAnswers[testCurrent] === -1;
-  document.getElementById('testBackBtn').style.visibility = testCurrent===0?'hidden':'visible';
-}
-
-function selectAnswer(i){
-  testAnswers[testCurrent] = i;
-  document.querySelectorAll('.test-option').forEach((el,idx)=>{
-    el.classList.toggle('selected', idx===i);
-    el.querySelector('.opt-letter').style.background = idx===i?'var(--orange)':'';
-    el.querySelector('.opt-letter').style.color = idx===i?'#fff':'';
-  });
-  document.getElementById('testNextBtn').disabled = false;
-}
-
-document.getElementById('testNextBtn').addEventListener('click',()=>{
-  if(testAnswers[testCurrent]===-1) return;
-  if(testCurrent < QUESTIONS.length-1){ testCurrent++; renderTestQuestion(); }
-  else { showResults(); }
-});
-document.getElementById('testBackBtn').addEventListener('click',()=>{
-  if(testCurrent>0){ testCurrent--; renderTestQuestion(); }
-});
-
-function showResults(){
-  document.getElementById('finalScore').textContent = finalGameScore;
   showScreen('test');
 }
 
