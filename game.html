@@ -189,6 +189,17 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
   .nav-menu{display:none;}
   .hud-box:nth-child(4){display:none;}
 }
+@keyframes glowPulse {
+  0%,100%{box-shadow:0 0 8px 2px rgba(255,165,0,.6),0 0 20px 4px rgba(255,165,0,.3);transform:scale(1);}
+  50%{box-shadow:0 0 18px 6px rgba(255,165,0,.9),0 0 40px 12px rgba(255,165,0,.5);transform:scale(1.04);}
+}
+.glow-btn{
+  animation:glowPulse 1.4s ease-in-out infinite;
+  background:linear-gradient(135deg,#ff9500,#ff5e00)!important;
+  color:#fff!important;
+  border:none!important;
+  font-weight:800!important;
+}
 </style>
 </head>
 <body>
@@ -199,10 +210,6 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
     <img src="logo.png" alt="Онлайн Колледж №1" class="nav-logo-img">
   </a>
   <nav class="nav-menu">
-    <a href="#">Специальности</a>
-    <a href="#">О колледже</a>
-    <a href="#">Учебный процесс</a>
-    <a href="#">Стоимость</a>
   </nav>
   <a href="https://onlinecollege-1.ru/" target="_blank" class="nav-cta">Начать бесплатно</a>
 </nav>
@@ -219,7 +226,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
           <span class="badge bg-orange">ОГЭ</span>
         </div>
       </h1>
-      <p class="start-sub">Уворачивайся от контрольных,<br>отвечай на вопросы ОГЭ и узнай о закрытых эфирах 19 и 20 мая!</p>
+      <p class="start-sub">Уворачивайся от контрольных и отвечай на вопросы ОГЭ!</p>
       <div class="diff-label">Уровень сложности:</div>
       <div class="diff-btns">
         <button class="diff-btn" data-diff="easy">Лёгкий</button>
@@ -295,7 +302,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
     <div class="overlay-box">
       <h2>💥 Игра окончена!</h2><p id="gameOverScore">Твой счёт: 0</p>
       <button class="ov-btn ov-primary" id="retryBtn">🔄 Ещё раз</button>
-      <button class="ov-btn ov-secondary" id="toTestBtn">📺 Узнать о закрытых эфирах</button>
+      <button class="ov-btn ov-secondary glow-btn" id="toTestBtn">✨ Попасть на секретный эфир</button>
     </div>
   </div>
 </div>
