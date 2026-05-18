@@ -311,9 +311,7 @@ body{font-family:'Segoe UI',Arial,sans-serif;background:#fff;overflow:hidden;wid
 <div class="screen" id="testScreen" style="overflow-y:auto;background:linear-gradient(135deg,#faf5ff 0%,#f0fdf4 60%,#eff6ff 100%)">
   <div style="max-width:720px;width:100%;padding:32px 20px;">
     <div style="text-align:center;margin-bottom:28px;">
-      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;margin-bottom:16px;">⭐ Счёт в игре: <span id="finalScore" style="font-size:16px;">0</span></div>
-      <h2 style="font-size:clamp(24px,4vw,38px);font-weight:900;color:var(--dark);line-height:1.2;margin-bottom:10px;">Май — самый горячий месяц<br>для каждой семьи</h2>
-      <p style="font-size:15px;color:var(--gray);font-weight:500;line-height:1.6;max-width:580px;margin:0 auto;">До экзаменов остались считанные дни, а вопросов «что делать дальше?» становится только больше. Онлайн-школа №1 подготовила два закрытых эфира: отдельно для школьников и отдельно для родителей.</p>
+      <div style="display:inline-flex;align-items:center;gap:8px;background:var(--purple);color:#fff;border-radius:20px;padding:7px 20px;font-size:13px;font-weight:800;margin-bottom:16px;">⭐ Счёт в игре: <span id="finalScore" style="font-size:16px;">0</span></div>      <h2 style="font-size:clamp(22px,3.5vw,32px);font-weight:900;color:var(--dark);line-height:1.2;margin-bottom:6px;">Два секретных эфира</h2>
     </div>
 
     <!-- Эфир  1: Школьники -->
@@ -753,9 +751,9 @@ animatePreview();
 // DIFFICULTY SETTINGS
 // ══════════════════════════════════════════
 const DIFF = {
-  easy:   { startSpeed:3,   maxSpeed:9,  lives:5, obsInterval:100, starInterval:120, quizInterval:400 },
-  normal: { startSpeed:4,   maxSpeed:13, lives:3, obsInterval:80,  starInterval:150, quizInterval:300 },
-  hard:   { startSpeed:6,   maxSpeed:16, lives:2, obsInterval:55,  starInterval:200, quizInterval:500 },
+  easy:   { startSpeed:4,   maxSpeed:11, lives:5, obsInterval:100, starInterval:120, quizInterval:400 },
+  normal: { startSpeed:5.5, maxSpeed:15, lives:3, obsInterval:80,  starInterval:150, quizInterval:300 },
+  hard:   { startSpeed:7,   maxSpeed:18, lives:2, obsInterval:55,  starInterval:200, quizInterval:500 },
 };
 let selectedDiff = 'normal';
 
