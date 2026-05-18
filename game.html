@@ -822,11 +822,10 @@ const screens = {
   start: document.getElementById('startScreen'),
   game:  document.getElementById('gameScreen'),
   test:  document.getElementById('testScreen'),
-  end:   document.getElementById('endScreen'),
 };
 function showScreen(name) {
-  Object.values(screens).forEach(s => s.classList.remove('active'));
-  screens[name].classList.add('active');
+  Object.values(screens).forEach(s => s && s.classList.remove('active'));
+  if (screens[name]) screens[name].classList.add('active');
   if (name === 'game') resizeCanvas();
 }
 const canvas = document.getElementById('gameCanvas');
