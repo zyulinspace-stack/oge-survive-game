@@ -1,643 +1,1116 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Путь героя — Онлайн-колледж №1</title>
-  <meta name="description" content="Пройди тест и узнай свой путь в профессию после 9 класса. Онлайн-колледж №1." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    :root {
-      --orange: #FF6B35;
-      --orange-dark: #E55A25;
-      --green: #3DB87A;
-      --green-dark: #2E9A63;
-      --teal: #00BFA5;
-      --bg: #F7F8FA;
-      --white: #FFFFFF;
-      --dark: #1A1F2E;
-      --dark2: #2D3448;
-      --text: #1A1F2E;
-      --text-muted: #6B7280;
-      --border: #E5E7EB;
-      --radius: 20px;
-      --radius-sm: 12px;
-      --shadow: 0 4px 24px rgba(0,0,0,0.08);
-      --shadow-lg: 0 12px 48px rgba(0,0,0,0.12);
-    }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Академия героев — Онлайн-колледж №1</title>
+<meta name="description" content="Пройди путь героя и узнай свою профессию после 9 класса. Онлайн-колледж №1."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FF6B35;--orange2:#FF8C5A;--ob:rgba(255,107,53,.1);
+  --green:#3DB87A;--green2:#2E9A63;
+  --purple:#7C3AED;--blue:#2563EB;--yellow:#F59E0B;
+  --dark:#1A1F2E;--dark2:#2D3448;
+  --bg:#F7F8FA;--white:#fff;
+  --text:#1A1F2E;--muted:#6B7280;--border:#E5E7EB;
+  --r:20px;--rs:12px;
+  --sh:0 4px 24px rgba(0,0,0,.08);--shl:0 12px 48px rgba(0,0,0,.14)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 
-    /* ─── HEADER ─── */
-    .header { background: var(--white); border-bottom: 1px solid var(--border); padding: 16px 6vw; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
-    .logo { height: 44px; width: auto; }
-    .header-badge { background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: white; font-size: 12px; font-weight: 700; padding: 6px 14px; border-radius: 100px; letter-spacing: 0.02em; }
+/* HEADER */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:14px 5vw;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.hdr-logo{height:42px;width:auto}
+.hdr-xp{display:flex;align-items:center;gap:10px}
+.xp-gem{width:30px;height:30px;background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:#fff}
+.xp-count{font-size:15px;font-weight:800;color:var(--orange);line-height:1}
+.xp-sub{font-size:11px;color:var(--muted);font-weight:600}
 
-    /* ─── HERO ─── */
-    .hero { background: var(--white); padding: 64px 6vw 0; overflow: hidden; position: relative; }
-    .hero-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: end; }
-    .hero-left { padding-bottom: 64px; }
-    .hero-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,107,53,0.1); color: var(--orange); font-size: 13px; font-weight: 700; padding: 6px 14px; border-radius: 100px; margin-bottom: 20px; letter-spacing: 0.02em; }
-    .hero-tag-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--orange); animation: blink 1.5s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
-    .hero h1 { font-size: clamp(36px, 4.5vw, 60px); font-weight: 900; line-height: 1.1; letter-spacing: -0.03em; margin-bottom: 16px; }
-    .hero h1 em { font-style: normal; background: linear-gradient(135deg, #FF6B35, #FF8C5A); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
-    .hero-sub { font-size: 18px; color: var(--text-muted); line-height: 1.6; margin-bottom: 32px; max-width: 480px; }
-    .hero-steps { display: flex; gap: 24px; margin-bottom: 36px; }
-    .hero-step { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--text-muted); }
-    .hero-step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--orange); color: white; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .hero-img-wrap { position: relative; display: flex; justify-content: flex-end; align-items: flex-end; }
-    .hero-img { width: 100%; max-width: 480px; height: 420px; object-fit: cover; object-position: top center; border-radius: 24px 24px 0 0; }
-    .hero-img-badge { position: absolute; bottom: 24px; left: -20px; background: white; border-radius: 16px; padding: 14px 18px; box-shadow: var(--shadow-lg); display: flex; align-items: center; gap: 12px; }
-    .hero-img-badge-icon { width: 40px; height: 40px; border-radius: 10px; background: rgba(61,184,122,0.12); display: flex; align-items: center; justify-content: center; }
-    .hero-img-badge-icon svg { width: 20px; height: 20px; stroke: var(--green); fill: none; stroke-width: 2; }
-    .hero-img-badge-text strong { display: block; font-size: 16px; font-weight: 800; color: var(--text); }
-    .hero-img-badge-text span { font-size: 12px; color: var(--text-muted); }
+/* XP TOAST */
+.xp-toast{position:fixed;top:80px;right:20px;background:var(--orange);color:#fff;font-size:15px;font-weight:800;padding:10px 20px;border-radius:100px;z-index:999;opacity:0;transform:translateY(-8px);transition:all .3s;pointer-events:none;box-shadow:0 4px 20px rgba(255,107,53,.4)}
+.xp-toast.show{opacity:1;transform:translateY(0)}
 
-    /* ─── JOURNEY TRACK ─── */
-    .journey-track { background: var(--dark); padding: 20px 6vw; position: sticky; top: 73px; z-index: 100; }
-    .journey-inner { max-width: 700px; margin: 0 auto; display: flex; align-items: center; gap: 0; }
-    .journey-node { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; position: relative; }
-    .journey-node:not(:last-child)::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background: rgba(255,255,255,0.15); z-index: 0; transition: background 0.4s; }
-    .journey-node.done:not(:last-child)::after { background: var(--orange); }
-    .journey-node.active:not(:last-child)::after { background: rgba(255,107,53,0.3); }
-    .journey-icon { width: 32px; height: 32px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; background: var(--dark); position: relative; z-index: 1; transition: all 0.4s; }
-    .journey-icon svg { width: 14px; height: 14px; stroke: rgba(255,255,255,0.3); fill: none; stroke-width: 2; transition: stroke 0.4s; }
-    .journey-node.active .journey-icon { border-color: var(--orange); background: rgba(255,107,53,0.15); }
-    .journey-node.active .journey-icon svg { stroke: var(--orange); }
-    .journey-node.done .journey-icon { border-color: var(--orange); background: var(--orange); }
-    .journey-node.done .journey-icon svg { stroke: white; }
-    .journey-label { font-size: 11px; font-weight: 600; color: rgba(255,255,255,0.3); text-align: center; transition: color 0.4s; white-space: nowrap; }
-    .journey-node.active .journey-label, .journey-node.done .journey-label { color: rgba(255,255,255,0.85); }
+/* JOURNEY TRACK */
+.jtrack{background:var(--dark);padding:16px 5vw;position:sticky;top:71px;z-index:200;display:none}
+.jtrack-in{max-width:640px;margin:0 auto;display:flex;align-items:center}
+.jn{flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;position:relative}
+.jn:not(:last-child)::after{content:'';position:absolute;top:15px;left:50%;width:100%;height:2px;background:rgba(255,255,255,.12);z-index:0;transition:background .5s}
+.jn.done:not(:last-child)::after{background:var(--orange)}
+.jn.active:not(:last-child)::after{background:rgba(255,107,53,.3)}
+.jdot{width:30px;height:30px;border-radius:50%;border:2px solid rgba(255,255,255,.2);background:var(--dark);display:flex;align-items:center;justify-content:center;position:relative;z-index:1;transition:all .4s;font-size:12px;color:rgba(255,255,255,.3);font-weight:700}
+.jn.active .jdot{border-color:var(--orange);color:var(--orange);background:rgba(255,107,53,.12)}
+.jn.done .jdot{border-color:var(--orange);background:var(--orange);color:#fff}
+.jlbl{font-size:10px;font-weight:600;color:rgba(255,255,255,.3);transition:color .4s;white-space:nowrap}
+.jn.active .jlbl,.jn.done .jlbl{color:rgba(255,255,255,.8)}
 
-    /* ─── QUIZ WRAP ─── */
-    .quiz-wrap { max-width: 860px; margin: 0 auto; padding: 52px 6vw 80px; }
-    .screen { display: none; }
-    .screen.active { display: block; animation: fadeUp 0.35s ease; }
-    @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+/* HERO SECTION */
+.hero{background:var(--white);padding:64px 5vw 0;overflow:hidden}
+.hero-in{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:end}
+.hero-l{padding-bottom:64px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:var(--ob);color:var(--orange);font-size:13px;font-weight:700;padding:6px 14px;border-radius:100px;margin-bottom:20px}
+.hero-dot{width:6px;height:6px;border-radius:50%;background:var(--orange);animation:blink 1.5s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:clamp(36px,5vw,62px);font-weight:900;line-height:1.05;letter-spacing:-.03em;margin-bottom:16px}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--orange),var(--orange2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:18px;color:var(--muted);line-height:1.6;margin-bottom:32px;max-width:460px}
+.hero-steps{display:flex;gap:20px;margin-bottom:36px;flex-wrap:wrap}
+.hs{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--muted)}
+.hs-n{width:26px;height:26px;border-radius:50%;background:var(--orange);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hero-r{position:relative;display:flex;justify-content:flex-end;align-items:flex-end}
+.hero-img{width:100%;max-width:480px;height:420px;object-fit:cover;object-position:top center;border-radius:24px 24px 0 0}
+.hero-badge{position:absolute;bottom:28px;left:-16px;background:#fff;border-radius:16px;padding:14px 18px;box-shadow:var(--shl);display:flex;align-items:center;gap:12px}
+.hb-icon{width:38px;height:38px;border-radius:10px;background:rgba(61,184,122,.12);display:flex;align-items:center;justify-content:center}
+.hb-icon svg{width:18px;height:18px;stroke:var(--green);fill:none;stroke-width:2}
+.hb-text strong{display:block;font-size:15px;font-weight:800}
+.hb-text span{font-size:12px;color:var(--muted)}
 
-    /* ─── CHAPTER HEADER ─── */
-    .chapter { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
-    .chapter-num { width: 40px; height: 40px; border-radius: 12px; background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: white; font-size: 18px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .chapter-text { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--orange); }
-    .screen-title { font-size: clamp(26px, 3.5vw, 40px); font-weight: 900; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 10px; }
-    .screen-desc { font-size: 16px; color: var(--text-muted); margin-bottom: 36px; max-width: 580px; line-height: 1.6; }
+/* QUIZ */
+.qwrap{max-width:900px;margin:0 auto;padding:48px 5vw 80px;display:none}
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-    /* ─── FACT STRIP ─── */
-    .fact-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 36px; }
-    .fact-card { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px; box-shadow: var(--shadow); }
-    .fact-val { font-size: 24px; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
-    .fact-label { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+/* PROGRESS */
+.prog-wrap{margin-bottom:32px}
+.prog-bg{background:var(--border);border-radius:100px;height:6px;overflow:hidden;margin-bottom:8px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange2));border-radius:100px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.prog-meta{display:flex;justify-content:space-between;align-items:center}
+.prog-step{font-size:12px;font-weight:700;color:var(--muted)}
+.prog-xp{font-size:12px;font-weight:800;color:var(--orange)}
 
-    /* ─── INSIGHT ─── */
-    .insight { background: linear-gradient(135deg, rgba(61,184,122,0.08), rgba(0,191,165,0.05)); border: 1px solid rgba(61,184,122,0.25); border-radius: var(--radius-sm); padding: 18px 20px; margin-bottom: 32px; display: flex; gap: 14px; align-items: flex-start; }
-    .insight-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(61,184,122,0.12); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .insight-icon svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2; }
-    .insight-text { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
-    .insight-text strong { color: var(--text); }
+/* CHAPTER */
+.chapter{display:flex;align-items:center;gap:10px;margin-bottom:20px}
+.ch-n{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-size:16px;font-weight:900;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ch-l{font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--orange)}
+.stitle{font-size:clamp(26px,4vw,42px);font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:10px}
+.stitle em{font-style:normal;background:linear-gradient(135deg,var(--orange),var(--orange2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sdesc{font-size:16px;color:var(--muted);margin-bottom:32px;max-width:560px;line-height:1.6}
 
-    /* ─── CHOICES ─── */
-    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
-    .choice { background: var(--white); border: 2px solid var(--border); border-radius: var(--radius); padding: 24px 20px; cursor: pointer; transition: all 0.22s; position: relative; overflow: hidden; }
-    .choice:hover { border-color: var(--orange); box-shadow: 0 6px 24px rgba(255,107,53,0.12); transform: translateY(-2px); }
-    .choice.selected { border-color: var(--orange); background: rgba(255,107,53,0.04); box-shadow: 0 6px 24px rgba(255,107,53,0.15); }
-    .choice-check { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all 0.22s; }
-    .choice.selected .choice-check { background: var(--orange); border-color: var(--orange); }
-    .choice-check svg { width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; opacity: 0; transition: opacity 0.22s; }
-    .choice.selected .choice-check svg { opacity: 1; }
-    .choice-icon { width: 48px; height: 48px; border-radius: 14px; background: rgba(255,107,53,0.08); display: flex; align-items: center; justify-content: center; margin-bottom: 14px; }
-    .choice-icon svg { width: 24px; height: 24px; stroke: var(--orange); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
-    .choice-title { font-size: 17px; font-weight: 800; margin-bottom: 6px; color: var(--text); }
-    .choice-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:10px;font-size:16px;font-weight:700;padding:16px 32px;border-radius:100px;border:none;cursor:pointer;transition:all .22s;text-decoration:none;letter-spacing:-.01em;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 20px rgba(255,107,53,.3)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,107,53,.45)}
+.btn-p:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-s{background:transparent;color:var(--muted);border:2px solid var(--border);font-size:15px}
+.btn-s:hover{border-color:var(--muted);color:var(--text)}
+.btn-row{display:flex;align-items:center;gap:14px;margin-top:36px;flex-wrap:wrap}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
 
-    /* ─── SPEC GRID ─── */
-    .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
-    .spec-card { background: var(--white); border: 2px solid var(--border); border-radius: var(--radius); padding: 22px; cursor: pointer; transition: all 0.22s; position: relative; }
-    .spec-card:hover { border-color: var(--orange); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(255,107,53,0.12); }
-    .spec-card.selected { border-color: var(--orange); background: rgba(255,107,53,0.03); }
-    .spec-card-check { position: absolute; top: 14px; right: 14px; width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); display: flex; align-items: center; justify-content: center; transition: all 0.22s; }
-    .spec-card.selected .spec-card-check { background: var(--orange); border-color: var(--orange); }
-    .spec-card-check svg { width: 11px; height: 11px; stroke: white; fill: none; stroke-width: 3; opacity: 0; transition: opacity 0.22s; }
-    .spec-card.selected .spec-card-check svg { opacity: 1; }
-    .spec-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 3px 10px; border-radius: 100px; margin-bottom: 10px; }
-    .tag-it { background: rgba(52,152,219,0.12); color: #2980B9; }
-    .tag-design { background: rgba(155,89,182,0.12); color: #8E44AD; }
-    .tag-marketing { background: rgba(243,156,18,0.12); color: #D68910; }
-    .tag-law { background: rgba(231,76,60,0.12); color: #C0392B; }
-    .spec-name { font-size: 18px; font-weight: 800; margin-bottom: 6px; color: var(--text); padding-right: 28px; }
-    .spec-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; margin-bottom: 14px; }
-    .spec-meta { display: flex; gap: 10px; flex-wrap: wrap; }
-    .spec-meta-item { font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; }
-    .spec-meta-item svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; }
-    .spec-salary { font-size: 13px; font-weight: 700; color: var(--green); }
+/* CHARACTER CARDS */
+.char-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:16px;margin-bottom:8px}
+.char-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:28px 18px 22px;cursor:pointer;transition:all .25s;text-align:center;position:relative;overflow:hidden}
+.char-card:hover{transform:translateY(-4px);box-shadow:var(--shl)}
+.char-card.sel{border-color:var(--orange);box-shadow:0 0 0 4px rgba(255,107,53,.12)}
+.cc-check{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .22s}
+.char-card.sel .cc-check{background:var(--orange);border-color:var(--orange)}
+.cc-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .22s}
+.char-card.sel .cc-check svg{opacity:1}
+.char-av{width:90px;height:90px;margin:0 auto 14px;animation:charBob 3s ease-in-out infinite}
+.char-card:nth-child(2) .char-av{animation-delay:.4s}
+.char-card:nth-child(3) .char-av{animation-delay:.8s}
+.char-card:nth-child(4) .char-av{animation-delay:1.2s}
+@keyframes charBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+.char-av svg{width:90px;height:90px}
+.char-tag{display:inline-block;font-size:11px;font-weight:700;padding:3px 10px;border-radius:100px;margin-bottom:10px;letter-spacing:.04em}
+.char-name{font-size:17px;font-weight:800;margin-bottom:6px}
+.char-desc{font-size:13px;color:var(--muted);line-height:1.5}
 
-    /* ─── COMPARE ─── */
-    .compare-wrap { background: var(--white); border-radius: var(--radius); overflow: hidden; margin-bottom: 32px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .compare-table { width: 100%; border-collapse: collapse; }
-    .compare-table th { padding: 14px 20px; font-size: 13px; font-weight: 700; text-align: left; background: var(--bg); border-bottom: 1px solid var(--border); }
-    .compare-table th:nth-child(2) { color: var(--orange); }
-    .compare-table td { padding: 12px 20px; font-size: 14px; border-bottom: 1px solid var(--border); }
-    .compare-table tr:last-child td { border-bottom: none; }
-    .compare-table td:first-child { color: var(--text-muted); font-weight: 500; }
-    .check { color: var(--green); font-weight: 600; }
-    .cross { color: #E74C3C; }
-    .neutral { color: var(--text-muted); }
+/* CHOICES */
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.choice{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:22px 18px;cursor:pointer;transition:all .22s;position:relative}
+.choice:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,107,53,.12)}
+.choice.sel{border-color:var(--orange);background:rgba(255,107,53,.03)}
+.ch-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .22s}
+.choice.sel .ch-check{background:var(--orange);border-color:var(--orange)}
+.ch-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .22s}
+.choice.sel .ch-check svg{opacity:1}
+.ch-icon{width:46px;height:46px;border-radius:14px;background:var(--ob);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.ch-icon svg{width:22px;height:22px;stroke:var(--orange);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.ch-title{font-size:16px;font-weight:800;margin-bottom:5px}
+.ch-desc{font-size:13px;color:var(--muted);line-height:1.5}
 
-    /* ─── BUTTONS ─── */
-    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: white; font-size: 16px; font-weight: 700; padding: 16px 32px; border-radius: 100px; border: none; cursor: pointer; transition: all 0.22s; text-decoration: none; letter-spacing: -0.01em; box-shadow: 0 4px 20px rgba(255,107,53,0.3); }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(255,107,53,0.4); }
-    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
-    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--text-muted); font-size: 15px; font-weight: 600; padding: 14px 24px; border-radius: 100px; border: 2px solid var(--border); cursor: pointer; transition: all 0.22s; text-decoration: none; }
-    .btn-secondary:hover { border-color: var(--text-muted); color: var(--text); }
-    .btn-row { display: flex; align-items: center; gap: 14px; margin-top: 36px; flex-wrap: wrap; }
+/* CHART INSIGHT */
+.chart-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:24px;margin-bottom:28px;box-shadow:var(--sh);display:none;animation:fadeUp .4s ease}
+.chart-box.show{display:block}
+.chart-ttl{font-size:12px;font-weight:700;color:var(--muted);margin-bottom:16px;text-transform:uppercase;letter-spacing:.06em}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-lbl{font-size:13px;font-weight:600;color:var(--text);width:150px;flex-shrink:0}
+.bar-track{flex:1;height:10px;background:var(--bg);border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width 1s cubic-bezier(.4,0,.2,1);width:0}
+.bar-val{font-size:13px;font-weight:700;color:var(--text);width:100px;text-align:right;flex-shrink:0}
+.bo{background:linear-gradient(90deg,var(--orange),var(--orange2))}
+.bb{background:linear-gradient(90deg,var(--blue),#60A5FA)}
+.bg{background:linear-gradient(90deg,var(--green),var(--green2))}
+.bp{background:linear-gradient(90deg,var(--purple),#9F67FF)}
 
-    /* ─── RESULT ─── */
-    .result-hero { background: linear-gradient(135deg, var(--dark) 0%, var(--dark2) 100%); border-radius: 24px; padding: 40px; margin-bottom: 28px; position: relative; overflow: hidden; }
-    .result-hero::before { content: ''; position: absolute; top: -80px; right: -80px; width: 300px; height: 300px; background: radial-gradient(circle, rgba(255,107,53,0.15) 0%, transparent 70%); pointer-events: none; }
-    .result-tag { display: inline-flex; align-items: center; gap: 8px; background: rgba(255,107,53,0.2); color: #FF8C5A; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 100px; margin-bottom: 16px; letter-spacing: 0.04em; text-transform: uppercase; }
-    .result-tag-icon { font-size: 14px; }
-    .result-title { font-size: clamp(30px, 4vw, 52px); font-weight: 900; color: white; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 8px; }
-    .result-sub { font-size: 15px; color: rgba(255,255,255,0.55); }
-    .result-map-wrap { border-radius: 20px; overflow: hidden; margin-bottom: 28px; box-shadow: var(--shadow-lg); }
-    .result-map { width: 100%; height: auto; display: block; }
+/* INSIGHT */
+.insight{background:linear-gradient(135deg,rgba(61,184,122,.07),rgba(0,191,165,.04));border:1px solid rgba(61,184,122,.25);border-radius:var(--rs);padding:18px 20px;display:flex;gap:14px;align-items:flex-start;margin-bottom:28px;animation:fadeUp .4s ease}
+.ins-icon{width:32px;height:32px;border-radius:8px;background:rgba(61,184,122,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ins-icon svg{width:16px;height:16px;stroke:var(--green);fill:none;stroke-width:2}
+.ins-text{font-size:14px;color:var(--muted);line-height:1.6}
+.ins-text strong{color:var(--text)}
 
-    /* ─── ROUTE STEPS ─── */
-    .route-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(185px, 1fr)); gap: 12px; margin-bottom: 28px; }
-    .route-step { background: var(--white); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 20px; box-shadow: var(--shadow); position: relative; overflow: hidden; }
-    .route-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--orange), #FF8C5A); }
-    .route-step-num { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--orange); margin-bottom: 8px; }
-    .route-step-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
-    .route-step-desc { font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+/* SPEC GRID */
+.spec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.spec-card{background:var(--white);border:2px solid var(--border);border-radius:var(--r);padding:22px;cursor:pointer;transition:all .22s;position:relative}
+.spec-card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:0 6px 24px rgba(255,107,53,.12)}
+.spec-card.sel{border-color:var(--orange);background:rgba(255,107,53,.03)}
+.sc-check{position:absolute;top:14px;right:14px;width:22px;height:22px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .22s}
+.spec-card.sel .sc-check{background:var(--orange);border-color:var(--orange)}
+.sc-check svg{width:11px;height:11px;stroke:#fff;fill:none;stroke-width:3;opacity:0;transition:opacity .22s}
+.spec-card.sel .sc-check svg{opacity:1}
+.spec-tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:3px 10px;border-radius:100px;margin-bottom:10px}
+.t-it{background:rgba(37,99,235,.1);color:#2563EB}
+.t-des{background:rgba(124,58,237,.1);color:#7C3AED}
+.t-mkt{background:rgba(245,158,11,.1);color:#D97706}
+.t-law{background:rgba(220,38,38,.1);color:#DC2626}
+.spec-name{font-size:17px;font-weight:800;margin-bottom:6px;padding-right:28px}
+.spec-desc{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:12px}
+.spec-meta{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.spec-dur{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:4px}
+.spec-dur svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2}
+.spec-sal{font-size:13px;font-weight:700;color:var(--green)}
 
-    /* ─── PROGRAM BLOCK ─── */
-    .program-block { background: var(--white); border-radius: var(--radius); padding: 28px; margin-bottom: 28px; box-shadow: var(--shadow); border: 1px solid var(--border); }
-    .program-block h3 { font-size: 20px; font-weight: 800; margin-bottom: 20px; color: var(--text); }
-    .program-stats { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid var(--border); }
-    .program-stat-val { font-size: 24px; font-weight: 900; color: var(--orange); letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
-    .program-stat-label { font-size: 12px; color: var(--text-muted); font-weight: 500; }
-    .section-heading { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 12px; }
-    .program-skills { display: flex; flex-wrap: wrap; gap: 8px; }
-    .skill-tag { background: var(--bg); border: 1px solid var(--border); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 600; color: var(--text-muted); }
+/* MINI TASK */
+.task-wrap{background:var(--white);border-radius:var(--r);padding:28px;margin-bottom:28px;box-shadow:var(--sh);border:1px solid var(--border)}
+.task-hdr{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.task-ico{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.task-ico svg{width:22px;height:22px;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.task-ttl{font-size:18px;font-weight:800}
+.task-sub{font-size:13px;color:var(--muted)}
+.task-desc{font-size:15px;color:var(--muted);margin-bottom:20px;line-height:1.6}
 
-    /* ─── OFFER ─── */
-    .offer-block { background: linear-gradient(135deg, #1A1F2E 0%, #2D3448 100%); border-radius: 24px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; }
-    .offer-block::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: radial-gradient(circle, rgba(255,107,53,0.12) 0%, transparent 70%); pointer-events: none; }
-    .offer-label { display: inline-block; background: rgba(255,107,53,0.2); border: 1px solid rgba(255,107,53,0.4); border-radius: 100px; padding: 6px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #FF8C5A; margin-bottom: 20px; }
-    .offer-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px; color: white; }
-    .offer-title span { color: var(--orange); }
-    .offer-desc { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto 32px; line-height: 1.6; }
-    .offer-cta { display: inline-flex; align-items: center; gap: 12px; background: linear-gradient(135deg, #FF6B35, #FF8C5A); color: white; font-size: 18px; font-weight: 800; padding: 20px 44px; border-radius: 100px; text-decoration: none; transition: all 0.25s; letter-spacing: -0.01em; position: relative; animation: ctaPulse 3s ease-in-out infinite; box-shadow: 0 8px 32px rgba(255,107,53,0.4); }
-    @keyframes ctaPulse { 0%,100%{box-shadow:0 8px 32px rgba(255,107,53,0.4)} 50%{box-shadow:0 8px 48px rgba(255,107,53,0.6)} }
-    .offer-cta:hover { transform: translateY(-3px); animation: none; box-shadow: 0 12px 48px rgba(255,107,53,0.5); }
-    .offer-cta svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .offer-trust { display: flex; justify-content: center; gap: 24px; margin-top: 28px; flex-wrap: wrap; }
-    .offer-trust-item { font-size: 13px; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 6px; }
-    .offer-trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; }
+/* drag-drop */
+.code-slots{display:flex;flex-direction:column;gap:8px;margin-bottom:16px}
+.code-slot{min-height:44px;border:2px dashed var(--border);border-radius:10px;padding:10px 14px;font-size:14px;font-family:monospace;color:var(--muted);display:flex;align-items:center;transition:all .2s;background:var(--bg)}
+.code-slot.filled{border-color:var(--orange);background:rgba(255,107,53,.05);color:var(--text);font-weight:600}
+.code-slot.correct{border-color:var(--green);background:rgba(61,184,122,.08);color:var(--green)}
+.code-slot.wrong{border-color:#EF4444;background:rgba(239,68,68,.06);color:#EF4444}
+.code-blocks{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.code-block{background:var(--dark);color:#A5F3FC;font-size:13px;font-family:monospace;padding:8px 14px;border-radius:8px;cursor:pointer;user-select:none;transition:all .2s;border:2px solid transparent}
+.code-block:hover:not(.used){border-color:var(--orange);transform:translateY(-2px)}
+.code-block.used{opacity:.3;cursor:not-allowed}
 
-    /* ─── XP BAR ─── */
-    .xp-bar-wrap { background: var(--white); border-radius: 100px; height: 8px; overflow: hidden; margin-bottom: 8px; border: 1px solid var(--border); }
-    .xp-bar { height: 100%; background: linear-gradient(90deg, #FF6B35, #FF8C5A); border-radius: 100px; transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
-    .xp-label { font-size: 12px; color: var(--text-muted); font-weight: 600; margin-bottom: 32px; }
-    .xp-label span { color: var(--orange); font-weight: 700; }
+/* ab test */
+.ab-opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.ab-opt{background:var(--bg);border:2px solid var(--border);border-radius:var(--rs);padding:18px;cursor:pointer;transition:all .22s;font-size:15px;font-weight:600;line-height:1.5}
+.ab-opt:hover{border-color:var(--orange);background:var(--ob)}
+.ab-opt.winner{border-color:var(--green);background:rgba(61,184,122,.08);color:var(--green)}
+.ab-opt.loser{border-color:var(--border);opacity:.5}
 
-    @media (max-width: 768px) {
-      .hero-inner { grid-template-columns: 1fr; }
-      .hero-img-wrap { display: none; }
-      .hero-left { padding-bottom: 48px; }
-      .journey-label { display: none; }
-      .offer-block { padding: 32px 20px; }
-    }
-  </style>
+/* font picker */
+.font-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.font-opt{background:var(--bg);border:2px solid var(--border);border-radius:var(--rs);padding:20px 14px;cursor:pointer;transition:all .22s;text-align:center}
+.font-opt:hover{border-color:var(--orange)}
+.font-opt.correct{border-color:var(--green);background:rgba(61,184,122,.08)}
+.font-opt.wrong{border-color:#EF4444;background:rgba(239,68,68,.06)}
+.font-prev{font-size:22px;font-weight:700;margin-bottom:6px}
+.font-nm{font-size:11px;color:var(--muted);font-weight:600}
+
+/* contract */
+.contract-txt{background:var(--bg);border:1px solid var(--border);border-radius:var(--rs);padding:20px;font-size:14px;line-height:1.9;margin-bottom:16px;color:var(--text)}
+.trap{background:rgba(239,68,68,.1);border-bottom:2px solid #EF4444;cursor:pointer;padding:0 2px;border-radius:3px;transition:all .2s}
+.trap:hover{background:rgba(239,68,68,.2)}
+.trap.found{background:rgba(61,184,122,.15);border-color:var(--green);color:var(--green)}
+
+/* task result */
+.task-res{padding:16px 20px;border-radius:var(--rs);margin-top:16px;display:none;animation:fadeUp .3s ease}
+.task-res.show{display:block}
+.task-res.ok{background:rgba(61,184,122,.1);border:1px solid rgba(61,184,122,.3)}
+.task-res.fail{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2)}
+.task-res-ttl{font-size:15px;font-weight:800;margin-bottom:4px}
+.task-res.ok .task-res-ttl{color:var(--green)}
+.task-res.fail .task-res-ttl{color:#EF4444}
+.task-res-desc{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* RADAR */
+.radar-wrap{background:var(--white);border-radius:var(--r);padding:28px;margin-bottom:28px;box-shadow:var(--sh);border:1px solid var(--border);display:flex;gap:28px;align-items:center;flex-wrap:wrap}
+.radar-cv{flex-shrink:0}
+.radar-info{flex:1;min-width:200px}
+.radar-ttl{font-size:18px;font-weight:800;margin-bottom:6px}
+.radar-desc{font-size:14px;color:var(--muted);line-height:1.6;margin-bottom:16px}
+.radar-traits{display:flex;flex-direction:column;gap:8px}
+.rtrait{display:flex;align-items:center;gap:10px}
+.rtrait-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.rtrait-lbl{font-size:13px;font-weight:600;color:var(--text)}
+.rtrait-val{font-size:13px;color:var(--muted);margin-left:auto}
+
+/* ROUTE MAP CSS */
+.route-map{background:var(--dark);border-radius:24px;padding:36px 32px;margin-bottom:28px;position:relative;overflow:hidden}
+.route-map::before{content:'';position:absolute;top:-80px;right:-80px;width:280px;height:280px;background:radial-gradient(circle,rgba(255,107,53,.12) 0%,transparent 70%);pointer-events:none}
+.rm-ttl{font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:28px}
+.rm-line{display:flex;align-items:flex-start;position:relative;padding-bottom:8px}
+.rm-line::before{content:'';position:absolute;top:20px;left:20px;right:20px;height:2px;background:rgba(255,255,255,.1)}
+.rm-prog{position:absolute;top:20px;left:20px;height:2px;background:linear-gradient(90deg,var(--orange),var(--orange2));width:0;transition:width 1.5s cubic-bezier(.4,0,.2,1);z-index:1}
+.rn{flex:1;display:flex;flex-direction:column;align-items:center;gap:10px;position:relative;z-index:2}
+.rn-dot{width:40px;height:40px;border-radius:50%;border:2px solid rgba(255,255,255,.15);background:var(--dark2);display:flex;align-items:center;justify-content:center;transition:all .6s}
+.rn-dot svg{width:18px;height:18px;stroke:rgba(255,255,255,.3);fill:none;stroke-width:2;transition:stroke .6s}
+.rn.lit .rn-dot{border-color:var(--orange);background:rgba(255,107,53,.15)}
+.rn.lit .rn-dot svg{stroke:var(--orange)}
+.rn.done .rn-dot{border-color:var(--orange);background:var(--orange)}
+.rn.done .rn-dot svg{stroke:#fff}
+.rn-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,.35);text-align:center;transition:color .6s;letter-spacing:.04em;text-transform:uppercase}
+.rn.lit .rn-lbl,.rn.done .rn-lbl{color:rgba(255,255,255,.85)}
+.rn-date{font-size:10px;color:rgba(255,255,255,.3);text-align:center;transition:color .6s}
+.rn.lit .rn-date,.rn.done .rn-date{color:rgba(255,107,53,.8)}
+
+/* RESULT */
+.res-hero{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:24px;padding:36px;margin-bottom:24px;position:relative;overflow:hidden;display:flex;align-items:center;gap:28px;flex-wrap:wrap}
+.res-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:260px;height:260px;background:radial-gradient(circle,rgba(255,107,53,.15) 0%,transparent 70%);pointer-events:none}
+.res-char{width:100px;height:100px;flex-shrink:0;position:relative;z-index:1}
+.res-char svg{width:100px;height:100px}
+.res-text{flex:1;position:relative;z-index:1}
+.res-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(255,107,53,.2);color:#FF8C5A;font-size:11px;font-weight:700;padding:4px 12px;border-radius:100px;margin-bottom:12px;letter-spacing:.05em;text-transform:uppercase}
+.res-title{font-size:clamp(26px,4vw,46px);font-weight:900;color:#fff;letter-spacing:-.02em;line-height:1.1;margin-bottom:6px}
+.res-sub{font-size:14px;color:rgba(255,255,255,.5)}
+
+/* ROUTE STEPS */
+.rsteps{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:12px;margin-bottom:24px}
+.rstep{background:var(--white);border:1px solid var(--border);border-radius:var(--rs);padding:20px;box-shadow:var(--sh);position:relative;overflow:hidden}
+.rstep::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--orange),var(--orange2))}
+.rstep-n{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--orange);margin-bottom:8px}
+.rstep-t{font-size:15px;font-weight:700;margin-bottom:4px}
+.rstep-d{font-size:13px;color:var(--muted);line-height:1.5}
+
+/* PROGRAM BLOCK */
+.prog-block{background:var(--white);border-radius:var(--r);padding:28px;margin-bottom:24px;box-shadow:var(--sh);border:1px solid var(--border)}
+.prog-block h3{font-size:20px;font-weight:800;margin-bottom:20px}
+.prog-stats{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.pstat-v{font-size:22px;font-weight:900;color:var(--orange);letter-spacing:-.02em;line-height:1;margin-bottom:4px}
+.pstat-l{font-size:12px;color:var(--muted);font-weight:500}
+.sec-h{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.skill-tags{display:flex;flex-wrap:wrap;gap:8px}
+.skill-tag{background:var(--bg);border:1px solid var(--border);border-radius:100px;padding:5px 12px;font-size:12px;font-weight:600;color:var(--muted)}
+
+/* SCORE */
+.score-badge{background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:16px;padding:20px 24px;margin-bottom:24px;display:flex;align-items:center;gap:20px}
+.score-ico{font-size:36px}
+.score-txt strong{display:block;font-size:22px;font-weight:900;color:#fff;margin-bottom:2px}
+.score-txt span{font-size:14px;color:rgba(255,255,255,.7)}
+
+/* OFFER */
+.offer{background:linear-gradient(135deg,var(--dark),var(--dark2));border-radius:24px;padding:48px 36px;text-align:center;position:relative;overflow:hidden}
+.offer::before{content:'';position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:500px;height:500px;background:radial-gradient(circle,rgba(255,107,53,.12) 0%,transparent 70%);pointer-events:none}
+.offer-badge{display:inline-block;background:rgba(255,107,53,.2);border:1px solid rgba(255,107,53,.4);border-radius:100px;padding:6px 18px;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#FF8C5A;margin-bottom:20px}
+.offer-title{font-size:clamp(28px,4vw,44px);font-weight:900;letter-spacing:-.02em;line-height:1.1;margin-bottom:12px;color:#fff}
+.offer-title span{color:var(--orange)}
+.offer-desc{font-size:16px;color:rgba(255,255,255,.55);max-width:460px;margin:0 auto 32px;line-height:1.6}
+.offer-cta{display:inline-flex;align-items:center;gap:12px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-size:18px;font-weight:800;padding:20px 44px;border-radius:100px;text-decoration:none;transition:all .25s;letter-spacing:-.01em;position:relative;animation:ctaPulse 3s ease-in-out infinite;box-shadow:0 8px 32px rgba(255,107,53,.4)}
+@keyframes ctaPulse{0%,100%{box-shadow:0 8px 32px rgba(255,107,53,.4)}50%{box-shadow:0 8px 48px rgba(255,107,53,.65)}}
+.offer-cta:hover{transform:translateY(-3px);animation:none;box-shadow:0 12px 48px rgba(255,107,53,.55)}
+.offer-cta svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+.offer-trust{display:flex;justify-content:center;gap:20px;margin-top:24px;flex-wrap:wrap}
+.ot-item{font-size:13px;color:rgba(255,255,255,.4);display:flex;align-items:center;gap:6px}
+.ot-item svg{width:13px;height:13px;stroke:var(--green);fill:none;stroke-width:2}
+
+@media(max-width:768px){
+  .hero-in{grid-template-columns:1fr}
+  .hero-r{display:none}
+  .hero-l{padding-bottom:48px}
+  .jlbl{display:none}
+  .offer{padding:32px 20px}
+  .radar-wrap{flex-direction:column}
+  .res-hero{flex-direction:column;text-align:center}
+  .ab-opts{grid-template-columns:1fr}
+  .font-opts{grid-template-columns:1fr 1fr}
+  .rm-line{gap:0}
+  .rn-date{display:none}
+}
+</style>
 </head>
 <body>
 
 <!-- HEADER -->
-<header class="header">
-  <img src="assets/logo-ok1.jpg" alt="Онлайн-колледж №1" class="logo" />
-  <div class="header-badge">Профориентация 2026</div>
+<header class="hdr">
+  <img src="assets/logo-ok1.jpg" alt="Онлайн-колледж №1" class="hdr-logo"/>
+  <div class="hdr-xp">
+    <div class="xp-gem">★</div>
+    <div>
+      <div class="xp-count" id="xpDisp">0 XP</div>
+      <div class="xp-sub">Опыт героя</div>
+    </div>
+  </div>
 </header>
 
-<!-- HERO -->
-<section class="hero" id="heroSection">
-  <div class="hero-inner">
-    <div class="hero-left">
-      <div class="hero-tag"><span class="hero-tag-dot"></span>Интерактивный тест</div>
-      <h1>Найди свой<br /><em>путь героя</em><br />после 9 класса</h1>
-      <p class="hero-sub">3 шага — и ты получишь персональный маршрут в профессию: специальность, сроки и первый шаг.</p>
+<!-- XP TOAST -->
+<div class="xp-toast" id="xpToast"></div>
+
+<!-- JOURNEY TRACK -->
+<div class="jtrack" id="jtrack">
+  <div class="jtrack-in">
+    <div class="jn" id="jn1"><div class="jdot">1</div><div class="jlbl">Герой</div></div>
+    <div class="jn" id="jn2"><div class="jdot">2</div><div class="jlbl">Испытание</div></div>
+    <div class="jn" id="jn3"><div class="jdot">3</div><div class="jlbl">Профессия</div></div>
+    <div class="jn" id="jn4"><div class="jdot">4</div><div class="jlbl">Задание</div></div>
+    <div class="jn" id="jn5"><div class="jdot">5</div><div class="jlbl">Маршрут</div></div>
+  </div>
+</div>
+
+<!-- HERO SECTION -->
+<section class="hero" id="heroSec">
+  <div class="hero-in">
+    <div class="hero-l">
+      <div class="hero-tag"><span class="hero-dot"></span>Академия героев 2026</div>
+      <h1>Найди свой<br/><em>путь героя</em><br/>после 9 класса</h1>
+      <p class="hero-sub">5 шагов — персональный маршрут в профессию, реальные данные рынка и мини-задание, чтобы попробовать профессию прямо сейчас.</p>
       <div class="hero-steps">
-        <div class="hero-step"><div class="hero-step-num">1</div>Выбери путь</div>
-        <div class="hero-step"><div class="hero-step-num">2</div>Узнай профессию</div>
-        <div class="hero-step"><div class="hero-step-num">3</div>Получи маршрут</div>
+        <div class="hs"><div class="hs-n">1</div>Выбери героя</div>
+        <div class="hs"><div class="hs-n">2</div>Пройди испытание</div>
+        <div class="hs"><div class="hs-n">3</div>Попробуй профессию</div>
+        <div class="hs"><div class="hs-n">4</div>Получи маршрут</div>
       </div>
-      <button class="btn-primary" onclick="startQuiz()">
+      <button class="btn btn-p" onclick="startQuiz()">
         Начать путь
-        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
-    <div class="hero-img-wrap">
-      <img src="assets/students-hero.jpg" alt="Студенты" class="hero-img" />
-      <div class="hero-img-badge">
-        <div class="hero-img-badge-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="hero-img-badge-text"><strong>Без ОГЭ и ЕГЭ</strong><span>Только аттестат за 9 класс</span></div>
+    <div class="hero-r">
+      <img src="assets/students-hero.jpg" alt="Студенты" class="hero-img"/>
+      <div class="hero-badge">
+        <div class="hb-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+        <div class="hb-text"><strong>Без ОГЭ и ЕГЭ</strong><span>Только аттестат за 9 класс</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- JOURNEY TRACK -->
-<div class="journey-track" id="journeyTrack" style="display:none;">
-  <div class="journey-inner">
-    <div class="journey-node" id="jn1">
-      <div class="journey-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12"/></svg></div>
-      <div class="journey-label">Старт</div>
+<!-- QUIZ WRAP -->
+<div class="qwrap" id="qwrap">
+
+<!-- ═══ S0: CHOOSE CHARACTER ═══ -->
+<div class="screen" id="s0">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:5%"></div></div>
+    <div class="prog-meta"><span class="prog-step">Шаг 1 из 5 — Выбор героя</span><span class="prog-xp" id="px0">0 XP</span></div>
+  </div>
+  <div class="chapter"><div class="ch-n">1</div><div class="ch-l">Глава 1 — Рождение героя</div></div>
+  <h2 class="stitle">Выбери своего <em>персонажа</em></h2>
+  <p class="sdesc">Каждый герой — это архетип мышления. Выбери того, кто ближе всего к тебе прямо сейчас.</p>
+  <div class="char-grid" id="charGrid">
+
+    <div class="char-card" onclick="selectChar(this,'builder')">
+      <div class="cc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="char-av">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="42" width="34" height="32" rx="8" fill="#2563EB"/>
+          <circle cx="45" cy="32" r="16" fill="#FBBF24"/>
+          <path d="M29 30 Q45 14 61 30 L61 26 Q45 10 29 26 Z" fill="#2563EB"/>
+          <rect x="27" y="28" width="36" height="6" rx="3" fill="#1D4ED8"/>
+          <circle cx="39" cy="32" r="2.5" fill="#1A1F2E"/>
+          <circle cx="51" cy="32" r="2.5" fill="#1A1F2E"/>
+          <circle cx="40" cy="31" r="1" fill="white"/>
+          <circle cx="52" cy="31" r="1" fill="white"/>
+          <path d="M40 38 Q45 42 50 38" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="14" y="44" width="14" height="8" rx="4" fill="#2563EB"/>
+          <rect x="62" y="44" width="14" height="8" rx="4" fill="#2563EB"/>
+          <rect x="68" y="40" width="4" height="14" rx="2" fill="#FCD34D"/>
+          <circle cx="70" cy="39" r="4" fill="none" stroke="#FCD34D" stroke-width="2"/>
+          <rect x="31" y="70" width="12" height="14" rx="5" fill="#1D4ED8"/>
+          <rect x="47" y="70" width="12" height="14" rx="5" fill="#1D4ED8"/>
+        </svg>
+      </div>
+      <span class="char-tag" style="background:rgba(37,99,235,.1);color:#2563EB">Строитель</span>
+      <div class="char-name">Строитель</div>
+      <div class="char-desc">Любишь разбираться, как устроены системы. Думаешь логически, строишь по шагам.</div>
     </div>
-    <div class="journey-node" id="jn2">
-      <div class="journey-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-      <div class="journey-label">Испытание</div>
+
+    <div class="char-card" onclick="selectChar(this,'artist')">
+      <div class="cc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="char-av">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="42" width="34" height="32" rx="8" fill="#7C3AED"/>
+          <circle cx="45" cy="26" r="18" fill="#7C3AED"/>
+          <circle cx="45" cy="32" r="14" fill="#FBBF24"/>
+          <circle cx="55" cy="18" r="5" fill="#5B21B6"/>
+          <circle cx="40" cy="31" r="2.5" fill="#1A1F2E"/>
+          <circle cx="50" cy="31" r="2.5" fill="#1A1F2E"/>
+          <circle cx="41" cy="30" r="1" fill="white"/>
+          <circle cx="51" cy="30" r="1" fill="white"/>
+          <path d="M40 37 Q45 41 50 37" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="14" y="44" width="14" height="8" rx="4" fill="#7C3AED"/>
+          <rect x="62" y="44" width="14" height="8" rx="4" fill="#7C3AED"/>
+          <rect x="64" y="38" width="14" height="18" rx="3" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="1"/>
+          <rect x="66" y="40" width="10" height="12" rx="2" fill="#A78BFA"/>
+          <rect x="31" y="70" width="12" height="14" rx="5" fill="#5B21B6"/>
+          <rect x="47" y="70" width="12" height="14" rx="5" fill="#5B21B6"/>
+        </svg>
+      </div>
+      <span class="char-tag" style="background:rgba(124,58,237,.1);color:#7C3AED">Художник</span>
+      <div class="char-name">Художник</div>
+      <div class="char-desc">Видишь мир образами. Тебе важно, как вещи выглядят и ощущаются.</div>
     </div>
-    <div class="journey-node" id="jn3">
-      <div class="journey-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-      <div class="journey-label">Выбор</div>
+
+    <div class="char-card" onclick="selectChar(this,'strategist')">
+      <div class="cc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="char-av">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="42" width="34" height="32" rx="8" fill="#059669"/>
+          <polygon points="45,44 42,56 45,58 48,56" fill="white" opacity=".6"/>
+          <circle cx="45" cy="32" r="16" fill="#FBBF24"/>
+          <path d="M29 28 Q45 16 61 28 Q61 22 45 18 Q29 22 29 28Z" fill="#1A1F2E"/>
+          <circle cx="39" cy="32" r="2.5" fill="#1A1F2E"/>
+          <circle cx="51" cy="32" r="2.5" fill="#1A1F2E"/>
+          <circle cx="40" cy="31" r="1" fill="white"/>
+          <circle cx="52" cy="31" r="1" fill="white"/>
+          <path d="M40 38 Q45 42 50 38" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="14" y="44" width="14" height="8" rx="4" fill="#059669"/>
+          <rect x="62" y="44" width="14" height="8" rx="4" fill="#059669"/>
+          <rect x="64" y="36" width="14" height="18" rx="2" fill="white" opacity=".9"/>
+          <rect x="66" y="46" width="2" height="6" rx="1" fill="#059669"/>
+          <rect x="69" y="42" width="2" height="10" rx="1" fill="#059669"/>
+          <rect x="72" y="44" width="2" height="8" rx="1" fill="#059669"/>
+          <rect x="75" y="40" width="2" height="12" rx="1" fill="#059669"/>
+          <rect x="31" y="70" width="12" height="14" rx="5" fill="#047857"/>
+          <rect x="47" y="70" width="12" height="14" rx="5" fill="#047857"/>
+        </svg>
+      </div>
+      <span class="char-tag" style="background:rgba(5,150,105,.1);color:#059669">Стратег</span>
+      <div class="char-name">Стратег</div>
+      <div class="char-desc">Умеешь убеждать и понимать людей. Видишь большую картину и знаешь, как достичь цели.</div>
     </div>
-    <div class="journey-node" id="jn4">
-      <div class="journey-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/></svg></div>
-      <div class="journey-label">Маршрут</div>
+
+    <div class="char-card" onclick="selectChar(this,'explorer')">
+      <div class="cc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="char-av">
+        <svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg">
+          <rect x="28" y="42" width="34" height="32" rx="8" fill="#FF6B35"/>
+          <circle cx="45" cy="32" r="16" fill="#FBBF24"/>
+          <circle cx="39" cy="32" r="6" fill="none" stroke="#1A1F2E" stroke-width="2"/>
+          <circle cx="51" cy="32" r="6" fill="none" stroke="#1A1F2E" stroke-width="2"/>
+          <line x1="45" y1="32" x2="45" y2="32" stroke="#1A1F2E" stroke-width="2"/>
+          <line x1="33" y1="30" x2="30" y2="28" stroke="#1A1F2E" stroke-width="2"/>
+          <line x1="57" y1="30" x2="60" y2="28" stroke="#1A1F2E" stroke-width="2"/>
+          <circle cx="39" cy="32" r="2" fill="#1A1F2E"/>
+          <circle cx="51" cy="32" r="2" fill="#1A1F2E"/>
+          <circle cx="40" cy="31" r=".8" fill="white"/>
+          <circle cx="52" cy="31" r=".8" fill="white"/>
+          <path d="M40 39 Q45 43 50 39" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          <rect x="14" y="44" width="14" height="8" rx="4" fill="#FF6B35"/>
+          <rect x="62" y="44" width="14" height="8" rx="4" fill="#FF6B35"/>
+          <circle cx="72" cy="44" r="6" fill="none" stroke="#FCD34D" stroke-width="2.5"/>
+          <line x1="76" y1="48" x2="80" y2="52" stroke="#FCD34D" stroke-width="2.5" stroke-linecap="round"/>
+          <rect x="31" y="70" width="12" height="14" rx="5" fill="#E55A25"/>
+          <rect x="47" y="70" width="12" height="14" rx="5" fill="#E55A25"/>
+        </svg>
+      </div>
+      <span class="char-tag" style="background:rgba(255,107,53,.1);color:var(--orange)">Исследователь</span>
+      <div class="char-name">Исследователь</div>
+      <div class="char-desc">Задаёшь вопросы и ищешь правду. Тебе важна справедливость и точность.</div>
     </div>
+
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-p" id="btn0" disabled onclick="go('s1')">
+      Выбрать героя
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
   </div>
 </div>
 
-<!-- QUIZ -->
-<div class="quiz-wrap" id="quizWrap" style="display:none;">
-
-  <!-- SCREEN 1 -->
-  <div class="screen" id="screen1">
-    <div class="xp-bar-wrap"><div class="xp-bar" id="xpBar" style="width:10%"></div></div>
-    <div class="xp-label">Прогресс: <span id="xpText">Шаг 1 из 3</span></div>
-    <div class="chapter"><div class="chapter-num">1</div><div class="chapter-text">Глава 1 — Начало пути</div></div>
-    <h2 class="screen-title">Куда направляется твой герой?</h2>
-    <p class="screen-desc">Выбери путь — и мы покажем реальные данные по каждому маршруту.</p>
-    <div class="fact-strip">
-      <div class="fact-card"><div class="fact-val">2–4 г.</div><div class="fact-label">до диплома в колледже</div></div>
-      <div class="fact-card"><div class="fact-val">98 000 ₽</div><div class="fact-label">средняя зарплата IT-выпускника</div></div>
-      <div class="fact-card"><div class="fact-val">Без ЕГЭ</div><div class="fact-label">поступление — только аттестат</div></div>
-      <div class="fact-card"><div class="fact-val">60 000 ₽</div><div class="fact-label">максимальный грант на обучение</div></div>
+<!-- ═══ S1: CHALLENGE ═══ -->
+<div class="screen" id="s1">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:25%"></div></div>
+    <div class="prog-meta"><span class="prog-step">Шаг 2 из 5 — Испытание</span><span class="prog-xp" id="px1">0 XP</span></div>
+  </div>
+  <div class="chapter"><div class="ch-n">2</div><div class="ch-l">Глава 2 — Испытание выбором</div></div>
+  <h2 class="stitle">Что важнее для <em>твоего героя?</em></h2>
+  <p class="sdesc">Выбери — и сразу получишь реальные данные по этому пути.</p>
+  <div class="choices" id="chalChoices">
+    <div class="choice" onclick="selectChal(this,'fast')">
+      <div class="ch-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="ch-icon"><svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+      <div class="ch-title">Быстрый старт карьеры</div>
+      <div class="ch-desc">Хочу начать зарабатывать как можно раньше</div>
     </div>
-    <div class="choices">
-      <div class="choice" onclick="selectChoice(this,'college')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-        <div class="choice-title">Хочет в колледж</div>
-        <div class="choice-desc">Получить профессию и диплом СПО быстрее, чем через вуз</div>
-      </div>
-      <div class="choice" onclick="selectChoice(this,'school')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
-        <div class="choice-title">Остаётся в 10 классе</div>
-        <div class="choice-desc">Планирует сдать ЕГЭ и поступить в университет</div>
-      </div>
-      <div class="choice" onclick="selectChoice(this,'undecided')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
-        <div class="choice-title">Ещё не решили</div>
-        <div class="choice-desc">Нужно разобраться в вариантах и выбрать лучший путь</div>
-      </div>
+    <div class="choice" onclick="selectChal(this,'uni')">
+      <div class="ch-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="ch-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+      <div class="ch-title">Высшее образование</div>
+      <div class="ch-desc">Планирую поступить в университет</div>
     </div>
-    <div class="btn-row">
-      <button class="btn-primary" id="btn1" disabled onclick="goToScreen(2)">
-        Дальше
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
+    <div class="choice" onclick="selectChal(this,'explore')">
+      <div class="ch-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div class="ch-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+      <div class="ch-title">Разобраться в себе</div>
+      <div class="ch-desc">Ещё не знаю, чего хочу — нужно понять</div>
     </div>
   </div>
-
-  <!-- SCREEN 2A: Специальность (колледж) -->
-  <div class="screen" id="screen2a">
-    <div class="xp-bar-wrap"><div class="xp-bar" style="width:55%"></div></div>
-    <div class="xp-label">Прогресс: <span>Шаг 2 из 3</span></div>
-    <div class="chapter"><div class="chapter-num">2</div><div class="chapter-text">Глава 2 — Выбор оружия</div></div>
-    <h2 class="screen-title">Какая профессия зовёт героя?</h2>
-    <div class="insight">
-      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-      <div class="insight-text">Все специальности — это <strong>государственный диплом СПО</strong>, обучение онлайн из любой точки мира и <strong>отсрочка от армии</strong>. Поступление без ОГЭ и ЕГЭ.</div>
-    </div>
-    <div class="spec-grid">
-      <div class="spec-card" onclick="selectSpec(this,'fullstack')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag tag-it">IT</span>
-        <div class="spec-name">Fullstack-разработчик</div>
-        <div class="spec-desc">Python, Java, JavaScript, React, Docker — разработка веб-сервисов от интерфейса до сервера</div>
-        <div class="spec-meta">
-          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
-          <span class="spec-salary">от 98 000 ₽/мес.</span>
-        </div>
-      </div>
-      <div class="spec-card" onclick="selectSpec(this,'gamedev')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag tag-it">IT</span>
-        <div class="spec-name">Разработчик игр</div>
-        <div class="spec-desc">Unity, Unreal Engine, C#, геймдизайн, 3D — создание компьютерных игр с нуля</div>
-        <div class="spec-meta">
-          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
-          <span class="spec-salary">от 82 000 ₽/мес.</span>
-        </div>
-      </div>
-      <div class="spec-card" onclick="selectSpec(this,'design')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag tag-design">Дизайн</span>
-        <div class="spec-name">Графический дизайнер</div>
-        <div class="spec-desc">Figma, Adobe Photoshop, Illustrator, After Effects — брендинг, упаковка, веб-дизайн</div>
-        <div class="spec-meta">
-          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
-          <span class="spec-salary">от 65 000 ₽/мес.</span>
-        </div>
-      </div>
-      <div class="spec-card" onclick="selectSpec(this,'marketing')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag tag-marketing">Маркетинг</span>
-        <div class="spec-name">Интернет-маркетолог</div>
-        <div class="spec-desc">Таргет, контекст, SEO, SMM, аналитика — продвижение товаров и услуг онлайн</div>
-        <div class="spec-meta">
-          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
-          <span class="spec-salary">от 75 000 ₽/мес.</span>
-        </div>
-      </div>
-      <div class="spec-card" onclick="selectSpec(this,'law')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag tag-law">Право</span>
-        <div class="spec-name">Юрист</div>
-        <div class="spec-desc">ФГОС 40.02.04 Юриспруденция — гражданское, уголовное, корпоративное право</div>
-        <div class="spec-meta">
-          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 г. 10 мес.</span>
-          <span class="spec-salary">от 85 000 ₽/мес.</span>
-        </div>
-      </div>
-      <div class="spec-card" onclick="selectSpec(this,'unsure')">
-        <div class="spec-card-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <span class="spec-tag" style="background:rgba(0,0,0,0.05);color:var(--text-muted)">Не определился</span>
-        <div class="spec-name">Помогите выбрать</div>
-        <div class="spec-desc">Подберём направление по интересам ребёнка на бесплатной консультации</div>
-        <div class="spec-meta"><span class="spec-meta-item">Бесплатная консультация</span></div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" id="btn2a" disabled onclick="goToResult()">
-        Получить маршрут
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
-    </div>
+  <div class="chart-box" id="chalChart">
+    <div class="chart-ttl" id="chalChartTtl">Данные рынка труда</div>
+    <div id="chalChartBars"></div>
   </div>
-
-  <!-- SCREEN 2B: Приоритет (10 класс) -->
-  <div class="screen" id="screen2b">
-    <div class="xp-bar-wrap"><div class="xp-bar" style="width:55%"></div></div>
-    <div class="xp-label">Прогресс: <span>Шаг 2 из 3</span></div>
-    <div class="chapter"><div class="chapter-num">2</div><div class="chapter-text">Глава 2 — Испытание выбором</div></div>
-    <h2 class="screen-title">Что важнее для героя?</h2>
-    <div class="insight">
-      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-      <div class="insight-text"><strong>Важный факт:</strong> выпускники колледжа могут поступить в вуз <strong>без ЕГЭ</strong> по сокращённой программе. Профессия через 3 года — и высшее образование потом.</div>
-    </div>
-    <div class="choices">
-      <div class="choice" onclick="selectChoice2b(this,'career')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
-        <div class="choice-title">Быстрый старт карьеры</div>
-        <div class="choice-desc">Хочу начать зарабатывать как можно раньше</div>
-      </div>
-      <div class="choice" onclick="selectChoice2b(this,'uni')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
-        <div class="choice-title">Поступление в вуз</div>
-        <div class="choice-desc">Хочу получить высшее образование</div>
-      </div>
-      <div class="choice" onclick="selectChoice2b(this,'both')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
-        <div class="choice-title">Оба варианта</div>
-        <div class="choice-desc">Хочу и профессию, и возможность поступить в вуз</div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" id="btn2b" disabled onclick="goToScreen('compare')">
-        Дальше
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
-    </div>
+  <div class="btn-row">
+    <button class="btn btn-p" id="btn1" disabled onclick="go('s2')">
+      Дальше
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <button class="btn btn-s" onclick="go('s0')">Назад</button>
   </div>
-
-  <!-- SCREEN 2C: Интересы (не решили) -->
-  <div class="screen" id="screen2c">
-    <div class="xp-bar-wrap"><div class="xp-bar" style="width:55%"></div></div>
-    <div class="xp-label">Прогресс: <span>Шаг 2 из 3</span></div>
-    <div class="chapter"><div class="chapter-num">2</div><div class="chapter-text">Глава 2 — Поиск призвания</div></div>
-    <h2 class="screen-title">Что зажигает героя?</h2>
-    <div class="insight">
-      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-      <div class="insight-text">По данным hh.ru за 2025 год, <strong>IT-специальности</strong> — самые востребованные среди выпускников СПО. Средняя зарплата junior-разработчика в первый год — <strong>от 60 000 ₽</strong>.</div>
-    </div>
-    <div class="choices" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
-      <div class="choice" onclick="selectChoice2c(this,'tech')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
-        <div class="choice-title">Технологии и IT</div>
-        <div class="choice-desc">Программирование, игры, сайты</div>
-      </div>
-      <div class="choice" onclick="selectChoice2c(this,'creative')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
-        <div class="choice-title">Творчество и дизайн</div>
-        <div class="choice-desc">Рисование, визуальные образы, бренды</div>
-      </div>
-      <div class="choice" onclick="selectChoice2c(this,'business')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-        <div class="choice-title">Бизнес и маркетинг</div>
-        <div class="choice-desc">Продажи, реклама, предпринимательство</div>
-      </div>
-      <div class="choice" onclick="selectChoice2c(this,'social')">
-        <div class="choice-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div class="choice-title">Право и общество</div>
-        <div class="choice-desc">Юриспруденция, помощь людям</div>
-      </div>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" id="btn2c" disabled onclick="goToResult('undecided')">
-        Получить маршрут
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
-    </div>
-  </div>
-
-  <!-- SCREEN COMPARE -->
-  <div class="screen" id="screenCompare">
-    <div class="xp-bar-wrap"><div class="xp-bar" style="width:80%"></div></div>
-    <div class="xp-label">Прогресс: <span>Шаг 3 из 3</span></div>
-    <div class="chapter"><div class="chapter-num">3</div><div class="chapter-text">Глава 3 — Развилка судьбы</div></div>
-    <h2 class="screen-title">Два пути — честное сравнение</h2>
-    <p class="screen-desc">Данные по программам Онлайн-колледжа №1 и средним показателям рынка.</p>
-    <div class="insight">
-      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
-      <div class="insight-text">Выпускник колледжа начинает зарабатывать <strong>на 3–4 года раньше</strong>. За это время разница в доходе составляет <strong>от 2 до 4 млн рублей</strong>.</div>
-    </div>
-    <div class="compare-wrap">
-      <table class="compare-table">
-        <thead><tr><th>Критерий</th><th>Колледж №1</th><th>10–11 класс + вуз</th></tr></thead>
-        <tbody>
-          <tr><td>Срок до диплома</td><td><span class="check">2–4 года</span></td><td><span class="neutral">6–7 лет</span></td></tr>
-          <tr><td>Вступительные экзамены</td><td><span class="check">Без ОГЭ и ЕГЭ</span></td><td><span class="cross">ЕГЭ обязателен</span></td></tr>
-          <tr><td>Диплом</td><td><span class="check">Гос. диплом СПО</span></td><td><span class="neutral">Гос. диплом ВО</span></td></tr>
-          <tr><td>Поступление в вуз после</td><td><span class="check">Без ЕГЭ, сокращённая программа</span></td><td><span class="neutral">По результатам ЕГЭ</span></td></tr>
-          <tr><td>Отсрочка от армии</td><td><span class="check">Есть</span></td><td><span class="check">Есть</span></td></tr>
-          <tr><td>Практика с 1 курса</td><td><span class="check">Да, реальные проекты</span></td><td><span class="cross">Нет</span></td></tr>
-          <tr><td>Старт карьеры</td><td><span class="check">Через 2–4 года</span></td><td><span class="neutral">Через 6–7 лет</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="btn-row">
-      <button class="btn-primary" onclick="goToScreen('2a_from_compare')">
-        Выбрать специальность
-        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- SCREEN RESULT -->
-  <div class="screen" id="screenResult">
-    <div class="xp-bar-wrap"><div class="xp-bar" style="width:100%"></div></div>
-    <div class="xp-label">Прогресс: <span style="color:var(--green)">Путь пройден!</span></div>
-    <div class="result-hero">
-      <div class="result-tag"><span class="result-tag-icon">★</span>Персональный маршрут героя</div>
-      <h2 class="result-title" id="resultTitle"></h2>
-      <p class="result-sub" id="resultSub"></p>
-    </div>
-    <div class="result-map-wrap">
-      <img src="assets/route-map-v2.jpg" alt="Маршрутная карта" class="result-map" />
-    </div>
-    <div class="route-steps" id="routeSteps"></div>
-    <div class="program-block" id="programDetail"></div>
-    <div class="offer-block">
-      <div class="offer-label">Специальное предложение</div>
-      <h2 class="offer-title">Первый месяц<br /><span>в подарок</span></h2>
-      <p class="offer-desc">Запишитесь на открытый урок — познакомьтесь с форматом, преподавателями и платформой без обязательств.</p>
-      <a href="https://get.onlinecollege-1.ru/eventmay" class="offer-cta" target="_blank" rel="noopener">
-        Записаться бесплатно
-        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-      </a>
-      <div class="offer-trust">
-        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Без ОГЭ и ЕГЭ</span>
-        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Гос. диплом СПО</span>
-        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Грант до 60 000 ₽</span>
-        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Лицензия с 1998 года</span>
-      </div>
-    </div>
-    <div class="btn-row" style="margin-top:28px;">
-      <button class="btn-secondary" onclick="restart()">Пройти заново</button>
-    </div>
-  </div>
-
 </div>
+
+<!-- ═══ S2: SPECIALTY ═══ -->
+<div class="screen" id="s2">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:50%"></div></div>
+    <div class="prog-meta"><span class="prog-step">Шаг 3 из 5 — Выбор профессии</span><span class="prog-xp" id="px2">0 XP</span></div>
+  </div>
+  <div class="chapter"><div class="ch-n">3</div><div class="ch-l">Глава 3 — Выбор оружия</div></div>
+  <h2 class="stitle">Какая профессия <em>зовёт тебя?</em></h2>
+  <div class="insight">
+    <div class="ins-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+    <div class="ins-text">Все специальности — <strong>государственный диплом СПО</strong>, обучение онлайн из любой точки мира, <strong>отсрочка от армии</strong>. Поступление без ОГЭ и ЕГЭ — только аттестат.</div>
+  </div>
+  <div class="spec-grid">
+    <div class="spec-card" onclick="selectSpec(this,'fullstack')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag t-it">IT</span>
+      <div class="spec-name">Fullstack-разработчик</div>
+      <div class="spec-desc">Python, Java, JavaScript, React, Docker — разработка веб-сервисов от интерфейса до сервера</div>
+      <div class="spec-meta"><span class="spec-dur"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span><span class="spec-sal">от 98 000 ₽/мес.</span></div>
+    </div>
+    <div class="spec-card" onclick="selectSpec(this,'gamedev')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag t-it">IT</span>
+      <div class="spec-name">Разработчик игр</div>
+      <div class="spec-desc">Unity, Unreal Engine, C#, геймдизайн, 3D — создание компьютерных игр с нуля</div>
+      <div class="spec-meta"><span class="spec-dur"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span><span class="spec-sal">от 82 000 ₽/мес.</span></div>
+    </div>
+    <div class="spec-card" onclick="selectSpec(this,'design')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag t-des">Дизайн</span>
+      <div class="spec-name">Графический дизайнер</div>
+      <div class="spec-desc">Figma, Adobe Photoshop, Illustrator, After Effects — брендинг, упаковка, веб-дизайн</div>
+      <div class="spec-meta"><span class="spec-dur"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span><span class="spec-sal">от 65 000 ₽/мес.</span></div>
+    </div>
+    <div class="spec-card" onclick="selectSpec(this,'marketing')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag t-mkt">Маркетинг</span>
+      <div class="spec-name">Интернет-маркетолог</div>
+      <div class="spec-desc">Таргет, контекст, SEO, SMM, аналитика — продвижение товаров и услуг онлайн</div>
+      <div class="spec-meta"><span class="spec-dur"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span><span class="spec-sal">от 75 000 ₽/мес.</span></div>
+    </div>
+    <div class="spec-card" onclick="selectSpec(this,'law')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag t-law">Право</span>
+      <div class="spec-name">Юрист</div>
+      <div class="spec-desc">ФГОС 40.02.04 Юриспруденция — гражданское, уголовное, корпоративное право</div>
+      <div class="spec-meta"><span class="spec-dur"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 г. 10 мес.</span><span class="spec-sal">от 85 000 ₽/мес.</span></div>
+    </div>
+    <div class="spec-card" onclick="selectSpec(this,'unsure')">
+      <div class="sc-check"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <span class="spec-tag" style="background:rgba(0,0,0,.05);color:var(--muted)">Не определился</span>
+      <div class="spec-name">Помогите выбрать</div>
+      <div class="spec-desc">Подберём направление по интересам на бесплатной консультации</div>
+      <div class="spec-meta"><span class="spec-dur">Бесплатно</span></div>
+    </div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-p" id="btn2" disabled onclick="goToTask()">
+      Попробовать профессию
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <button class="btn btn-s" onclick="go('s1')">Назад</button>
+  </div>
+</div>
+
+<!-- ═══ S3: MINI TASK ═══ -->
+<div class="screen" id="s3">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:72%"></div></div>
+    <div class="prog-meta"><span class="prog-step">Шаг 4 из 5 — Испытание мастерством</span><span class="prog-xp" id="px3">0 XP</span></div>
+  </div>
+  <div class="chapter"><div class="ch-n">4</div><div class="ch-l">Глава 4 — Испытание мастерством</div></div>
+  <h2 class="stitle">Попробуй <em>профессию</em> прямо сейчас</h2>
+  <p class="sdesc" id="taskIntro"></p>
+  <div id="taskContainer"></div>
+  <div class="btn-row">
+    <button class="btn btn-p" id="btn3" disabled onclick="goToResult()">
+      Получить маршрут
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <button class="btn btn-s" onclick="go('s2')">Назад</button>
+  </div>
+</div>
+
+<!-- ═══ S4: RESULT ═══ -->
+<div class="screen" id="s4">
+  <div class="prog-wrap">
+    <div class="prog-bg"><div class="prog-fill" style="width:100%"></div></div>
+    <div class="prog-meta"><span class="prog-step">Путь пройден!</span><span class="prog-xp" id="px4" style="color:var(--green)">0 XP</span></div>
+  </div>
+  <div class="score-badge" id="scoreBadge">
+    <div class="score-ico">★</div>
+    <div class="score-txt"><strong id="scoreVal">250 XP</strong><span id="scoreLvl">Уровень: Исследователь</span></div>
+  </div>
+  <div class="res-hero">
+    <div class="res-char" id="resChar"></div>
+    <div class="res-text">
+      <div class="res-tag">★ Персональный маршрут героя</div>
+      <h2 class="res-title" id="resTitle"></h2>
+      <p class="res-sub" id="resSub"></p>
+    </div>
+  </div>
+  <div class="radar-wrap">
+    <div class="radar-cv"><canvas id="radarCanvas" width="200" height="200"></canvas></div>
+    <div class="radar-info">
+      <div class="radar-ttl">Твой профиль навыков</div>
+      <div class="radar-desc" id="radarDesc">На основе твоих ответов мы составили профиль сильных сторон.</div>
+      <div class="radar-traits" id="radarTraits"></div>
+    </div>
+  </div>
+  <div class="route-map">
+    <div class="rm-ttl">Твой маршрут</div>
+    <div class="rm-line" id="rmLine">
+      <div class="rm-prog" id="rmProg"></div>
+      <div class="rn" id="rn1">
+        <div class="rn-dot"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3"/></svg></div>
+        <div class="rn-lbl">Сейчас</div><div class="rn-date" id="rd1"></div>
+      </div>
+      <div class="rn" id="rn2">
+        <div class="rn-dot"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/></svg></div>
+        <div class="rn-lbl">Поступление</div><div class="rn-date" id="rd2"></div>
+      </div>
+      <div class="rn" id="rn3">
+        <div class="rn-dot"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="rn-lbl">Практика</div><div class="rn-date" id="rd3"></div>
+      </div>
+      <div class="rn" id="rn4">
+        <div class="rn-dot"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <div class="rn-lbl">Диплом</div><div class="rn-date" id="rd4"></div>
+      </div>
+      <div class="rn" id="rn5">
+        <div class="rn-dot"><svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg></div>
+        <div class="rn-lbl">Карьера</div><div class="rn-date" id="rd5"></div>
+      </div>
+    </div>
+  </div>
+  <div class="rsteps" id="rsteps"></div>
+  <div class="prog-block" id="progDetail"></div>
+  <div class="offer">
+    <div class="offer-badge">Специальное предложение</div>
+    <h2 class="offer-title">Первый месяц<br/><span>в подарок</span></h2>
+    <p class="offer-desc">Запишись на открытый урок — познакомься с форматом, преподавателями и платформой без обязательств.</p>
+    <a href="https://get.onlinecollege-1.ru/eventmay" class="offer-cta" target="_blank" rel="noopener">
+      Записаться бесплатно
+      <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+    <div class="offer-trust">
+      <span class="ot-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Без ОГЭ и ЕГЭ</span>
+      <span class="ot-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Гос. диплом СПО</span>
+      <span class="ot-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Грант до 60 000 ₽</span>
+      <span class="ot-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Лицензия с 1998 года</span>
+    </div>
+  </div>
+  <div class="btn-row" style="margin-top:24px">
+    <button class="btn btn-s" onclick="restart()">Пройти заново</button>
+  </div>
+</div>
+
+</div><!-- /qwrap -->
 
 <script>
-var path=null,priority=null,interest=null,selectedSpec=null;
-var SPECS={
-  fullstack:{name:'Fullstack-разработчик',sub:'IT · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 98 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Python','Java','JavaScript','React','Vue','Docker','PostgreSQL','Git','ChatGPT API','Android'],insight:'Fullstack-разработчики входят в топ-3 самых востребованных IT-специальностей. Средняя зарплата в Москве — 130 000 ₽, в регионах — от 70 000 ₽.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'},{n:'Шаг 2 — 1 курс',t:'Основы и школьная программа',d:'Введение в Python, основы алгоритмов, параллельно — общеобразовательные дисциплины.'},{n:'Шаг 3 — 2–3 курс',t:'Специализация',d:'Frontend (React, Vue), backend (Java, Node.js), базы данных, реальные проекты в команде.'},{n:'Шаг 4 — Карьера',t:'Диплом + первая работа',d:'Дипломный проект по реальному брифу. Средний срок до первого оффера — 3 месяца после диплома.'}]},
-  gamedev:{name:'Разработчик игр',sub:'IT · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 82 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Unity','C#','Unreal Engine','Blender','Геймдизайн','GDD','VR','AI-инструменты'],insight:'Игровая индустрия в России выросла на 40% за последние 3 года. Разработчики на Unity и Unreal Engine — в постоянном дефиците на рынке труда.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класса.'},{n:'Шаг 2 — 1 курс',t:'Анализ игр и первые прототипы',d:'Принципы геймплея, игровые механики, первые игры на Unity.'},{n:'Шаг 3 — 2–3 курс',t:'Разработка и 3D',d:'C#, Blender, левел-дизайн, работа в команде над реальным проектом.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Unreal Engine, VR, дипломная игра — готовое портфолио для работодателя.'}]},
-  design:{name:'Графический дизайнер',sub:'Дизайн · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 65 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Adobe Photoshop','Adobe Illustrator','Figma','After Effects','Blender','Tilda','MidJourney','ChatGPT'],insight:'Дизайнеры, владеющие AI-инструментами (MidJourney, Stable Diffusion), зарабатывают на 30–50% больше коллег без этих навыков.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы визуальных коммуникаций',d:'Типографика, теория цвета, первые работы в Adobe Photoshop.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и проекты',d:'Figma, Illustrator, веб-прототипирование, реальные клиентские задачи.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Айдентика, упаковка, 3D-анимация, AI-дизайн — готовое портфолио.'}]},
-  marketing:{name:'Интернет-маркетолог',sub:'Маркетинг · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 75 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Таргет','Контекстная реклама','SEO','SMM','Email-маркетинг','CRM','Веб-аналитика','Маркетплейсы'],insight:'Маркетологи, работающие с маркетплейсами (Wildberries, Ozon), — одна из самых быстрорастущих профессий. Спрос вырос в 3 раза за 2 года.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы маркетинга',d:'Введение в digital-маркетинг, основы SMM, первые рекламные кампании.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и аналитика',d:'Таргет, контекст, SEO, веб-аналитика, работа с реальными бюджетами.'},{n:'Шаг 4 — Карьера',t:'Диплом + кейсы',d:'CRM, маркетплейсы, стратегический маркетинговый план — готовые кейсы.'}]},
-  law:{name:'Юрист',sub:'ФГОС 40.02.04 Юриспруденция · Государственный диплом СПО · 2 года 10 мес. после 9 класса',duration:'2 г. 10 мес.',salary:'от 85 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Гражданское право','Уголовное право','Административное право','Корпоративное право','Юридические документы','Судебная практика'],insight:'Юрист — одна из самых коротких программ СПО: диплом уже через 2 года 10 месяцев. После колледжа можно поступить в вуз на юрфак без ЕГЭ.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Самая короткая программа.'},{n:'Шаг 2 — 1 курс',t:'Базовые правовые дисциплины',d:'Конституционное право, теория государства и права, введение в юриспруденцию.'},{n:'Шаг 3 — 2 курс',t:'Специализация',d:'Гражданское, уголовное, административное право, юридические документы.'},{n:'Шаг 4 — Карьера',t:'Диплом + практика',d:'Корпоративное право, судебная практика, дипломный проект — диплом за 2 г. 10 мес.'}]},
-  unsure:{name:'Подбор специальности',sub:'Бесплатная консультация · Определим направление вместе',duration:'По запросу',salary:'Зависит от специальности',cost:'от 22 000 ₽/мес.',skills:['IT','Дизайн','Маркетинг','Право'],insight:'На бесплатной консультации эксперт разберёт интересы ребёнка и предложит 2–3 подходящие специальности с конкретными данными по зарплатам и карьере.',steps:[{n:'Шаг 1',t:'Бесплатная консультация',d:'Разбор интересов и сильных сторон ребёнка с экспертом колледжа.'},{n:'Шаг 2',t:'Выбор направления',d:'Подберём 2–3 подходящие специальности с данными по рынку труда.'},{n:'Шаг 3',t:'Пробный урок',d:'Попробуете формат обучения без обязательств и оплаты.'},{n:'Шаг 4',t:'Поступление',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'}]}
-};
-var UNDECIDED_MAP={tech:'fullstack',creative:'design',business:'marketing',social:'law'};
+// ── STATE ──
+var XP=0,selChar=null,selChal=null,selSpec=null,taskDone=false;
 
+var CHARS={
+  builder:{svg:'<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="42" width="34" height="32" rx="8" fill="#2563EB"/><circle cx="45" cy="32" r="16" fill="#FBBF24"/><path d="M29 30 Q45 14 61 30 L61 26 Q45 10 29 26 Z" fill="#2563EB"/><rect x="27" y="28" width="36" height="6" rx="3" fill="#1D4ED8"/><circle cx="39" cy="32" r="2.5" fill="#1A1F2E"/><circle cx="51" cy="32" r="2.5" fill="#1A1F2E"/><circle cx="40" cy="31" r="1" fill="white"/><circle cx="52" cy="31" r="1" fill="white"/><path d="M40 38 Q45 42 50 38" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="14" y="44" width="14" height="8" rx="4" fill="#2563EB"/><rect x="62" y="44" width="14" height="8" rx="4" fill="#2563EB"/><rect x="68" y="40" width="4" height="14" rx="2" fill="#FCD34D"/><circle cx="70" cy="39" r="4" fill="none" stroke="#FCD34D" stroke-width="2"/><rect x="31" y="70" width="12" height="14" rx="5" fill="#1D4ED8"/><rect x="47" y="70" width="12" height="14" rx="5" fill="#1D4ED8"/></svg>',
+   radar:[90,60,70,50,80],name:'Строитель'},
+  artist:{svg:'<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="42" width="34" height="32" rx="8" fill="#7C3AED"/><circle cx="45" cy="26" r="18" fill="#7C3AED"/><circle cx="45" cy="32" r="14" fill="#FBBF24"/><circle cx="55" cy="18" r="5" fill="#5B21B6"/><circle cx="40" cy="31" r="2.5" fill="#1A1F2E"/><circle cx="50" cy="31" r="2.5" fill="#1A1F2E"/><circle cx="41" cy="30" r="1" fill="white"/><circle cx="51" cy="30" r="1" fill="white"/><path d="M40 37 Q45 41 50 37" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="14" y="44" width="14" height="8" rx="4" fill="#7C3AED"/><rect x="62" y="44" width="14" height="8" rx="4" fill="#7C3AED"/><rect x="64" y="38" width="14" height="18" rx="3" fill="#F3F4F6" stroke="#E5E7EB" stroke-width="1"/><rect x="66" y="40" width="10" height="12" rx="2" fill="#A78BFA"/><rect x="31" y="70" width="12" height="14" rx="5" fill="#5B21B6"/><rect x="47" y="70" width="12" height="14" rx="5" fill="#5B21B6"/></svg>',
+   radar:[55,95,65,60,70],name:'Художник'},
+  strategist:{svg:'<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="42" width="34" height="32" rx="8" fill="#059669"/><polygon points="45,44 42,56 45,58 48,56" fill="white" opacity=".6"/><circle cx="45" cy="32" r="16" fill="#FBBF24"/><path d="M29 28 Q45 16 61 28 Q61 22 45 18 Q29 22 29 28Z" fill="#1A1F2E"/><circle cx="39" cy="32" r="2.5" fill="#1A1F2E"/><circle cx="51" cy="32" r="2.5" fill="#1A1F2E"/><circle cx="40" cy="31" r="1" fill="white"/><circle cx="52" cy="31" r="1" fill="white"/><path d="M40 38 Q45 42 50 38" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="14" y="44" width="14" height="8" rx="4" fill="#059669"/><rect x="62" y="44" width="14" height="8" rx="4" fill="#059669"/><rect x="64" y="36" width="14" height="18" rx="2" fill="white" opacity=".9"/><rect x="66" y="46" width="2" height="6" rx="1" fill="#059669"/><rect x="69" y="42" width="2" height="10" rx="1" fill="#059669"/><rect x="72" y="44" width="2" height="8" rx="1" fill="#059669"/><rect x="75" y="40" width="2" height="12" rx="1" fill="#059669"/><rect x="31" y="70" width="12" height="14" rx="5" fill="#047857"/><rect x="47" y="70" width="12" height="14" rx="5" fill="#047857"/></svg>',
+   radar:[70,65,90,85,75],name:'Стратег'},
+  explorer:{svg:'<svg viewBox="0 0 90 90" xmlns="http://www.w3.org/2000/svg"><rect x="28" y="42" width="34" height="32" rx="8" fill="#FF6B35"/><circle cx="45" cy="32" r="16" fill="#FBBF24"/><circle cx="39" cy="32" r="6" fill="none" stroke="#1A1F2E" stroke-width="2"/><circle cx="51" cy="32" r="6" fill="none" stroke="#1A1F2E" stroke-width="2"/><line x1="33" y1="30" x2="30" y2="28" stroke="#1A1F2E" stroke-width="2"/><line x1="57" y1="30" x2="60" y2="28" stroke="#1A1F2E" stroke-width="2"/><circle cx="39" cy="32" r="2" fill="#1A1F2E"/><circle cx="51" cy="32" r="2" fill="#1A1F2E"/><circle cx="40" cy="31" r=".8" fill="white"/><circle cx="52" cy="31" r=".8" fill="white"/><path d="M40 39 Q45 43 50 39" stroke="#1A1F2E" stroke-width="1.5" fill="none" stroke-linecap="round"/><rect x="14" y="44" width="14" height="8" rx="4" fill="#FF6B35"/><rect x="62" y="44" width="14" height="8" rx="4" fill="#FF6B35"/><circle cx="72" cy="44" r="6" fill="none" stroke="#FCD34D" stroke-width="2.5"/><line x1="76" y1="48" x2="80" y2="52" stroke="#FCD34D" stroke-width="2.5" stroke-linecap="round"/><rect x="31" y="70" width="12" height="14" rx="5" fill="#E55A25"/><rect x="47" y="70" width="12" height="14" rx="5" fill="#E55A25"/></svg>',
+   radar:[75,70,80,95,65],name:'Исследователь'}
+};
+
+var SPECS={
+  fullstack:{name:'Fullstack-разработчик',sub:'IT · Гос. диплом СПО · 3 года 10 мес. после 9 класса',dur:'3 г. 10 мес.',sal:'от 98 000 ₽/мес.',skills:['Python','Java','JavaScript','React','Vue','Docker','PostgreSQL','Git','ChatGPT API','Android'],insight:'Fullstack-разработчики входят в топ-3 самых востребованных IT-специальностей. Средняя зарплата в Москве — 130 000 ₽, в регионах — от 70 000 ₽.',dates:['2026','Сент. 2026','2027–2028','Июнь 2030','Осень 2030'],steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'},{n:'Шаг 2 — 1 курс',t:'Основы и школьная программа',d:'Введение в Python, основы алгоритмов, параллельно — общеобразовательные дисциплины.'},{n:'Шаг 3 — 2–3 курс',t:'Специализация',d:'Frontend (React, Vue), backend (Java, Node.js), базы данных, реальные проекты в команде.'},{n:'Шаг 4 — Карьера',t:'Диплом + первая работа',d:'Дипломный проект по реальному брифу. Средний срок до первого оффера — 3 месяца после диплома.'}],task:'code'},
+  gamedev:{name:'Разработчик игр',sub:'IT · Гос. диплом СПО · 3 года 10 мес. после 9 класса',dur:'3 г. 10 мес.',sal:'от 82 000 ₽/мес.',skills:['Unity','C#','Unreal Engine','Blender','Геймдизайн','GDD','VR','AI-инструменты'],insight:'Игровая индустрия в России выросла на 40% за последние 3 года. Разработчики на Unity и Unreal Engine — в постоянном дефиците на рынке труда.',dates:['2026','Сент. 2026','2027–2028','Июнь 2030','Осень 2030'],steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Анализ игр и первые прототипы',d:'Принципы геймплея, игровые механики, первые игры на Unity.'},{n:'Шаг 3 — 2–3 курс',t:'Разработка и 3D',d:'C#, Blender, левел-дизайн, работа в команде над реальным проектом.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Unreal Engine, VR, дипломная игра — готовое портфолио для работодателя.'}],task:'code'},
+  design:{name:'Графический дизайнер',sub:'Дизайн · Гос. диплом СПО · 3 года 10 мес. после 9 класса',dur:'3 г. 10 мес.',sal:'от 65 000 ₽/мес.',skills:['Adobe Photoshop','Adobe Illustrator','Figma','After Effects','Blender','Tilda','MidJourney','ChatGPT'],insight:'Дизайнеры, владеющие AI-инструментами (MidJourney, Stable Diffusion), зарабатывают на 30–50% больше коллег без этих навыков.',dates:['2026','Сент. 2026','2027–2028','Июнь 2030','Осень 2030'],steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы визуальных коммуникаций',d:'Типографика, теория цвета, первые работы в Adobe Photoshop.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и проекты',d:'Figma, Illustrator, веб-прототипирование, реальные клиентские задачи.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Айдентика, упаковка, 3D-анимация, AI-дизайн — готовое портфолио.'}],task:'font'},
+  marketing:{name:'Интернет-маркетолог',sub:'Маркетинг · Гос. диплом СПО · 3 года 10 мес. после 9 класса',dur:'3 г. 10 мес.',sal:'от 75 000 ₽/мес.',skills:['Таргет','Контекстная реклама','SEO','SMM','Email-маркетинг','CRM','Веб-аналитика','Маркетплейсы'],insight:'Маркетологи, работающие с маркетплейсами (Wildberries, Ozon), — одна из самых быстрорастущих профессий. Спрос вырос в 3 раза за 2 года.',dates:['2026','Сент. 2026','2027–2028','Июнь 2030','Осень 2030'],steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы маркетинга',d:'Введение в digital-маркетинг, основы SMM, первые рекламные кампании.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и аналитика',d:'Таргет, контекст, SEO, веб-аналитика, работа с реальными бюджетами.'},{n:'Шаг 4 — Карьера',t:'Диплом + кейсы',d:'CRM, маркетплейсы, стратегический маркетинговый план — готовые кейсы.'}],task:'ab'},
+  law:{name:'Юрист',sub:'ФГОС 40.02.04 Юриспруденция · Гос. диплом СПО · 2 года 10 мес. после 9 класса',dur:'2 г. 10 мес.',sal:'от 85 000 ₽/мес.',skills:['Гражданское право','Уголовное право','Административное право','Корпоративное право','Юридические документы','Судебная практика'],insight:'Юрист — одна из самых коротких программ СПО: диплом уже через 2 года 10 месяцев. После колледжа можно поступить в вуз на юрфак без ЕГЭ.',dates:['2026','Сент. 2026','2027','Июнь 2029','Осень 2029'],steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Самая короткая программа.'},{n:'Шаг 2 — 1 курс',t:'Базовые правовые дисциплины',d:'Конституционное право, теория государства и права, введение в юриспруденцию.'},{n:'Шаг 3 — 2 курс',t:'Специализация',d:'Гражданское, уголовное, административное право, юридические документы.'},{n:'Шаг 4 — Карьера',t:'Диплом + практика',d:'Корпоративное право, судебная практика, дипломный проект — диплом за 2 г. 10 мес.'}],task:'contract'},
+  unsure:{name:'Подбор специальности',sub:'Бесплатная консультация · Определим направление вместе',dur:'По запросу',sal:'Зависит от специальности',skills:['IT','Дизайн','Маркетинг','Право'],insight:'На бесплатной консультации эксперт разберёт интересы ребёнка и предложит 2–3 подходящие специальности с конкретными данными по зарплатам и карьере.',dates:['2026','Сент. 2026','2027–2028','По программе','По программе'],steps:[{n:'Шаг 1',t:'Бесплатная консультация',d:'Разбор интересов и сильных сторон с экспертом колледжа.'},{n:'Шаг 2',t:'Выбор направления',d:'Подберём 2–3 подходящие специальности с данными по рынку труда.'},{n:'Шаг 3',t:'Пробный урок',d:'Попробуешь формат обучения без обязательств и оплаты.'},{n:'Шаг 4',t:'Поступление',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'}],task:'ab'}
+};
+
+var CHAL_CHARTS={
+  fast:{ttl:'Сравнение путей: когда начнёшь зарабатывать',bars:[
+    {l:'Колледж (диплом)',v:46,max:100,pct:'3 г. 10 мес.',cls:'bo'},
+    {l:'Вуз (бакалавр)',v:100,max:100,pct:'4–6 лет',cls:'bb'},
+    {l:'Средняя зарплата junior',v:65,max:100,pct:'65 000 ₽',cls:'bg'},
+    {l:'Средняя зарплата через 3 г.',v:90,max:100,pct:'98 000 ₽',cls:'bp'}
+  ],insight:'Из колледжа можно поступить в вуз <strong>без ЕГЭ</strong> — это знают только 12% родителей. Диплом СПО + высшее образование = максимальная гибкость.'},
+  uni:{ttl:'Пути в высшее образование',bars:[
+    {l:'Колледж → вуз (без ЕГЭ)',v:75,max:100,pct:'Без ЕГЭ',cls:'bg'},
+    {l:'10 класс → ЕГЭ → вуз',v:100,max:100,pct:'С ЕГЭ',cls:'bb'},
+    {l:'Стоимость колледжа/год',v:55,max:100,pct:'от 264 000 ₽',cls:'bo'},
+    {l:'Стоимость вуза/год',v:100,max:100,pct:'от 350 000 ₽',cls:'bp'}
+  ],insight:'<strong>67% выпускников колледжа</strong> поступают в вуз на 2–3 курс — пропуская первые годы. Это экономит 1–2 года и деньги.'},
+  explore:{ttl:'Востребованность профессий (hh.ru, 2026)',bars:[
+    {l:'IT-специалисты',v:95,max:100,pct:'95 000+ вакансий',cls:'bo'},
+    {l:'Маркетологи',v:72,max:100,pct:'72 000+ вакансий',cls:'bg'},
+    {l:'Дизайнеры',v:58,max:100,pct:'58 000+ вакансий',cls:'bp'},
+    {l:'Юристы',v:45,max:100,pct:'45 000+ вакансий',cls:'bb'}
+  ],insight:'<strong>Не знаешь, чего хочешь?</strong> Это нормально — 67% студентов колледжа говорят, что выбрали профессию осознанно только после первого курса.'}
+};
+
+var RADAR_LABELS=['Логика','Творчество','Общение','Аналитика','Скорость'];
+var RADAR_COLORS={builder:'#2563EB',artist:'#7C3AED',strategist:'#059669',explorer:'#FF6B35'};
+
+// ── FUNCTIONS ──
 function startQuiz(){
-  document.getElementById('heroSection').style.display='none';
-  document.getElementById('journeyTrack').style.display='block';
-  document.getElementById('quizWrap').style.display='block';
-  showScreen('screen1'); updateJourney(1);
+  document.getElementById('heroSec').style.display='none';
+  document.getElementById('jtrack').style.display='block';
+  document.getElementById('qwrap').style.display='block';
+  go('s0'); setJourney(1);
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function showScreen(id){
-  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+function go(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});
   document.getElementById(id).classList.add('active');
+  updateXPDisplays();
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function updateJourney(step){
-  for(var i=1;i<=4;i++){
+function setJourney(step){
+  for(var i=1;i<=5;i++){
     var el=document.getElementById('jn'+i);
     el.classList.remove('active','done');
     if(i<step) el.classList.add('done');
     else if(i===step) el.classList.add('active');
   }
 }
-function selectChoice(el,value){
-  el.closest('.choices').querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); path=value;
+function addXP(pts,label){
+  XP+=pts;
+  var t=document.getElementById('xpToast');
+  t.textContent='+'+pts+' XP — '+label;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show')},2000);
+  updateXPDisplays();
+}
+function updateXPDisplays(){
+  var s=XP+' XP';
+  document.getElementById('xpDisp').textContent=s;
+  ['px0','px1','px2','px3','px4'].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=s;});
+}
+
+function selectChar(el,key){
+  document.querySelectorAll('.char-card').forEach(function(c){c.classList.remove('sel')});
+  el.classList.add('sel');
+  selChar=key;
+  document.getElementById('btn0').disabled=false;
+  addXP(50,'Герой выбран');
+}
+function selectChal(el,key){
+  document.querySelectorAll('#chalChoices .choice').forEach(function(c){c.classList.remove('sel')});
+  el.classList.add('sel');
+  selChal=key;
   document.getElementById('btn1').disabled=false;
+  addXP(50,'Испытание пройдено');
+  showChalChart(key);
 }
-function selectChoice2b(el,value){
-  el.closest('.choices').querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); priority=value;
-  document.getElementById('btn2b').disabled=false;
+function showChalChart(key){
+  var data=CHAL_CHARTS[key];
+  var box=document.getElementById('chalChart');
+  document.getElementById('chalChartTtl').textContent=data.ttl;
+  var html='';
+  data.bars.forEach(function(b){
+    html+='<div class="bar-row"><div class="bar-lbl">'+b.l+'</div><div class="bar-track"><div class="bar-fill '+b.cls+'" data-pct="'+b.v+'"></div></div><div class="bar-val">'+b.pct+'</div></div>';
+  });
+  html+='<div class="insight" style="margin-top:16px;margin-bottom:0"><div class="ins-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="#3DB87A" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="ins-text">'+data.insight+'</div></div>';
+  document.getElementById('chalChartBars').innerHTML=html;
+  box.classList.add('show');
+  setTimeout(function(){
+    box.querySelectorAll('.bar-fill').forEach(function(f){f.style.width=f.dataset.pct+'%'});
+  },50);
 }
-function selectChoice2c(el,value){
-  el.closest('.choices').querySelectorAll('.choice').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); interest=value;
-  document.getElementById('btn2c').disabled=false;
+function selectSpec(el,key){
+  document.querySelectorAll('.spec-card').forEach(function(c){c.classList.remove('sel')});
+  el.classList.add('sel');
+  selSpec=key;
+  document.getElementById('btn2').disabled=false;
 }
-function selectSpec(el,value){
-  el.closest('.spec-grid').querySelectorAll('.spec-card').forEach(function(c){c.classList.remove('selected');});
-  el.classList.add('selected'); selectedSpec=value;
-  document.getElementById('btn2a').disabled=false;
+function goToTask(){
+  if(!selSpec) return;
+  addXP(50,'Профессия выбрана');
+  var spec=SPECS[selSpec];
+  document.getElementById('taskIntro').textContent='Сейчас ты окажешься в роли '+spec.name+'. Выполни задание — и получи +100 XP.';
+  buildTask(spec.task||'ab');
+  go('s3'); setJourney(4);
 }
-function goToScreen(target){
-  if(target===1){showScreen('screen1');updateJourney(1);}
-  else if(target===2){
-    if(path==='college'){showScreen('screen2a');updateJourney(2);}
-    else if(path==='school'){showScreen('screen2b');updateJourney(2);}
-    else{showScreen('screen2c');updateJourney(2);}
+function buildTask(type){
+  var c=document.getElementById('taskContainer');
+  taskDone=false;
+  document.getElementById('btn3').disabled=true;
+  if(type==='code') buildCodeTask(c);
+  else if(type==='font') buildFontTask(c);
+  else if(type==='ab') buildABTask(c);
+  else if(type==='contract') buildContractTask(c);
+  else buildABTask(c);
+}
+
+// ── CODE TASK (IT) ──
+var codeOrder=['def greet(name):','    message = "Привет, " + name','    return message','print(greet("Мир"))'];
+var codeSlots=[null,null,null,null];
+var codeBlocks=['print(greet("Мир"))','def greet(name):','    return message','    message = "Привет, " + name'];
+function buildCodeTask(c){
+  var slotsHtml='<div class="code-slots">';
+  for(var i=0;i<4;i++) slotsHtml+='<div class="code-slot" id="slot'+i+'" onclick="fillSlot('+i+')" data-idx="'+i+'">Строка '+(i+1)+'...</div>';
+  slotsHtml+='</div>';
+  var blocksHtml='<div class="code-blocks">';
+  codeBlocks.forEach(function(b,i){blocksHtml+='<div class="code-block" id="cb'+i+'" onclick="pickBlock('+i+',\''+b.replace(/'/g,"\\'")+'\')" data-i="'+i+'">'+b+'</div>';});
+  blocksHtml+='</div>';
+  c.innerHTML='<div class="task-wrap"><div class="task-hdr"><div class="task-ico" style="background:rgba(37,99,235,.1)"><svg viewBox="0 0 24 24" stroke="#2563EB"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><div><div class="task-ttl">Собери функцию</div><div class="task-sub">Задание разработчика</div></div></div><div class="task-desc">Расставь строки кода в правильном порядке, чтобы функция работала корректно. Нажми на блок — потом на слот.</div>'+blocksHtml+slotsHtml+'<div class="task-res" id="taskRes"></div></div>';
+  window._pickedBlock=null;
+}
+var _pickedBlock=null;
+function pickBlock(i,val){
+  var el=document.getElementById('cb'+i);
+  if(el.classList.contains('used')) return;
+  _pickedBlock={i:i,val:val};
+  document.querySelectorAll('.code-block').forEach(function(b){b.style.outline='none'});
+  el.style.outline='2px solid var(--orange)';
+}
+function fillSlot(slotIdx){
+  if(!_pickedBlock) return;
+  var slot=document.getElementById('slot'+slotIdx);
+  if(slot.classList.contains('filled')) return;
+  slot.textContent=_pickedBlock.val;
+  slot.classList.add('filled');
+  codeSlots[slotIdx]=_pickedBlock.val;
+  document.getElementById('cb'+_pickedBlock.i).classList.add('used');
+  document.getElementById('cb'+_pickedBlock.i).style.outline='none';
+  _pickedBlock=null;
+  if(codeSlots.every(function(s){return s!==null})) checkCode();
+}
+function checkCode(){
+  var correct=codeSlots.every(function(v,i){return v===codeOrder[i]});
+  var res=document.getElementById('taskRes');
+  if(correct){
+    codeSlots.forEach(function(v,i){document.getElementById('slot'+i).classList.add('correct')});
+    res.className='task-res ok show';
+    res.innerHTML='<div class="task-res-ttl">Правильно! +100 XP</div><div class="task-res-desc">Ты думаешь как разработчик. Функция написана верно: сначала объявление, потом логика, потом вызов.</div>';
+    addXP(100,'Задание выполнено');
+  } else {
+    codeSlots.forEach(function(v,i){document.getElementById('slot'+i).classList.add(v===codeOrder[i]?'correct':'wrong')});
+    res.className='task-res fail show';
+    res.innerHTML='<div class="task-res-ttl">Не совсем. +50 XP за попытку</div><div class="task-res-desc">Правильный порядок: объявление функции → переменная → return → вызов. Это базовый паттерн в Python.</div>';
+    addXP(50,'Попытка засчитана');
   }
-  else if(target==='compare'){showScreen('screenCompare');updateJourney(3);}
-  else if(target==='2a_from_compare'){path='college';showScreen('screen2a');updateJourney(2);}
+  taskDone=true;
+  document.getElementById('btn3').disabled=false;
 }
-function goToResult(mode){
-  var specKey=selectedSpec;
-  if(mode==='undecided'&&interest) specKey=UNDECIDED_MAP[interest]||'unsure';
-  if(!specKey) specKey='unsure';
-  var spec=SPECS[specKey];
-  document.getElementById('resultTitle').textContent=spec.name;
-  document.getElementById('resultSub').textContent=spec.sub;
+
+// ── FONT TASK (Design) ──
+function buildFontTask(c){
+  c.innerHTML='<div class="task-wrap"><div class="task-hdr"><div class="task-ico" style="background:rgba(124,58,237,.1)"><svg viewBox="0 0 24 24" stroke="#7C3AED"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg></div><div><div class="task-ttl">Выбери шрифт для бренда</div><div class="task-sub">Задание дизайнера</div></div></div><div class="task-desc">Перед тобой логотип детского образовательного приложения. Какой шрифт подойдёт лучше всего?</div><div style="background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:20px;text-align:center;margin-bottom:20px;font-size:22px;font-weight:700;color:var(--text)">KidsLearn</div><div class="font-opts"><div class="font-opt" onclick="pickFont(this,false)"><div class="font-prev" style="font-family:Georgia,serif;font-weight:700">KidsLearn</div><div class="font-nm">Georgia (Serif)</div></div><div class="font-opt" onclick="pickFont(this,true)"><div class="font-prev" style="font-family:Arial,sans-serif;font-weight:700;letter-spacing:-.5px">KidsLearn</div><div class="font-nm">Rounded Sans</div></div><div class="font-opt" onclick="pickFont(this,false)"><div class="font-prev" style="font-family:\'Courier New\',monospace;font-weight:700">KidsLearn</div><div class="font-nm">Courier (Mono)</div></div></div><div class="task-res" id="taskRes"></div></div>';
+}
+function pickFont(el,correct){
+  document.querySelectorAll('.font-opt').forEach(function(f){f.classList.remove('correct','wrong')});
+  el.classList.add(correct?'correct':'wrong');
+  var res=document.getElementById('taskRes');
+  if(correct){
+    res.className='task-res ok show';
+    res.innerHTML='<div class="task-res-ttl">Верно! +100 XP</div><div class="task-res-desc">Rounded Sans — правильный выбор. Округлые формы ассоциируются с дружелюбием и безопасностью. Serif выглядит слишком строго, Mono — технически.</div>';
+    addXP(100,'Задание выполнено');
+  } else {
+    res.className='task-res fail show';
+    res.innerHTML='<div class="task-res-ttl">Не совсем. +50 XP за попытку</div><div class="task-res-desc">Для детского бренда лучше работает Rounded Sans — округлые формы создают ощущение тепла и безопасности. Это базовое правило типографики.</div>';
+    addXP(50,'Попытка засчитана');
+  }
+  taskDone=true;
+  document.getElementById('btn3').disabled=false;
+}
+
+// ── AB TASK (Marketing / unsure) ──
+function buildABTask(c){
+  c.innerHTML='<div class="task-wrap"><div class="task-hdr"><div class="task-ico" style="background:rgba(245,158,11,.1)"><svg viewBox="0 0 24 24" stroke="#D97706"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></div><div><div class="task-ttl">Угадай победителя A/B-теста</div><div class="task-sub">Задание маркетолога</div></div></div><div class="task-desc">Два заголовка для рекламы онлайн-курса. Реальный тест показал, что один из них дал CTR в 2,3 раза выше. Какой?</div><div class="ab-opts"><div class="ab-opt" onclick="pickAB(this,false)">Запишись на курс по Python и начни карьеру в IT</div><div class="ab-opt" onclick="pickAB(this,true)">Через 4 месяца ты напишешь свой первый сайт — с нуля</div></div><div class="task-res" id="taskRes"></div></div>';
+}
+function pickAB(el,correct){
+  var opts=document.querySelectorAll('.ab-opt');
+  opts.forEach(function(o){o.classList.add('loser')});
+  el.classList.remove('loser');
+  el.classList.add(correct?'winner':'loser');
+  if(correct) opts[0].classList.add('loser');
+  else opts[1].classList.add('winner');
+  var res=document.getElementById('taskRes');
+  if(correct){
+    res.className='task-res ok show';
+    res.innerHTML='<div class="task-res-ttl">Правильно! +100 XP</div><div class="task-res-desc">Конкретный результат ("напишешь свой первый сайт") бьёт абстрактный призыв ("начни карьеру"). Люди покупают трансформацию, а не процесс — это ключевой принцип маркетинга.</div>';
+    addXP(100,'Задание выполнено');
+  } else {
+    res.className='task-res fail show';
+    res.innerHTML='<div class="task-res-ttl">Не угадал. +50 XP за попытку</div><div class="task-res-desc">Победил второй: "Через 4 месяца ты напишешь свой первый сайт". Конкретный результат + временной горизонт = высокий CTR. Это работает в 80% A/B-тестов.</div>';
+    addXP(50,'Попытка засчитана');
+  }
+  taskDone=true;
+  document.getElementById('btn3').disabled=false;
+}
+
+// ── CONTRACT TASK (Law) ──
+function buildContractTask(c){
+  c.innerHTML='<div class="task-wrap"><div class="task-hdr"><div class="task-ico" style="background:rgba(220,38,38,.1)"><svg viewBox="0 0 24 24" stroke="#DC2626"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div><div><div class="task-ttl">Найди ловушку в договоре</div><div class="task-sub">Задание юриста</div></div></div><div class="task-desc">Перед тобой фрагмент договора аренды. В нём спрятана одна юридическая ловушка. Нажми на неё.</div><div class="contract-txt">Арендатор обязуется вносить арендную плату в размере <span class="trap" onclick="wrongTrap(this)">30 000 рублей</span> ежемесячно не позднее 10-го числа. Арендодатель вправе в <span class="trap" onclick="correctTrap(this)">одностороннем порядке изменить размер арендной платы</span> без предварительного уведомления арендатора. Договор заключён сроком на <span class="trap" onclick="wrongTrap(this)">12 месяцев</span>.</div><div class="task-res" id="taskRes"></div></div>';
+}
+function correctTrap(el){
+  el.classList.add('found');
+  var res=document.getElementById('taskRes');
+  res.className='task-res ok show';
+  res.innerHTML='<div class="task-res-ttl">Нашёл! +100 XP</div><div class="task-res-desc">Верно. "Одностороннее изменение без уведомления" — грубое нарушение ст. 450 ГК РФ. Такое условие можно оспорить в суде. Именно это изучают на первом курсе юриспруденции.</div>';
+  addXP(100,'Задание выполнено');
+  taskDone=true;
+  document.getElementById('btn3').disabled=false;
+}
+function wrongTrap(el){
+  el.style.background='rgba(239,68,68,.15)';
+  var res=document.getElementById('taskRes');
+  res.className='task-res fail show';
+  res.innerHTML='<div class="task-res-ttl">Не эта. +50 XP за попытку</div><div class="task-res-desc">Сумма и срок — стандартные условия. Ловушка в другом: "одностороннее изменение платы без уведомления" нарушает ГК РФ. Попробуй ещё раз.</div>';
+  addXP(50,'Попытка засчитана');
+  taskDone=true;
+  document.getElementById('btn3').disabled=false;
+}
+
+// ── RESULT ──
+function goToResult(){
+  addXP(50,'Маршрут получен');
+  var spec=SPECS[selSpec||'unsure'];
+  var ch=CHARS[selChar||'builder'];
+
+  // score
+  var lvl=XP>=300?'Мастер':XP>=200?'Специалист':'Исследователь';
+  document.getElementById('scoreVal').textContent=XP+' XP';
+  document.getElementById('scoreLvl').textContent='Уровень: '+lvl;
+  document.getElementById('px4').textContent=XP+' XP';
+
+  // result hero
+  document.getElementById('resChar').innerHTML=ch.svg;
+  document.getElementById('resTitle').textContent=spec.name;
+  document.getElementById('resSub').textContent=spec.sub;
+
+  // radar
+  drawRadar(ch.radar,RADAR_COLORS[selChar||'builder']);
+  var traits=['Логика','Творчество','Общение','Аналитика','Скорость'];
+  var traitsHtml='';
+  var colors=['#FF6B35','#7C3AED','#059669','#2563EB','#F59E0B'];
+  ch.radar.forEach(function(v,i){
+    traitsHtml+='<div class="rtrait"><div class="rtrait-dot" style="background:'+colors[i]+'"></div><div class="rtrait-lbl">'+traits[i]+'</div><div class="rtrait-val">'+v+'%</div></div>';
+  });
+  document.getElementById('radarTraits').innerHTML=traitsHtml;
+
+  // route map
+  var dates=spec.dates;
+  document.getElementById('rd1').textContent=dates[0];
+  document.getElementById('rd2').textContent=dates[1];
+  document.getElementById('rd3').textContent=dates[2];
+  document.getElementById('rd4').textContent=dates[3];
+  document.getElementById('rd5').textContent=dates[4];
+  setTimeout(function(){
+    ['rn1','rn2','rn3','rn4','rn5'].forEach(function(id,i){
+      setTimeout(function(){
+        document.getElementById(id).classList.add(i<4?'done':'lit');
+        var pct=i===0?0:i===1?25:i===2?50:i===3?75:100;
+        document.getElementById('rmProg').style.width=pct+'%';
+      },i*300);
+    });
+  },400);
+
+  // steps
   var stepsHtml=spec.steps.map(function(s){
-    return '<div class="route-step"><div class="route-step-num">'+s.n+'</div><div class="route-step-title">'+s.t+'</div><div class="route-step-desc">'+s.d+'</div></div>';
+    return '<div class="rstep"><div class="rstep-n">'+s.n+'</div><div class="rstep-t">'+s.t+'</div><div class="rstep-d">'+s.d+'</div></div>';
   }).join('');
-  document.getElementById('routeSteps').innerHTML=stepsHtml;
+  document.getElementById('rsteps').innerHTML=stepsHtml;
+
+  // program
   var skillsHtml=spec.skills.map(function(s){return '<span class="skill-tag">'+s+'</span>';}).join('');
-  document.getElementById('programDetail').innerHTML=
+  document.getElementById('progDetail').innerHTML=
     '<h3>'+spec.name+'</h3>'+
-    '<div class="program-stats">'+
-      '<div><div class="program-stat-val">'+spec.duration+'</div><div class="program-stat-label">Срок обучения (после 9 кл.)</div></div>'+
-      '<div><div class="program-stat-val">'+spec.salary+'</div><div class="program-stat-label">Средняя зарплата выпускника</div></div>'+
-      '<div><div class="program-stat-val">'+spec.cost+'</div><div class="program-stat-label">Стоимость обучения</div></div>'+
+    '<div class="prog-stats">'+
+      '<div><div class="pstat-v">'+spec.dur+'</div><div class="pstat-l">Срок обучения</div></div>'+
+      '<div><div class="pstat-v">'+spec.sal+'</div><div class="pstat-l">Средняя зарплата</div></div>'+
     '</div>'+
-    '<div class="insight" style="margin-bottom:20px;">'+
-      '<div class="insight-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="#3DB87A" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>'+
-      '<div class="insight-text">'+spec.insight+'</div>'+
+    '<div class="insight" style="margin-bottom:20px">'+
+      '<div class="ins-icon"><svg viewBox="0 0 24 24" width="16" height="16" stroke="#3DB87A" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>'+
+      '<div class="ins-text">'+spec.insight+'</div>'+
     '</div>'+
-    '<div class="section-heading">Инструменты и навыки</div>'+
-    '<div class="program-skills">'+skillsHtml+'</div>';
-  showScreen('screenResult'); updateJourney(4);
+    '<div class="sec-h">Инструменты и навыки</div>'+
+    '<div class="skill-tags">'+skillsHtml+'</div>';
+
+  go('s4'); setJourney(5);
 }
+
+// ── RADAR CHART ──
+function drawRadar(vals,color){
+  var canvas=document.getElementById('radarCanvas');
+  var ctx=canvas.getContext('2d');
+  var cx=100,cy=100,r=75,n=5;
+  ctx.clearRect(0,0,200,200);
+  // grid
+  for(var g=1;g<=4;g++){
+    ctx.beginPath();
+    for(var i=0;i<n;i++){
+      var a=Math.PI*2*i/n-Math.PI/2;
+      var x=cx+r*g/4*Math.cos(a),y=cy+r*g/4*Math.sin(a);
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    }
+    ctx.closePath();
+    ctx.strokeStyle='rgba(0,0,0,.08)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+  // axes
+  for(var i=0;i<n;i++){
+    var a=Math.PI*2*i/n-Math.PI/2;
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    ctx.strokeStyle='rgba(0,0,0,.1)';
+    ctx.lineWidth=1;
+    ctx.stroke();
+  }
+  // data
+  ctx.beginPath();
+  vals.forEach(function(v,i){
+    var a=Math.PI*2*i/n-Math.PI/2;
+    var x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle=color+'33';
+  ctx.fill();
+  ctx.strokeStyle=color;
+  ctx.lineWidth=2.5;
+  ctx.stroke();
+  // dots
+  vals.forEach(function(v,i){
+    var a=Math.PI*2*i/n-Math.PI/2;
+    var x=cx+r*(v/100)*Math.cos(a),y=cy+r*(v/100)*Math.sin(a);
+    ctx.beginPath();
+    ctx.arc(x,y,4,0,Math.PI*2);
+    ctx.fillStyle=color;
+    ctx.fill();
+  });
+  // labels
+  ctx.fillStyle='#6B7280';
+  ctx.font='11px Inter,sans-serif';
+  ctx.textAlign='center';
+  RADAR_LABELS.forEach(function(l,i){
+    var a=Math.PI*2*i/n-Math.PI/2;
+    var x=cx+(r+16)*Math.cos(a),y=cy+(r+16)*Math.sin(a)+4;
+    ctx.fillText(l,x,y);
+  });
+}
+
 function restart(){
-  path=null;priority=null;interest=null;selectedSpec=null;
-  document.querySelectorAll('.choice,.spec-card').forEach(function(c){c.classList.remove('selected');});
-  ['btn1','btn2a','btn2b','btn2c'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=true;});
-  showScreen('screen1'); updateJourney(1);
+  XP=0;selChar=null;selChal=null;selSpec=null;taskDone=false;
+  document.querySelectorAll('.char-card,.choice,.spec-card').forEach(function(c){c.classList.remove('sel')});
+  document.querySelectorAll('.chart-box').forEach(function(b){b.classList.remove('show')});
+  ['btn0','btn1','btn2','btn3'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=true;});
+  updateXPDisplays();
+  go('s0'); setJourney(1);
 }
 </script>
 </body>
