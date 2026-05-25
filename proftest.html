@@ -12,15 +12,16 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
       --green: #2ECC71; --green-dark: #27AE60; --navy: #0D1B2A;
-      --navy-mid: #1A2E42; --white: #FFFFFF; --red: #E74C3C;
-      --radius: 16px; --radius-sm: 10px;
+      --navy-mid: #1A2E42; --navy-light: #1E3550; --white: #FFFFFF;
+      --red: #E74C3C; --yellow: #F39C12; --radius: 16px; --radius-sm: 10px;
     }
     html { scroll-behavior: smooth; }
     body { font-family: 'Inter', -apple-system, sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
+    /* ─── HERO ─── */
     .hero { position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column; }
     .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0D1B2A 0%, #1A2E42 50%, #0D2B1A 100%); z-index: 0; }
-    .hero-img { position: absolute; right: 0; top: 0; width: 55%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.35; z-index: 1; }
+    .hero-img { position: absolute; right: 0; top: 0; width: 55%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.3; z-index: 1; }
     .hero-gradient { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,27,42,1) 40%, rgba(13,27,42,0) 100%); z-index: 2; }
     .hero-content { position: relative; z-index: 3; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 80px 6vw 60px; max-width: 680px; }
     .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); border-radius: 100px; padding: 6px 16px; font-size: 13px; font-weight: 600; color: var(--green); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 24px; }
@@ -28,9 +29,13 @@
     @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
     .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 20px; }
     .hero h1 span { color: var(--green); }
-    .hero-sub { font-size: clamp(16px, 2vw, 20px); color: rgba(255,255,255,0.7); font-weight: 400; margin-bottom: 40px; max-width: 520px; }
+    .hero-sub { font-size: clamp(16px, 2vw, 20px); color: rgba(255,255,255,0.7); font-weight: 400; margin-bottom: 16px; max-width: 520px; }
+    .hero-promise { display: flex; flex-direction: column; gap: 8px; margin-bottom: 40px; }
+    .hero-promise-item { display: flex; align-items: center; gap: 10px; font-size: 15px; color: rgba(255,255,255,0.75); }
+    .hero-promise-item svg { width: 16px; height: 16px; stroke: var(--green); fill: none; stroke-width: 2.5; flex-shrink: 0; }
 
-    .progress-track { padding: 20px 6vw; background: rgba(13,27,42,0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.06); }
+    /* ─── PROGRESS ─── */
+    .progress-track { padding: 20px 6vw; background: rgba(13,27,42,0.97); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.06); position: sticky; top: 0; z-index: 100; }
     .progress-steps { display: flex; align-items: center; max-width: 600px; }
     .progress-step { display: flex; align-items: center; gap: 10px; flex: 1; }
     .progress-step:not(:last-child)::after { content: ''; flex: 1; height: 2px; background: rgba(255,255,255,0.12); margin: 0 8px; transition: background 0.4s; }
@@ -41,14 +46,29 @@
     .step-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.35); white-space: nowrap; transition: color 0.4s; }
     .progress-step.active .step-label, .progress-step.done .step-label { color: rgba(255,255,255,0.85); }
 
-    .quiz-wrap { padding: 60px 6vw 80px; max-width: 860px; margin: 0 auto; }
+    /* ─── QUIZ ─── */
+    .quiz-wrap { padding: 60px 6vw 80px; max-width: 900px; margin: 0 auto; }
     .screen { display: none; }
     .screen.active { display: block; animation: fadeUp 0.4s ease; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
     .screen-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
     .screen-title { font-size: clamp(24px, 3.5vw, 40px); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 12px; }
-    .screen-desc { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; max-width: 560px; }
+    .screen-desc { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; max-width: 600px; }
 
+    /* ─── INSIGHT BOX ─── */
+    .insight-box { background: rgba(46,204,113,0.07); border: 1px solid rgba(46,204,113,0.2); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 32px; display: flex; gap: 16px; align-items: flex-start; }
+    .insight-icon { width: 36px; height: 36px; border-radius: 8px; background: rgba(46,204,113,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .insight-icon svg { width: 18px; height: 18px; stroke: var(--green); fill: none; stroke-width: 2; }
+    .insight-text { font-size: 14px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+    .insight-text strong { color: var(--white); }
+
+    /* ─── FACT STRIP ─── */
+    .fact-strip { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; margin-bottom: 36px; }
+    .fact-card { background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-sm); padding: 16px; }
+    .fact-val { font-size: 26px; font-weight: 900; color: var(--green); letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
+    .fact-label { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+
+    /* ─── CHOICES ─── */
     .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
     .choice-card { background: var(--navy-mid); border: 2px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 28px 24px; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
     .choice-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(46,204,113,0.08) 0%, transparent 60%); opacity: 0; transition: opacity 0.25s; }
@@ -61,6 +81,7 @@
     .choice-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
     .choice-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
 
+    /* ─── SPEC GRID ─── */
     .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
     .spec-card { background: var(--navy-mid); border: 2px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: all 0.25s; }
     .spec-card:hover { border-color: rgba(46,204,113,0.5); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(46,204,113,0.15); }
@@ -72,11 +93,12 @@
     .tag-law { background: rgba(231,76,60,0.2); color: #EC7063; }
     .spec-name { font-size: 20px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.01em; }
     .spec-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; margin-bottom: 16px; }
-    .spec-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .spec-meta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
     .spec-meta-item { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 5px; }
     .spec-meta-item svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
     .spec-salary { font-size: 13px; font-weight: 700; color: var(--green); }
 
+    /* ─── BUTTONS ─── */
     .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--navy); font-size: 16px; font-weight: 700; padding: 16px 32px; border-radius: 100px; border: none; cursor: pointer; transition: all 0.25s; text-decoration: none; letter-spacing: -0.01em; }
     .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,204,113,0.35); }
     .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
@@ -84,74 +106,67 @@
     .btn-secondary:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
     .btn-row { display: flex; align-items: center; gap: 16px; margin-top: 40px; flex-wrap: wrap; }
 
-    .result-hero { background: var(--navy-mid); border-radius: 24px; overflow: hidden; margin-bottom: 32px; }
+    /* ─── COMPARE TABLE ─── */
+    .compare-wrap { background: var(--navy-mid); border-radius: var(--radius); overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.07); }
+    .compare-table { width: 100%; border-collapse: collapse; }
+    .compare-table th { padding: 14px 20px; font-size: 13px; font-weight: 700; text-align: left; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08); }
+    .compare-table th:first-child { color: rgba(255,255,255,0.4); }
+    .compare-table th:nth-child(2) { color: var(--green); }
+    .compare-table th:nth-child(3) { color: rgba(255,255,255,0.5); }
+    .compare-table td { padding: 13px 20px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table td:first-child { color: rgba(255,255,255,0.5); font-weight: 500; }
+    .check { color: var(--green); font-weight: 600; }
+    .cross { color: var(--red); }
+    .neutral { color: rgba(255,255,255,0.4); }
+
+    /* ─── RESULT ─── */
+    .result-map-wrap { border-radius: 20px; overflow: hidden; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.08); }
     .result-map { width: 100%; height: auto; display: block; }
-    .result-body { padding: 32px; }
-    .result-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
-    .result-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 8px; }
-    .result-sub { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
-    .route-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
-    .route-step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); padding: 20px; }
+    .result-header { margin-bottom: 32px; }
+    .result-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-bottom: 10px; }
+    .result-title { font-size: clamp(28px, 4vw, 48px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 8px; }
+    .result-sub { font-size: 16px; color: rgba(255,255,255,0.55); }
+
+    /* ─── ROUTE STEPS ─── */
+    .route-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 12px; margin-bottom: 40px; }
+    .route-step { background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.07); border-radius: var(--radius-sm); padding: 20px; position: relative; }
+    .route-step::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--green); border-radius: 3px 3px 0 0; opacity: 0.4; }
     .route-step-num { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
     .route-step-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
     .route-step-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
 
-    .program-detail { background: var(--navy-mid); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.08); }
-    .program-detail h3 { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
-    .program-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
-    .program-stat { display: flex; flex-direction: column; gap: 2px; }
-    .program-stat-val { font-size: 22px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; }
-    .program-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
+    /* ─── PROGRAM DETAIL ─── */
+    .program-block { background: var(--navy-mid); border-radius: var(--radius); padding: 28px; margin-bottom: 32px; border: 1px solid rgba(255,255,255,0.07); }
+    .program-block h3 { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+    .program-stats { display: flex; gap: 28px; flex-wrap: wrap; margin-bottom: 24px; padding-bottom: 24px; border-bottom: 1px solid rgba(255,255,255,0.07); }
+    .program-stat-val { font-size: 24px; font-weight: 900; color: var(--green); letter-spacing: -0.02em; line-height: 1; margin-bottom: 4px; }
+    .program-stat-label { font-size: 12px; color: rgba(255,255,255,0.4); font-weight: 500; }
+    .section-heading { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.35); margin-bottom: 14px; }
     .program-skills { display: flex; flex-wrap: wrap; gap: 8px; }
-    .skill-tag { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7); }
+    .skill-tag { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.65); }
 
-    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
-    .pricing-card { background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 24px; }
-    .pricing-card.featured { border-color: var(--green); background: rgba(46,204,113,0.06); }
-    .pricing-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
-    .pricing-card.featured .pricing-label { color: var(--green); }
-    .pricing-price { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 4px; }
-    .pricing-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
-    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-    .pricing-features li { font-size: 13px; color: rgba(255,255,255,0.65); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
-    .pricing-features li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; margin-top: 6px; }
-
-    .offer-block { background: linear-gradient(135deg, #0D2B1A 0%, #0D1B2A 100%); border: 1px solid rgba(46,204,113,0.3); border-radius: 24px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; }
-    .offer-block::before { content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 70%); pointer-events: none; }
-    .offer-label { display: inline-block; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.35); border-radius: 100px; padding: 6px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+    /* ─── OFFER ─── */
+    .offer-block { background: linear-gradient(135deg, #0D2B1A 0%, #0D1B2A 100%); border: 1px solid rgba(46,204,113,0.25); border-radius: 24px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; }
+    .offer-block::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 500px; height: 500px; background: radial-gradient(circle, rgba(46,204,113,0.1) 0%, transparent 70%); pointer-events: none; }
+    .offer-label { display: inline-block; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.3); border-radius: 100px; padding: 6px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
     .offer-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px; }
     .offer-title span { color: var(--green); }
-    .offer-desc { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 480px; margin: 0 auto 32px; line-height: 1.6; }
+    .offer-desc { font-size: 16px; color: rgba(255,255,255,0.6); max-width: 480px; margin: 0 auto 32px; line-height: 1.6; }
     .offer-cta { display: inline-flex; align-items: center; gap: 12px; background: var(--green); color: var(--navy); font-size: 18px; font-weight: 800; padding: 20px 44px; border-radius: 100px; text-decoration: none; transition: all 0.25s; letter-spacing: -0.01em; position: relative; animation: ctaPulse 3s ease-in-out infinite; }
     @keyframes ctaPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.4); } 50% { box-shadow: 0 0 0 16px rgba(46,204,113,0); } }
     .offer-cta:hover { background: var(--green-dark); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(46,204,113,0.4); animation: none; }
     .offer-cta svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
-    .offer-trust { display: flex; justify-content: center; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+    .offer-trust { display: flex; justify-content: center; gap: 28px; margin-top: 28px; flex-wrap: wrap; }
     .offer-trust-item { font-size: 13px; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 6px; }
     .offer-trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; }
 
-    .compare-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
-    .compare-table th { padding: 14px 16px; font-size: 13px; font-weight: 700; text-align: left; border-bottom: 2px solid rgba(255,255,255,0.1); }
-    .compare-table th:first-child { color: rgba(255,255,255,0.5); }
-    .compare-table th:nth-child(2) { color: var(--green); }
-    .compare-table th:nth-child(3) { color: rgba(255,255,255,0.5); }
-    .compare-table td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
-    .compare-table tr:last-child td { border-bottom: none; }
-    .compare-table td:first-child { color: rgba(255,255,255,0.55); font-weight: 500; }
-    .compare-table td:nth-child(2) { font-weight: 600; }
-    .check { color: var(--green); font-weight: 700; }
-    .cross { color: var(--red); }
-    .neutral { color: rgba(255,255,255,0.4); }
-    .section-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 40px 0; }
-    .section-heading { font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
-
     @media (max-width: 640px) {
-      .hero-img { width: 100%; opacity: 0.2; }
-      .hero-gradient { background: linear-gradient(180deg, rgba(13,27,42,0.6) 0%, rgba(13,27,42,1) 70%); }
+      .hero-img { width: 100%; opacity: 0.18; }
+      .hero-gradient { background: linear-gradient(180deg, rgba(13,27,42,0.5) 0%, rgba(13,27,42,1) 65%); }
       .hero-content { padding: 60px 24px 40px; max-width: 100%; }
       .quiz-wrap { padding: 40px 24px 60px; }
-      .offer-block { padding: 32px 24px; }
-      .result-body { padding: 24px; }
+      .offer-block { padding: 32px 20px; }
       .progress-track { padding: 16px 24px; }
       .step-label { display: none; }
     }
@@ -159,14 +174,20 @@
 </head>
 <body>
 
-<section class="hero">
+<!-- HERO -->
+<section class="hero" id="heroSection">
   <div class="hero-bg"></div>
   <img src="assets/students-hero.jpg" alt="Студенты Онлайн-колледжа №1" class="hero-img" />
   <div class="hero-gradient"></div>
   <div class="hero-content">
     <div class="badge"><span class="badge-dot"></span>Профориентация 2026</div>
     <h1>Маршрутная карта<br /><span>после 9 класса</span></h1>
-    <p class="hero-sub">Ответьте на 3 вопроса — получите персональный план: специальность, сроки, стоимость и первый шаг.</p>
+    <p class="hero-sub">3 вопроса — и вы получите конкретный план: специальность, сроки и первый шаг.</p>
+    <div class="hero-promise">
+      <div class="hero-promise-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Узнаете, какой путь выгоднее финансово</div>
+      <div class="hero-promise-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Получите реальные данные по зарплатам выпускников</div>
+      <div class="hero-promise-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Увидите пошаговый маршрут с конкретными датами</div>
+    </div>
     <button class="btn-primary" onclick="startQuiz()">
       Начать
       <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -174,6 +195,7 @@
   </div>
 </section>
 
+<!-- PROGRESS -->
 <div class="progress-track" id="progressTrack" style="display:none;">
   <div class="progress-steps">
     <div class="progress-step" id="ps1"><div class="step-num">1</div><span class="step-label">Направление</span></div>
@@ -183,12 +205,20 @@
   </div>
 </div>
 
+<!-- QUIZ -->
 <div class="quiz-wrap" id="quizWrap" style="display:none;">
 
+  <!-- SCREEN 1: Направление -->
   <div class="screen" id="screen1">
     <div class="screen-label">Шаг 1 из 3</div>
     <h2 class="screen-title">Что планирует ребёнок после 9 класса?</h2>
-    <p class="screen-desc">Выберите наиболее близкий вариант — это поможет подобрать оптимальный маршрут.</p>
+    <p class="screen-desc">Выберите вариант — мы покажем конкретные данные по каждому пути.</p>
+    <div class="fact-strip">
+      <div class="fact-card"><div class="fact-val">2–4 г.</div><div class="fact-label">до диплома в колледже vs 6–7 лет через вуз</div></div>
+      <div class="fact-card"><div class="fact-val">98 000 ₽</div><div class="fact-label">средняя зарплата IT-выпускника колледжа</div></div>
+      <div class="fact-card"><div class="fact-val">Без ЕГЭ</div><div class="fact-label">поступление в колледж — только аттестат</div></div>
+      <div class="fact-card"><div class="fact-val">60 000 ₽</div><div class="fact-label">максимальный грант на обучение</div></div>
+    </div>
     <div class="choices">
       <div class="choice-card" onclick="selectChoice(this,'college')">
         <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
@@ -214,10 +244,14 @@
     </div>
   </div>
 
+  <!-- SCREEN 2A: Специальность (ветка "колледж") -->
   <div class="screen" id="screen2a">
     <div class="screen-label">Шаг 2 из 3</div>
     <h2 class="screen-title">Какое направление интересует больше всего?</h2>
-    <p class="screen-desc">Все специальности — с государственным дипломом СПО и обучением онлайн из любой точки мира.</p>
+    <div class="insight-box">
+      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="insight-text">Все специальности ниже — это <strong>государственный диплом СПО</strong>, обучение онлайн из любой точки мира и <strong>отсрочка от армии</strong>. Поступление без ОГЭ и ЕГЭ — только аттестат за 9 класс.</div>
+    </div>
     <div class="spec-grid">
       <div class="spec-card" onclick="selectSpec(this,'fullstack')">
         <span class="spec-tag tag-it">IT</span>
@@ -265,7 +299,7 @@
         </div>
       </div>
       <div class="spec-card" onclick="selectSpec(this,'unsure')">
-        <span class="spec-tag" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)">Не определился</span>
+        <span class="spec-tag" style="background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.45)">Не определился</span>
         <div class="spec-name">Помогите выбрать</div>
         <div class="spec-desc">Подберём направление по интересам ребёнка на бесплатной консультации</div>
         <div class="spec-meta"><span class="spec-meta-item">Бесплатная консультация</span></div>
@@ -280,10 +314,14 @@
     </div>
   </div>
 
+  <!-- SCREEN 2B: Приоритет (ветка "10 класс") -->
   <div class="screen" id="screen2b">
     <div class="screen-label">Шаг 2 из 3</div>
     <h2 class="screen-title">Что важнее после школы?</h2>
-    <p class="screen-desc">Это поможет сравнить пути и найти оптимальный вариант.</p>
+    <div class="insight-box">
+      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="insight-text"><strong>Важный факт:</strong> выпускники колледжа могут поступить в вуз <strong>без ЕГЭ</strong> по сокращённой программе. Это значит — и профессия через 3 года, и высшее образование потом.</div>
+    </div>
     <div class="choices">
       <div class="choice-card" onclick="selectChoice2b(this,'career')">
         <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
@@ -310,10 +348,14 @@
     </div>
   </div>
 
+  <!-- SCREEN 2C: Интересы (ветка "не решили") -->
   <div class="screen" id="screen2c">
     <div class="screen-label">Шаг 2 из 3</div>
     <h2 class="screen-title">Что больше всего интересует ребёнка?</h2>
-    <p class="screen-desc">Выберите ближайшую область — это поможет сузить выбор.</p>
+    <div class="insight-box">
+      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="insight-text">По данным hh.ru за 2025 год, <strong>IT-специальности</strong> — самые востребованные среди выпускников СПО. Средняя зарплата junior-разработчика в первый год работы — <strong>от 60 000 ₽</strong>.</div>
+    </div>
     <div class="choices" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
       <div class="choice-card" onclick="selectChoice2c(this,'tech')">
         <div class="choice-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
@@ -345,23 +387,30 @@
     </div>
   </div>
 
+  <!-- SCREEN COMPARE: Сравнение (ветка "10 класс") -->
   <div class="screen" id="screenCompare">
     <div class="screen-label">Шаг 3 из 3</div>
     <h2 class="screen-title">10 класс или колледж — честное сравнение</h2>
-    <p class="screen-desc">Данные основаны на реальных программах Онлайн-колледжа №1.</p>
-    <table class="compare-table">
-      <thead><tr><th>Критерий</th><th>Колледж №1</th><th>10–11 класс + вуз</th></tr></thead>
-      <tbody>
-        <tr><td>Срок до диплома</td><td><span class="check">2–4 года</span></td><td><span class="neutral">6–7 лет</span></td></tr>
-        <tr><td>Стоимость обучения</td><td><span class="check">от 22 000 ₽/мес.</span></td><td><span class="neutral">от 80 000 ₽/год (вуз)</span></td></tr>
-        <tr><td>Вступительные экзамены</td><td><span class="check">Без ОГЭ и ЕГЭ</span></td><td><span class="cross">ЕГЭ обязателен</span></td></tr>
-        <tr><td>Диплом</td><td><span class="check">Гос. диплом СПО</span></td><td><span class="neutral">Гос. диплом ВО</span></td></tr>
-        <tr><td>Поступление в вуз</td><td><span class="check">Без ЕГЭ, по сокращённой программе</span></td><td><span class="neutral">По результатам ЕГЭ</span></td></tr>
-        <tr><td>Отсрочка от армии</td><td><span class="check">Есть</span></td><td><span class="check">Есть</span></td></tr>
-        <tr><td>Практика с 1 курса</td><td><span class="check">Да, реальные проекты</span></td><td><span class="cross">Нет</span></td></tr>
-        <tr><td>Формат</td><td><span class="check">Онлайн, гибкий график</span></td><td><span class="neutral">Очно или смешанный</span></td></tr>
-      </tbody>
-    </table>
+    <p class="screen-desc">Данные по программам Онлайн-колледжа №1 и средним показателям по рынку.</p>
+    <div class="insight-box">
+      <div class="insight-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>
+      <div class="insight-text">Выпускник колледжа начинает зарабатывать <strong>на 3–4 года раньше</strong>, чем однокурсник, который пошёл в 10 класс и потом в вуз. За это время разница в доходе составляет <strong>от 2 до 4 млн рублей</strong>.</div>
+    </div>
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Критерий</th><th>Колледж №1</th><th>10–11 класс + вуз</th></tr></thead>
+        <tbody>
+          <tr><td>Срок до диплома</td><td><span class="check">2–4 года</span></td><td><span class="neutral">6–7 лет</span></td></tr>
+          <tr><td>Стоимость обучения</td><td><span class="check">от 22 000 ₽/мес.</span></td><td><span class="neutral">от 80 000 ₽/год (вуз)</span></td></tr>
+          <tr><td>Вступительные экзамены</td><td><span class="check">Без ОГЭ и ЕГЭ</span></td><td><span class="cross">ЕГЭ обязателен</span></td></tr>
+          <tr><td>Диплом</td><td><span class="check">Гос. диплом СПО</span></td><td><span class="neutral">Гос. диплом ВО</span></td></tr>
+          <tr><td>Поступление в вуз после</td><td><span class="check">Без ЕГЭ, сокращённая программа</span></td><td><span class="neutral">По результатам ЕГЭ</span></td></tr>
+          <tr><td>Отсрочка от армии</td><td><span class="check">Есть</span></td><td><span class="check">Есть</span></td></tr>
+          <tr><td>Практика с 1 курса</td><td><span class="check">Да, реальные проекты</span></td><td><span class="cross">Нет</span></td></tr>
+          <tr><td>Старт карьеры</td><td><span class="check">Через 2–4 года</span></td><td><span class="neutral">Через 6–7 лет</span></td></tr>
+        </tbody>
+      </table>
+    </div>
     <div class="btn-row">
       <button class="btn-primary" onclick="goToScreen('2a_from_compare')">
         Выбрать специальность в колледже
@@ -370,59 +419,18 @@
     </div>
   </div>
 
+  <!-- SCREEN RESULT -->
   <div class="screen" id="screenResult">
-    <div class="result-hero">
-      <img src="assets/route-map.jpg" alt="Маршрутная карта" class="result-map" />
-      <div class="result-body">
-        <div class="result-tag">Ваш персональный маршрут</div>
-        <h2 class="result-title" id="resultTitle"></h2>
-        <p class="result-sub" id="resultSub"></p>
-        <div class="route-steps" id="routeSteps"></div>
-      </div>
+    <div class="result-map-wrap">
+      <img src="assets/route-map-v2.jpg" alt="Маршрутная карта" class="result-map" />
     </div>
-    <div class="program-detail" id="programDetail"></div>
-    <div class="section-heading">Стоимость обучения</div>
-    <div class="pricing-grid">
-      <div class="pricing-card featured">
-        <div class="pricing-label">Свободный трек</div>
-        <div class="pricing-price">от 22 000 ₽</div>
-        <div class="pricing-note">в месяц при оплате за год</div>
-        <ul class="pricing-features">
-          <li>Видеоуроки в удобное время</li>
-          <li>Углублённый английский язык</li>
-          <li>Учебная и производственная практика</li>
-          <li>Личный куратор и наставник</li>
-          <li>Государственный диплом СПО</li>
-          <li>Отсрочка от армии</li>
-        </ul>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-label">Очное обучение</div>
-        <div class="pricing-price">от 24 444 ₽</div>
-        <div class="pricing-note">в месяц при оплате за год</div>
-        <ul class="pricing-features">
-          <li>Онлайн-занятия по расписанию</li>
-          <li>Все уроки в записи</li>
-          <li>Углублённый английский язык</li>
-          <li>Личный куратор и наставник</li>
-          <li>Государственный диплом СПО</li>
-          <li>Отсрочка от армии</li>
-        </ul>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-label">Очно-заочное</div>
-        <div class="pricing-price">от 22 000 ₽</div>
-        <div class="pricing-note">в месяц при оплате за год</div>
-        <ul class="pricing-features">
-          <li>Гибкий формат обучения</li>
-          <li>Видеоуроки на платформе</li>
-          <li>Производственная практика</li>
-          <li>Личный куратор</li>
-          <li>Государственный диплом СПО</li>
-        </ul>
-      </div>
+    <div class="result-header">
+      <div class="result-tag">Ваш персональный маршрут</div>
+      <h2 class="result-title" id="resultTitle"></h2>
+      <p class="result-sub" id="resultSub"></p>
     </div>
-    <div class="section-divider"></div>
+    <div class="route-steps" id="routeSteps"></div>
+    <div class="program-block" id="programDetail"></div>
     <div class="offer-block">
       <div class="offer-label">Специальное предложение</div>
       <h2 class="offer-title">Первый месяц<br /><span>в подарок</span></h2>
@@ -438,7 +446,7 @@
         <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Лицензия с 1998 года</span>
       </div>
     </div>
-    <div class="btn-row" style="margin-top: 32px;">
+    <div class="btn-row" style="margin-top:32px;">
       <button class="btn-secondary" onclick="restart()">Пройти заново</button>
     </div>
   </div>
@@ -446,26 +454,100 @@
 </div>
 
 <script>
-  var path=null,priority=null,interest=null,selectedSpec=null;
-  var SPECS={
-    fullstack:{name:'Fullstack-разработчик',sub:'IT-специальность · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 98 000 ₽/мес.',skills:['Python','Java','JavaScript','React','Vue','Docker','PostgreSQL','Git','ChatGPT API','Android'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + введение в IT и Python'},{n:'Шаг 3',t:'2–3 курс — специализация',d:'Frontend, backend, базы данных, реальные проекты'},{n:'Шаг 4',t:'Диплом + карьера',d:'Дипломный проект по реальному брифу, старт карьеры'}]},
-    gamedev:{name:'Разработчик игр',sub:'IT-специальность · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 82 000 ₽/мес.',skills:['Unity','C#','Unreal Engine','Blender','Геймдизайн','GDD','VR','AI-инструменты'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Анализ игр, принципы геймплея, первые прототипы'},{n:'Шаг 3',t:'2–3 курс — разработка',d:'Unity, C#, 3D-моделирование, левел-дизайн'},{n:'Шаг 4',t:'Диплом + карьера',d:'Unreal Engine, VR, дипломная игра по реальному брифу'}]},
-    design:{name:'Графический дизайнер',sub:'Дизайн · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 65 000 ₽/мес.',skills:['Adobe Photoshop','Adobe Illustrator','Figma','After Effects','Blender','Tilda','MidJourney','ChatGPT'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + основы визуальных коммуникаций'},{n:'Шаг 3',t:'2 курс — инструменты',d:'Типографика, веб-прототипирование, Adobe-пакет'},{n:'Шаг 4',t:'Диплом + карьера',d:'Айдентика, упаковка, 3D-анимация, дипломный проект'}]},
-    marketing:{name:'Интернет-маркетолог',sub:'Маркетинг · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 75 000 ₽/мес.',skills:['Таргет','Контекстная реклама','SEO','SMM','Email-маркетинг','CRM','Веб-аналитика','Маркетплейсы'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + введение в маркетинг'},{n:'Шаг 3',t:'2 курс — инструменты',d:'Таргет, контент, аналитика, первые кампании'},{n:'Шаг 4',t:'Диплом + карьера',d:'CRM, маркетплейсы, стратегический маркетинговый план'}]},
-    law:{name:'Юрист',sub:'ФГОС 40.02.04 Юриспруденция · Государственный диплом СПО · 2 года 10 мес. после 9 класса',duration:'2 г. 10 мес.',salary:'от 85 000 ₽/мес.',skills:['Гражданское право','Уголовное право','Административное право','Корпоративное право','Юридические документы','Судебная практика'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Базовые дисциплины + введение в право'},{n:'Шаг 3',t:'2 курс — специализация',d:'Гражданское, уголовное, административное право'},{n:'Шаг 4',t:'Диплом + карьера',d:'Корпоративное право, судебная практика, дипломный проект'}]},
-    unsure:{name:'Подбор специальности',sub:'Бесплатная консультация · Определим направление вместе',duration:'По запросу',salary:'Зависит от специальности',skills:['IT','Дизайн','Маркетинг','Право'],steps:[{n:'Шаг 1',t:'Консультация',d:'Бесплатный разбор интересов и сильных сторон ребёнка'},{n:'Шаг 2',t:'Выбор направления',d:'Подберём 2–3 подходящие специальности'},{n:'Шаг 3',t:'Пробный урок',d:'Попробуете формат обучения без обязательств'},{n:'Шаг 4',t:'Поступление',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'}]}
-  };
-  var UNDECIDED_MAP={tech:'fullstack',creative:'design',business:'marketing',social:'law'};
-  function startQuiz(){document.querySelector('.hero').style.display='none';document.getElementById('progressTrack').style.display='block';document.getElementById('quizWrap').style.display='block';showScreen('screen1');updateProgress(1);window.scrollTo({top:0,behavior:'smooth'});}
-  function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
-  function updateProgress(step){for(var i=1;i<=4;i++){var el=document.getElementById('ps'+i);el.classList.remove('active','done');if(i<step)el.classList.add('done');else if(i===step)el.classList.add('active');}}
-  function selectChoice(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');path=value;document.getElementById('btn1').disabled=false;}
-  function selectChoice2b(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');priority=value;document.getElementById('btn2b').disabled=false;}
-  function selectChoice2c(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');interest=value;document.getElementById('btn2c').disabled=false;}
-  function selectSpec(el,value){el.closest('.spec-grid').querySelectorAll('.spec-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');selectedSpec=value;document.getElementById('btn2a').disabled=false;}
-  function goToScreen(target){if(target===1){showScreen('screen1');updateProgress(1);}else if(target===2){if(path==='college'){showScreen('screen2a');updateProgress(2);}else if(path==='school'){showScreen('screen2b');updateProgress(2);}else{showScreen('screen2c');updateProgress(2);}}else if(target==='compare'){showScreen('screenCompare');updateProgress(3);}else if(target==='2a_from_compare'){path='college';showScreen('screen2a');updateProgress(2);}}
-  function goToResult(mode){var specKey=selectedSpec;if(mode==='undecided'&&interest)specKey=UNDECIDED_MAP[interest]||'unsure';if(!specKey)specKey='unsure';var spec=SPECS[specKey];document.getElementById('resultTitle').textContent=spec.name;document.getElementById('resultSub').textContent=spec.sub;var stepsHtml=spec.steps.map(function(s){return '<div class="route-step"><div class="route-step-num">'+s.n+'</div><div class="route-step-title">'+s.t+'</div><div class="route-step-desc">'+s.d+'</div></div>';}).join('');document.getElementById('routeSteps').innerHTML=stepsHtml;var skillsHtml=spec.skills.map(function(s){return '<span class="skill-tag">'+s+'</span>';}).join('');document.getElementById('programDetail').innerHTML='<h3>'+spec.name+'</h3><div class="program-stats"><div class="program-stat"><span class="program-stat-val">'+spec.duration+'</span><span class="program-stat-label">Срок обучения (после 9 кл.)</span></div><div class="program-stat"><span class="program-stat-val">'+spec.salary+'</span><span class="program-stat-label">Средняя зарплата выпускника</span></div><div class="program-stat"><span class="program-stat-val">от 22 000 ₽</span><span class="program-stat-label">Стоимость в месяц</span></div></div><div class="section-heading">Инструменты и навыки</div><div class="program-skills">'+skillsHtml+'</div>';showScreen('screenResult');updateProgress(4);}
-  function restart(){path=null;priority=null;interest=null;selectedSpec=null;document.querySelectorAll('.choice-card,.spec-card').forEach(function(c){c.classList.remove('selected');});['btn1','btn2a','btn2b','btn2c'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=true;});showScreen('screen1');updateProgress(1);}
+var path=null,priority=null,interest=null,selectedSpec=null;
+var SPECS={
+  fullstack:{name:'Fullstack-разработчик',sub:'IT · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 98 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Python','Java','JavaScript','React','Vue','Docker','PostgreSQL','Git','ChatGPT API','Android'],insight:'Fullstack-разработчики входят в топ-3 самых востребованных IT-специальностей. Средняя зарплата в Москве — 130 000 ₽, в регионах — от 70 000 ₽.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'},{n:'Шаг 2 — 1 курс',t:'Основы и школьная программа',d:'Введение в Python, основы алгоритмов, параллельно — общеобразовательные дисциплины.'},{n:'Шаг 3 — 2–3 курс',t:'Специализация',d:'Frontend (React, Vue), backend (Java, Node.js), базы данных, реальные проекты в команде.'},{n:'Шаг 4 — Карьера',t:'Диплом + первая работа',d:'Дипломный проект по реальному брифу. Средний срок до первого оффера — 3 месяца после диплома.'}]},
+  gamedev:{name:'Разработчик игр',sub:'IT · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 82 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Unity','C#','Unreal Engine','Blender','Геймдизайн','GDD','VR','AI-инструменты'],insight:'Игровая индустрия в России выросла на 40% за последние 3 года. Разработчики на Unity и Unreal Engine — в постоянном дефиците на рынке труда.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Анализ игр и первые прототипы',d:'Принципы геймплея, игровые механики, первые игры на Unity.'},{n:'Шаг 3 — 2–3 курс',t:'Разработка и 3D',d:'C#, Blender, левел-дизайн, работа в команде над реальным проектом.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Unreal Engine, VR, дипломная игра — готовое портфолио для работодателя.'}]},
+  design:{name:'Графический дизайнер',sub:'Дизайн · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 65 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Adobe Photoshop','Adobe Illustrator','Figma','After Effects','Blender','Tilda','MidJourney','ChatGPT'],insight:'Дизайнеры, владеющие AI-инструментами (MidJourney, Stable Diffusion), зарабатывают на 30–50% больше коллег без этих навыков.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы визуальных коммуникаций',d:'Типографика, теория цвета, первые работы в Adobe Photoshop.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и проекты',d:'Figma, Illustrator, веб-прототипирование, реальные клиентские задачи.'},{n:'Шаг 4 — Карьера',t:'Диплом + портфолио',d:'Айдентика, упаковка, 3D-анимация, AI-дизайн — готовое портфолио.'}]},
+  marketing:{name:'Интернет-маркетолог',sub:'Маркетинг · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 75 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Таргет','Контекстная реклама','SEO','SMM','Email-маркетинг','CRM','Веб-аналитика','Маркетплейсы'],insight:'Маркетологи, работающие с маркетплейсами (Wildberries, Ozon), — одна из самых быстрорастущих профессий. Спрос вырос в 3 раза за 2 года.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс.'},{n:'Шаг 2 — 1 курс',t:'Основы маркетинга',d:'Введение в digital-маркетинг, основы SMM, первые рекламные кампании.'},{n:'Шаг 3 — 2 курс',t:'Инструменты и аналитика',d:'Таргет, контекст, SEO, веб-аналитика, работа с реальными бюджетами.'},{n:'Шаг 4 — Карьера',t:'Диплом + кейсы',d:'CRM, маркетплейсы, стратегический маркетинговый план — готовые кейсы.'}]},
+  law:{name:'Юрист',sub:'ФГОС 40.02.04 Юриспруденция · Государственный диплом СПО · 2 года 10 мес. после 9 класса',duration:'2 г. 10 мес.',salary:'от 85 000 ₽/мес.',cost:'от 22 000 ₽/мес.',skills:['Гражданское право','Уголовное право','Административное право','Корпоративное право','Юридические документы','Судебная практика'],insight:'Юрист — одна из самых коротких программ СПО: диплом уже через 2 года 10 месяцев. После колледжа можно поступить в вуз на юрфак без ЕГЭ.',steps:[{n:'Шаг 1 — Сейчас',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Самая короткая программа.'},{n:'Шаг 2 — 1 курс',t:'Базовые правовые дисциплины',d:'Конституционное право, теория государства и права, введение в юриспруденцию.'},{n:'Шаг 3 — 2 курс',t:'Специализация',d:'Гражданское, уголовное, административное право, юридические документы.'},{n:'Шаг 4 — Карьера',t:'Диплом + практика',d:'Корпоративное право, судебная практика, дипломный проект — диплом за 2 г. 10 мес.'}]},
+  unsure:{name:'Подбор специальности',sub:'Бесплатная консультация · Определим направление вместе',duration:'По запросу',salary:'Зависит от специальности',cost:'от 22 000 ₽/мес.',skills:['IT','Дизайн','Маркетинг','Право'],insight:'На бесплатной консультации эксперт разберёт интересы ребёнка и предложит 2–3 подходящие специальности с конкретными данными по зарплатам и карьере.',steps:[{n:'Шаг 1',t:'Бесплатная консультация',d:'Разбор интересов и сильных сторон ребёнка с экспертом колледжа.'},{n:'Шаг 2',t:'Выбор направления',d:'Подберём 2–3 подходящие специальности с данными по рынку труда.'},{n:'Шаг 3',t:'Пробный урок',d:'Попробуете формат обучения без обязательств и оплаты.'},{n:'Шаг 4',t:'Поступление',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс. Зачисление круглый год.'}]}
+};
+var UNDECIDED_MAP={tech:'fullstack',creative:'design',business:'marketing',social:'law'};
+
+function startQuiz(){
+  document.getElementById('heroSection').style.display='none';
+  document.getElementById('progressTrack').style.display='block';
+  document.getElementById('quizWrap').style.display='block';
+  showScreen('screen1');updateProgress(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});
+  document.getElementById(id).classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function updateProgress(step){
+  for(var i=1;i<=4;i++){
+    var el=document.getElementById('ps'+i);
+    el.classList.remove('active','done');
+    if(i<step)el.classList.add('done');
+    else if(i===step)el.classList.add('active');
+  }
+}
+function selectChoice(el,value){
+  el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');path=value;
+  document.getElementById('btn1').disabled=false;
+}
+function selectChoice2b(el,value){
+  el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');priority=value;
+  document.getElementById('btn2b').disabled=false;
+}
+function selectChoice2c(el,value){
+  el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');interest=value;
+  document.getElementById('btn2c').disabled=false;
+}
+function selectSpec(el,value){
+  el.closest('.spec-grid').querySelectorAll('.spec-card').forEach(function(c){c.classList.remove('selected');});
+  el.classList.add('selected');selectedSpec=value;
+  document.getElementById('btn2a').disabled=false;
+}
+function goToScreen(target){
+  if(target===1){showScreen('screen1');updateProgress(1);}
+  else if(target===2){
+    if(path==='college'){showScreen('screen2a');updateProgress(2);}
+    else if(path==='school'){showScreen('screen2b');updateProgress(2);}
+    else{showScreen('screen2c');updateProgress(2);}
+  }
+  else if(target==='compare'){showScreen('screenCompare');updateProgress(3);}
+  else if(target==='2a_from_compare'){path='college';showScreen('screen2a');updateProgress(2);}
+}
+function goToResult(mode){
+  var specKey=selectedSpec;
+  if(mode==='undecided'&&interest)specKey=UNDECIDED_MAP[interest]||'unsure';
+  if(!specKey)specKey='unsure';
+  var spec=SPECS[specKey];
+  document.getElementById('resultTitle').textContent=spec.name;
+  document.getElementById('resultSub').textContent=spec.sub;
+  var stepsHtml=spec.steps.map(function(s){
+    return '<div class="route-step"><div class="route-step-num">'+s.n+'</div><div class="route-step-title">'+s.t+'</div><div class="route-step-desc">'+s.d+'</div></div>';
+  }).join('');
+  document.getElementById('routeSteps').innerHTML=stepsHtml;
+  var skillsHtml=spec.skills.map(function(s){return '<span class="skill-tag">'+s+'</span>';}).join('');
+  document.getElementById('programDetail').innerHTML=
+    '<h3>'+spec.name+'</h3>'+
+    '<div class="program-stats">'+
+      '<div><div class="program-stat-val">'+spec.duration+'</div><div class="program-stat-label">Срок обучения (после 9 кл.)</div></div>'+
+      '<div><div class="program-stat-val">'+spec.salary+'</div><div class="program-stat-label">Средняя зарплата выпускника</div></div>'+
+      '<div><div class="program-stat-val">'+spec.cost+'</div><div class="program-stat-label">Стоимость обучения</div></div>'+
+    '</div>'+
+    '<div class="insight-box" style="margin-bottom:20px;">'+
+      '<div class="insight-icon"><svg viewBox="0 0 24 24" width="18" height="18" stroke="#2ECC71" fill="none" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div>'+
+      '<div class="insight-text">'+spec.insight+'</div>'+
+    '</div>'+
+    '<div class="section-heading">Инструменты и навыки</div>'+
+    '<div class="program-skills">'+skillsHtml+'</div>';
+  showScreen('screenResult');updateProgress(4);
+}
+function restart(){
+  path=null;priority=null;interest=null;selectedSpec=null;
+  document.querySelectorAll('.choice-card,.spec-card').forEach(function(c){c.classList.remove('selected');});
+  ['btn1','btn2a','btn2b','btn2c'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=true;});
+  showScreen('screen1');updateProgress(1);
+}
 </script>
 </body>
 </html>
