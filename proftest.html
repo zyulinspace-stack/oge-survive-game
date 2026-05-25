@@ -1,1451 +1,471 @@
 <!DOCTYPE html>
-<!-- build: 20260525-v1 -->
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Маршрутная карта после 9 класса — Онлайн-колледж №1</title>
-  <meta name="description" content="Интерактивный навигатор для родителей девятиклассников. Узнайте лучший маршрут для вашего ребёнка после 9 класса — за 3 минуты.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta name="description" content="Интерактивный навигатор: определите оптимальный маршрут после 9 класса и подберите подходящую специальность в Онлайн-колледже №1." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
     :root {
-      --orange:      #FB8125;
-      --orange-dark: #e06b10;
-      --teal:        #07B396;
-      --teal-dark:   #069680;
-      --purple:      #D571FF;
-      --dark:        #131D0E;
-      --gray:        #6B7280;
-      --border:      #E5E7EB;
-      --white:       #FFFFFF;
-      --sky:         #C2F5FF;
-      --sky-light:   #E8FBFF;
-      --bg:          #F8FFFE;
+      --green: #2ECC71; --green-dark: #27AE60; --navy: #0D1B2A;
+      --navy-mid: #1A2E42; --white: #FFFFFF; --red: #E74C3C;
+      --radius: 16px; --radius-sm: 10px;
     }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--navy); color: var(--white); min-height: 100vh; line-height: 1.6; -webkit-font-smoothing: antialiased; }
 
-    body {
-      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--dark);
-      min-height: 100vh;
-    }
+    .hero { position: relative; overflow: hidden; min-height: 100vh; display: flex; flex-direction: column; }
+    .hero-bg { position: absolute; inset: 0; background: linear-gradient(135deg, #0D1B2A 0%, #1A2E42 50%, #0D2B1A 100%); z-index: 0; }
+    .hero-img { position: absolute; right: 0; top: 0; width: 55%; height: 100%; object-fit: cover; object-position: center top; opacity: 0.35; z-index: 1; }
+    .hero-gradient { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(13,27,42,1) 40%, rgba(13,27,42,0) 100%); z-index: 2; }
+    .hero-content { position: relative; z-index: 3; flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 80px 6vw 60px; max-width: 680px; }
+    .badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.4); border-radius: 100px; padding: 6px 16px; font-size: 13px; font-weight: 600; color: var(--green); letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 24px; }
+    .badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.8); } }
+    .hero h1 { font-size: clamp(36px, 5vw, 64px); font-weight: 900; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 20px; }
+    .hero h1 span { color: var(--green); }
+    .hero-sub { font-size: clamp(16px, 2vw, 20px); color: rgba(255,255,255,0.7); font-weight: 400; margin-bottom: 40px; max-width: 520px; }
 
-    /* ===== HEADER ===== */
-    header {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 0 24px;
-      height: 64px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      position: sticky;
-      top: 0;
-      z-index: 200;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
-    }
-    .logo-text {
-      font-size: 17px;
-      font-weight: 900;
-      color: var(--dark);
-      text-decoration: none;
-      line-height: 1.2;
-    }
-    .logo-text span { color: var(--orange); }
-    .header-badge {
-      background: #FFF3E8;
-      color: var(--orange);
-      font-size: 11px;
-      font-weight: 800;
-      padding: 5px 12px;
-      border-radius: 50px;
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-    }
+    .progress-track { padding: 20px 6vw; background: rgba(13,27,42,0.95); backdrop-filter: blur(12px); border-top: 1px solid rgba(255,255,255,0.06); }
+    .progress-steps { display: flex; align-items: center; max-width: 600px; }
+    .progress-step { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .progress-step:not(:last-child)::after { content: ''; flex: 1; height: 2px; background: rgba(255,255,255,0.12); margin: 0 8px; transition: background 0.4s; }
+    .progress-step.active:not(:last-child)::after, .progress-step.done:not(:last-child)::after { background: var(--green); }
+    .step-num { width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; border: 2px solid rgba(255,255,255,0.2); color: rgba(255,255,255,0.4); flex-shrink: 0; transition: all 0.4s; }
+    .progress-step.active .step-num { border-color: var(--green); color: var(--green); background: rgba(46,204,113,0.1); }
+    .progress-step.done .step-num { border-color: var(--green); background: var(--green); color: var(--navy); }
+    .step-label { font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.35); white-space: nowrap; transition: color 0.4s; }
+    .progress-step.active .step-label, .progress-step.done .step-label { color: rgba(255,255,255,0.85); }
 
-    /* ===== MAIN WRAPPER ===== */
-    .main {
-      max-width: 640px;
-      margin: 0 auto;
-      padding: 0 16px 60px;
-    }
-
-    /* ===== HERO ===== */
-    .hero {
-      text-align: center;
-      padding: 36px 0 28px;
-    }
-    .hero-emoji {
-      font-size: 52px;
-      margin-bottom: 14px;
-      display: block;
-      animation: floatEmoji 3s ease-in-out infinite;
-    }
-    @keyframes floatEmoji {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-8px); }
-    }
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: white;
-      color: var(--teal);
-      font-size: 11px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 6px 14px;
-      border-radius: 50px;
-      margin-bottom: 16px;
-      box-shadow: 0 2px 10px rgba(7,179,150,0.18);
-    }
-    .hero h1 {
-      font-size: 28px;
-      font-weight: 900;
-      line-height: 1.25;
-      color: var(--dark);
-      margin-bottom: 12px;
-    }
-    @media (max-width: 480px) {
-      .hero h1 { font-size: 22px; }
-    }
-    .hero p {
-      font-size: 15px;
-      color: #4B5563;
-      font-weight: 500;
-      line-height: 1.6;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    /* ===== PROGRESS MAP ===== */
-    .progress-map {
-      background: white;
-      border-radius: 20px;
-      padding: 20px 20px 16px;
-      margin-bottom: 24px;
-      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
-      border: 1.5px solid var(--border);
-    }
-    .map-title {
-      font-size: 12px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      color: var(--gray);
-      margin-bottom: 14px;
-    }
-    .map-steps {
-      display: flex;
-      align-items: center;
-      gap: 0;
-      position: relative;
-    }
-    .map-step {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 1;
-      position: relative;
-      z-index: 2;
-    }
-    .map-step-dot {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      background: #F3F4F6;
-      border: 2.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 16px;
-      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      position: relative;
-    }
-    .map-step-dot.active {
-      background: var(--orange);
-      border-color: var(--orange);
-      box-shadow: 0 0 0 6px rgba(251,129,37,0.15);
-      transform: scale(1.15);
-    }
-    .map-step-dot.done {
-      background: var(--teal);
-      border-color: var(--teal);
-    }
-    .map-step-dot.locked {
-      opacity: 0.35;
-    }
-    .map-step-label {
-      font-size: 10px;
-      font-weight: 700;
-      color: var(--gray);
-      margin-top: 6px;
-      text-align: center;
-      line-height: 1.3;
-      max-width: 64px;
-      transition: color 0.3s;
-    }
-    .map-step-label.active { color: var(--orange); }
-    .map-step-label.done { color: var(--teal); }
-    .map-connector {
-      flex: 1;
-      height: 3px;
-      background: var(--border);
-      margin-bottom: 22px;
-      position: relative;
-      z-index: 1;
-      transition: background 0.4s;
-      max-width: 40px;
-    }
-    .map-connector.done { background: var(--teal); }
-
-    /* ===== QUESTION CARD ===== */
-    .question-card {
-      background: white;
-      border-radius: 24px;
-      padding: 28px 24px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      border: 1.5px solid var(--border);
-      animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes cardIn {
-      from { opacity: 0; transform: translateY(20px) scale(0.97); }
-      to   { opacity: 1; transform: translateY(0) scale(1); }
-    }
-    .q-step-tag {
-      display: inline-block;
-      background: #FFF7ED;
-      color: var(--orange);
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 5px 12px;
-      border-radius: 50px;
-      margin-bottom: 14px;
-    }
-    .q-text {
-      font-size: 20px;
-      font-weight: 900;
-      color: var(--dark);
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-    @media (max-width: 480px) {
-      .q-text { font-size: 17px; }
-    }
-    .q-sub {
-      font-size: 13px;
-      color: var(--gray);
-      font-weight: 500;
-      line-height: 1.5;
-      margin-bottom: 22px;
-    }
-
-    /* ===== ANSWER OPTIONS ===== */
-    .options {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .option-btn {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      background: #F9FAFB;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 18px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: left;
-      font-family: inherit;
-      width: 100%;
-    }
-    .option-btn:hover {
-      border-color: var(--teal);
-      background: var(--sky-light);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(7,179,150,0.12);
-    }
-    .option-btn.selected {
-      border-color: var(--teal);
-      background: var(--sky-light);
-      box-shadow: 0 4px 16px rgba(7,179,150,0.15);
-    }
-    .option-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 22px;
-      flex-shrink: 0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
-    }
-    .option-content { flex: 1; }
-    .option-title {
-      font-size: 15px;
-      font-weight: 800;
-      color: var(--dark);
-      margin-bottom: 2px;
-    }
-    .option-desc {
-      font-size: 12px;
-      color: var(--gray);
-      font-weight: 500;
-      line-height: 1.4;
-    }
-    .option-arrow {
-      color: var(--gray);
-      font-size: 18px;
-      flex-shrink: 0;
-      transition: transform 0.2s;
-    }
-    .option-btn:hover .option-arrow { transform: translateX(4px); }
-
-    /* ===== INSIGHT BLOCK ===== */
-    .insight {
-      background: linear-gradient(135deg, #F0FDF9 0%, #E8FBFF 100%);
-      border: 1.5px solid #A7F3D0;
-      border-radius: 16px;
-      padding: 16px 18px;
-      margin-top: 16px;
-      display: none;
-    }
-    .insight.show { display: block; animation: cardIn 0.3s ease; }
-    .insight-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--teal-dark);
-      margin-bottom: 6px;
-    }
-    .insight-text {
-      font-size: 13px;
-      color: #065F46;
-      font-weight: 500;
-      line-height: 1.55;
-    }
-
-    /* ===== COMPARISON TABLE ===== */
-    .compare-table {
-      width: 100%;
-      border-collapse: collapse;
-      margin: 16px 0;
-      font-size: 13px;
-    }
-    .compare-table th {
-      padding: 10px 12px;
-      font-weight: 800;
-      font-size: 12px;
-      text-align: center;
-    }
-    .compare-table th:first-child { text-align: left; color: var(--gray); }
-    .compare-table th.col-college { background: #FFF7ED; color: var(--orange); border-radius: 8px 8px 0 0; }
-    .compare-table th.col-school { background: #F9FAFB; color: var(--gray); border-radius: 8px 8px 0 0; }
-    .compare-table td {
-      padding: 10px 12px;
-      border-bottom: 1px solid var(--border);
-      font-weight: 600;
-    }
-    .compare-table td:first-child { color: var(--gray); font-size: 12px; }
-    .compare-table td.val-college { text-align: center; background: #FFFBF5; color: var(--dark); }
-    .compare-table td.val-school { text-align: center; color: var(--gray); }
-    .compare-table tr:last-child td { border-bottom: none; }
-    .badge-win {
-      display: inline-block;
-      background: var(--orange);
-      color: white;
-      font-size: 10px;
-      font-weight: 800;
-      padding: 2px 8px;
-      border-radius: 50px;
-      margin-left: 4px;
-    }
-
-    /* ===== RESULT SCREEN ===== */
-    .result-card {
-      background: white;
-      border-radius: 24px;
-      padding: 32px 24px 28px;
-      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-      border: 1.5px solid var(--border);
-      text-align: center;
-      animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
-      display: none;
-    }
-    .result-card.show { display: block; }
-    .result-emoji {
-      font-size: 56px;
-      margin-bottom: 16px;
-      display: block;
-    }
-    .result-title {
-      font-size: 24px;
-      font-weight: 900;
-      color: var(--dark);
-      line-height: 1.25;
-      margin-bottom: 10px;
-    }
-    @media (max-width: 480px) {
-      .result-title { font-size: 20px; }
-    }
-    .result-sub {
-      font-size: 14px;
-      color: #4B5563;
-      font-weight: 500;
-      line-height: 1.6;
-      margin-bottom: 24px;
-    }
-
-    /* ===== ROUTE VISUAL ===== */
-    .route-visual {
-      background: linear-gradient(135deg, #FFF7ED 0%, #FFFBEB 100%);
-      border: 2px solid var(--orange);
-      border-radius: 16px;
-      padding: 18px 20px;
-      margin-bottom: 20px;
-      text-align: left;
-    }
-    .route-title {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--orange);
-      text-transform: uppercase;
-      letter-spacing: 0.8px;
-      margin-bottom: 12px;
-    }
-    .route-steps {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .route-step {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-    }
-    .route-step-num {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      background: var(--orange);
-      color: white;
-      font-size: 12px;
-      font-weight: 900;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .route-step-text {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--dark);
-      line-height: 1.5;
-    }
-    .route-step-text strong { color: var(--orange); }
-
-    /* ===== OFFER BLOCK ===== */
-    .offer-block {
-      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
-      border-radius: 20px;
-      padding: 24px 22px;
-      margin-top: 20px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .offer-block::before {
-      content: '';
-      position: absolute;
-      top: -40px; right: -40px;
-      width: 160px; height: 160px;
-      background: radial-gradient(circle, rgba(251,129,37,0.25) 0%, transparent 65%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .offer-block::after {
-      content: '';
-      position: absolute;
-      bottom: -30px; left: -30px;
-      width: 120px; height: 120px;
-      background: radial-gradient(circle, rgba(7,179,150,0.2) 0%, transparent 65%);
-      border-radius: 50%;
-      pointer-events: none;
-    }
-    .offer-tag {
-      display: inline-block;
-      background: rgba(251,129,37,0.2);
-      color: #FFA85C;
-      font-size: 10px;
-      font-weight: 800;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      padding: 5px 14px;
-      border-radius: 50px;
-      margin-bottom: 12px;
-      position: relative;
-      z-index: 1;
-    }
-    .offer-title {
-      font-size: 22px;
-      font-weight: 900;
-      color: white;
-      line-height: 1.25;
-      margin-bottom: 8px;
-      position: relative;
-      z-index: 1;
-    }
-    @media (max-width: 480px) {
-      .offer-title { font-size: 18px; }
-    }
-    .offer-sub {
-      font-size: 13px;
-      color: rgba(255,255,255,0.7);
-      font-weight: 500;
-      line-height: 1.55;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-    .offer-countdown {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(255,255,255,0.1);
-      color: #FFA85C;
-      font-size: 13px;
-      font-weight: 800;
-      padding: 7px 16px;
-      border-radius: 50px;
-      margin-bottom: 18px;
-      position: relative;
-      z-index: 1;
-    }
-    .offer-countdown .dot {
-      width: 6px; height: 6px;
-      background: #FFA85C;
-      border-radius: 50%;
-      animation: pulse 1.2s ease-in-out infinite;
-    }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.7); }
-    }
-    .btn-offer {
-      display: block;
-      background: var(--orange);
-      color: white;
-      font-family: inherit;
-      font-size: 16px;
-      font-weight: 900;
-      padding: 16px 28px;
-      border-radius: 14px;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
-      position: relative;
-      z-index: 1;
-      box-shadow: 0 6px 24px rgba(251,129,37,0.4);
-      animation: offerPulse 2.5s ease-in-out infinite;
-    }
-    @keyframes offerPulse {
-      0%, 100% { box-shadow: 0 6px 24px rgba(251,129,37,0.4); }
-      50% { box-shadow: 0 6px 32px rgba(251,129,37,0.65); }
-    }
-    .btn-offer:hover {
-      background: var(--orange-dark);
-      transform: translateY(-2px);
-      animation: none;
-      box-shadow: 0 10px 32px rgba(251,129,37,0.5);
-    }
-    .offer-note {
-      font-size: 11px;
-      color: rgba(255,255,255,0.45);
-      margin-top: 10px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* ===== SCREENS ===== */
+    .quiz-wrap { padding: 60px 6vw 80px; max-width: 860px; margin: 0 auto; }
     .screen { display: none; }
-    .screen.active { display: block; }
+    .screen.active { display: block; animation: fadeUp 0.4s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .screen-label { font-size: 12px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+    .screen-title { font-size: clamp(24px, 3.5vw, 40px); font-weight: 800; line-height: 1.2; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .screen-desc { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 40px; max-width: 560px; }
 
-    /* ===== BACK BTN ===== */
-    .back-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: transparent;
-      border: none;
-      color: var(--gray);
-      font-family: inherit;
-      font-size: 13px;
-      font-weight: 700;
-      cursor: pointer;
-      padding: 8px 0;
-      margin-bottom: 16px;
-      transition: color 0.2s;
-    }
-    .back-btn:hover { color: var(--dark); }
+    .choices { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+    .choice-card { background: var(--navy-mid); border: 2px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 28px 24px; cursor: pointer; transition: all 0.25s; position: relative; overflow: hidden; }
+    .choice-card::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(46,204,113,0.08) 0%, transparent 60%); opacity: 0; transition: opacity 0.25s; }
+    .choice-card:hover { border-color: rgba(46,204,113,0.5); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(46,204,113,0.15); }
+    .choice-card:hover::before { opacity: 1; }
+    .choice-card.selected { border-color: var(--green); background: rgba(46,204,113,0.08); }
+    .choice-card.selected::before { opacity: 1; }
+    .choice-icon { width: 48px; height: 48px; border-radius: 12px; background: rgba(46,204,113,0.12); display: flex; align-items: center; justify-content: center; margin-bottom: 16px; }
+    .choice-icon svg { width: 24px; height: 24px; stroke: var(--green); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .choice-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .choice-desc { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.5; }
 
-    /* ===== SPECIALTY GRID ===== */
-    .specialty-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-    @media (max-width: 380px) {
-      .specialty-grid { grid-template-columns: 1fr; }
-    }
-    .spec-card {
-      background: #F9FAFB;
-      border: 2px solid var(--border);
-      border-radius: 14px;
-      padding: 14px 14px;
-      cursor: pointer;
-      transition: all 0.2s;
-      text-align: left;
-      font-family: inherit;
-    }
-    .spec-card:hover {
-      border-color: var(--orange);
-      background: #FFF7ED;
-      transform: translateY(-2px);
-    }
-    .spec-card.selected {
-      border-color: var(--orange);
-      background: #FFF7ED;
-    }
-    .spec-icon { font-size: 24px; margin-bottom: 6px; display: block; }
-    .spec-name {
-      font-size: 13px;
-      font-weight: 800;
-      color: var(--dark);
-      line-height: 1.3;
-    }
-    .spec-desc {
-      font-size: 11px;
-      color: var(--gray);
-      font-weight: 500;
-      margin-top: 3px;
-      line-height: 1.4;
-    }
+    .spec-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; }
+    .spec-card { background: var(--navy-mid); border: 2px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 24px; cursor: pointer; transition: all 0.25s; }
+    .spec-card:hover { border-color: rgba(46,204,113,0.5); transform: translateY(-3px); box-shadow: 0 8px 32px rgba(46,204,113,0.15); }
+    .spec-card.selected { border-color: var(--green); background: rgba(46,204,113,0.06); }
+    .spec-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 4px 10px; border-radius: 100px; margin-bottom: 12px; }
+    .tag-it { background: rgba(52,152,219,0.2); color: #5DADE2; }
+    .tag-design { background: rgba(155,89,182,0.2); color: #BB8FCE; }
+    .tag-marketing { background: rgba(243,156,18,0.2); color: #F5B041; }
+    .tag-law { background: rgba(231,76,60,0.2); color: #EC7063; }
+    .spec-name { font-size: 20px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .spec-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.5; margin-bottom: 16px; }
+    .spec-meta { display: flex; gap: 12px; flex-wrap: wrap; }
+    .spec-meta-item { font-size: 12px; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 5px; }
+    .spec-meta-item svg { width: 13px; height: 13px; stroke: currentColor; fill: none; stroke-width: 2; }
+    .spec-salary { font-size: 13px; font-weight: 700; color: var(--green); }
 
-    /* ===== NEXT BTN ===== */
-    .btn-next {
-      display: block;
-      width: 100%;
-      background: var(--teal);
-      color: white;
-      font-family: inherit;
-      font-size: 15px;
-      font-weight: 900;
-      padding: 15px 24px;
-      border-radius: 14px;
-      border: none;
-      cursor: pointer;
-      margin-top: 18px;
-      transition: background 0.2s, transform 0.1s;
-    }
-    .btn-next:hover { background: var(--teal-dark); transform: translateY(-1px); }
-    .btn-next:disabled {
-      background: var(--border);
-      color: var(--gray);
-      cursor: not-allowed;
-      transform: none;
-    }
+    .btn-primary { display: inline-flex; align-items: center; gap: 10px; background: var(--green); color: var(--navy); font-size: 16px; font-weight: 700; padding: 16px 32px; border-radius: 100px; border: none; cursor: pointer; transition: all 0.25s; text-decoration: none; letter-spacing: -0.01em; }
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(46,204,113,0.35); }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+    .btn-secondary { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: rgba(255,255,255,0.6); font-size: 15px; font-weight: 500; padding: 14px 24px; border-radius: 100px; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; transition: all 0.25s; text-decoration: none; }
+    .btn-secondary:hover { border-color: rgba(255,255,255,0.4); color: var(--white); }
+    .btn-row { display: flex; align-items: center; gap: 16px; margin-top: 40px; flex-wrap: wrap; }
 
-    /* ===== FOOTER ===== */
-    .footer-note {
-      text-align: center;
-      font-size: 12px;
-      color: var(--gray);
-      font-weight: 500;
-      margin-top: 32px;
-      padding-bottom: 20px;
-    }
-    .footer-note a { color: var(--teal); text-decoration: none; font-weight: 700; }
+    .result-hero { background: var(--navy-mid); border-radius: 24px; overflow: hidden; margin-bottom: 32px; }
+    .result-map { width: 100%; height: auto; display: block; }
+    .result-body { padding: 32px; }
+    .result-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
+    .result-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 8px; }
+    .result-sub { font-size: 16px; color: rgba(255,255,255,0.6); margin-bottom: 32px; }
+    .route-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 40px; }
+    .route-step { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius-sm); padding: 20px; }
+    .route-step-num { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 8px; }
+    .route-step-title { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+    .route-step-desc { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.5; }
 
-    /* ===== CONFETTI ===== */
-    .confetti-wrap {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      pointer-events: none;
-      z-index: 9999;
-      overflow: hidden;
-      height: 100vh;
-    }
-    .confetti-piece {
-      position: absolute;
-      width: 10px;
-      height: 10px;
-      border-radius: 2px;
-      animation: confettiFall linear forwards;
-    }
-    @keyframes confettiFall {
-      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    .program-detail { background: var(--navy-mid); border-radius: var(--radius); padding: 28px; margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.08); }
+    .program-detail h3 { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
+    .program-stats { display: flex; gap: 24px; flex-wrap: wrap; margin-bottom: 20px; }
+    .program-stat { display: flex; flex-direction: column; gap: 2px; }
+    .program-stat-val { font-size: 22px; font-weight: 800; color: var(--green); letter-spacing: -0.02em; }
+    .program-stat-label { font-size: 12px; color: rgba(255,255,255,0.45); font-weight: 500; }
+    .program-skills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1); border-radius: 100px; padding: 5px 12px; font-size: 12px; font-weight: 500; color: rgba(255,255,255,0.7); }
+
+    .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+    .pricing-card { background: var(--navy-mid); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 24px; }
+    .pricing-card.featured { border-color: var(--green); background: rgba(46,204,113,0.06); }
+    .pricing-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
+    .pricing-card.featured .pricing-label { color: var(--green); }
+    .pricing-price { font-size: 28px; font-weight: 900; letter-spacing: -0.02em; margin-bottom: 4px; }
+    .pricing-note { font-size: 12px; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+    .pricing-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .pricing-features li { font-size: 13px; color: rgba(255,255,255,0.65); display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+    .pricing-features li::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: var(--green); flex-shrink: 0; margin-top: 6px; }
+
+    .offer-block { background: linear-gradient(135deg, #0D2B1A 0%, #0D1B2A 100%); border: 1px solid rgba(46,204,113,0.3); border-radius: 24px; padding: 48px 40px; text-align: center; position: relative; overflow: hidden; }
+    .offer-block::before { content: ''; position: absolute; top: -80px; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(46,204,113,0.12) 0%, transparent 70%); pointer-events: none; }
+    .offer-label { display: inline-block; background: rgba(46,204,113,0.15); border: 1px solid rgba(46,204,113,0.35); border-radius: 100px; padding: 6px 18px; font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--green); margin-bottom: 20px; }
+    .offer-title { font-size: clamp(28px, 4vw, 44px); font-weight: 900; letter-spacing: -0.02em; line-height: 1.1; margin-bottom: 12px; }
+    .offer-title span { color: var(--green); }
+    .offer-desc { font-size: 16px; color: rgba(255,255,255,0.65); max-width: 480px; margin: 0 auto 32px; line-height: 1.6; }
+    .offer-cta { display: inline-flex; align-items: center; gap: 12px; background: var(--green); color: var(--navy); font-size: 18px; font-weight: 800; padding: 20px 44px; border-radius: 100px; text-decoration: none; transition: all 0.25s; letter-spacing: -0.01em; position: relative; animation: ctaPulse 3s ease-in-out infinite; }
+    @keyframes ctaPulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(46,204,113,0.4); } 50% { box-shadow: 0 0 0 16px rgba(46,204,113,0); } }
+    .offer-cta:hover { background: var(--green-dark); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(46,204,113,0.4); animation: none; }
+    .offer-cta svg { width: 20px; height: 20px; stroke: currentColor; fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .offer-trust { display: flex; justify-content: center; gap: 32px; margin-top: 28px; flex-wrap: wrap; }
+    .offer-trust-item { font-size: 13px; color: rgba(255,255,255,0.45); display: flex; align-items: center; gap: 6px; }
+    .offer-trust-item svg { width: 14px; height: 14px; stroke: var(--green); fill: none; stroke-width: 2; }
+
+    .compare-table { width: 100%; border-collapse: collapse; margin-bottom: 32px; }
+    .compare-table th { padding: 14px 16px; font-size: 13px; font-weight: 700; text-align: left; border-bottom: 2px solid rgba(255,255,255,0.1); }
+    .compare-table th:first-child { color: rgba(255,255,255,0.5); }
+    .compare-table th:nth-child(2) { color: var(--green); }
+    .compare-table th:nth-child(3) { color: rgba(255,255,255,0.5); }
+    .compare-table td { padding: 14px 16px; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .compare-table td:first-child { color: rgba(255,255,255,0.55); font-weight: 500; }
+    .compare-table td:nth-child(2) { font-weight: 600; }
+    .check { color: var(--green); font-weight: 700; }
+    .cross { color: var(--red); }
+    .neutral { color: rgba(255,255,255,0.4); }
+    .section-divider { height: 1px; background: rgba(255,255,255,0.06); margin: 40px 0; }
+    .section-heading { font-size: 14px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+
+    @media (max-width: 640px) {
+      .hero-img { width: 100%; opacity: 0.2; }
+      .hero-gradient { background: linear-gradient(180deg, rgba(13,27,42,0.6) 0%, rgba(13,27,42,1) 70%); }
+      .hero-content { padding: 60px 24px 40px; max-width: 100%; }
+      .quiz-wrap { padding: 40px 24px 60px; }
+      .offer-block { padding: 32px 24px; }
+      .result-body { padding: 24px; }
+      .progress-track { padding: 16px 24px; }
+      .step-label { display: none; }
     }
   </style>
 </head>
 <body>
 
-<!-- HEADER -->
-<header>
-  <a href="https://www.onlinecollege1.ru" class="logo-text">
-    Онлайн-колледж <span>№1</span>
-  </a>
-  <div class="header-badge">🗺 Навигатор</div>
-</header>
-
-<!-- CONFETTI -->
-<div class="confetti-wrap" id="confettiWrap"></div>
-
-<div class="main">
-
-  <!-- HERO -->
-  <div class="hero">
-    <span class="hero-emoji">🗺️</span>
-    <div class="hero-badge">⏱ 3 минуты · Бесплатно</div>
-    <h1>Маршрутная карта<br>после 9 класса</h1>
-    <p>Ответьте на несколько вопросов — и получите персональный маршрут для вашего ребёнка с конкретными следующими шагами</p>
+<section class="hero">
+  <div class="hero-bg"></div>
+  <img src="assets/students-hero.jpg" alt="Студенты Онлайн-колледжа №1" class="hero-img" />
+  <div class="hero-gradient"></div>
+  <div class="hero-content">
+    <div class="badge"><span class="badge-dot"></span>Профориентация 2026</div>
+    <h1>Маршрутная карта<br /><span>после 9 класса</span></h1>
+    <p class="hero-sub">Ответьте на 3 вопроса — получите персональный план: специальность, сроки, стоимость и первый шаг.</p>
+    <button class="btn-primary" onclick="startQuiz()">
+      Начать
+      <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
   </div>
+</section>
 
-  <!-- PROGRESS MAP -->
-  <div class="progress-map">
-    <div class="map-title">🧭 Ваш маршрут</div>
-    <div class="map-steps" id="mapSteps">
-      <div class="map-step">
-        <div class="map-step-dot active" id="dot0">🎯</div>
-        <div class="map-step-label active" id="lbl0">Старт</div>
+<div class="progress-track" id="progressTrack" style="display:none;">
+  <div class="progress-steps">
+    <div class="progress-step" id="ps1"><div class="step-num">1</div><span class="step-label">Направление</span></div>
+    <div class="progress-step" id="ps2"><div class="step-num">2</div><span class="step-label">Детали</span></div>
+    <div class="progress-step" id="ps3"><div class="step-num">3</div><span class="step-label">Специальность</span></div>
+    <div class="progress-step" id="ps4"><div class="step-num">4</div><span class="step-label">Маршрут</span></div>
+  </div>
+</div>
+
+<div class="quiz-wrap" id="quizWrap" style="display:none;">
+
+  <div class="screen" id="screen1">
+    <div class="screen-label">Шаг 1 из 3</div>
+    <h2 class="screen-title">Что планирует ребёнок после 9 класса?</h2>
+    <p class="screen-desc">Выберите наиболее близкий вариант — это поможет подобрать оптимальный маршрут.</p>
+    <div class="choices">
+      <div class="choice-card" onclick="selectChoice(this,'college')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <div class="choice-title">Хочет в колледж</div>
+        <div class="choice-desc">Получить профессию и диплом СПО быстрее, чем через вуз</div>
       </div>
-      <div class="map-connector" id="conn0"></div>
-      <div class="map-step">
-        <div class="map-step-dot locked" id="dot1">❓</div>
-        <div class="map-step-label" id="lbl1">Путь</div>
+      <div class="choice-card" onclick="selectChoice(this,'school')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+        <div class="choice-title">Остаётся в 10 классе</div>
+        <div class="choice-desc">Планирует сдать ЕГЭ и поступить в университет</div>
       </div>
-      <div class="map-connector" id="conn1"></div>
-      <div class="map-step">
-        <div class="map-step-dot locked" id="dot2">❓</div>
-        <div class="map-step-label" id="lbl2">Детали</div>
-      </div>
-      <div class="map-connector" id="conn2"></div>
-      <div class="map-step">
-        <div class="map-step-dot locked" id="dot3">🏁</div>
-        <div class="map-step-label" id="lbl3">Маршрут</div>
+      <div class="choice-card" onclick="selectChoice(this,'undecided')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg></div>
+        <div class="choice-title">Ещё не решили</div>
+        <div class="choice-desc">Нужно разобраться в вариантах и выбрать лучший путь</div>
       </div>
     </div>
-  </div>
-
-  <!-- ===================== SCREEN 0: QUALIFIER ===================== -->
-  <div class="screen active" id="screen0">
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 1 из 3</div>
-      <div class="q-text">Ваш ребёнок после 9 класса скорее всего...</div>
-      <div class="q-sub">Выберите то, что ближе к вашей ситуации сейчас</div>
-      <div class="options">
-        <button class="option-btn" onclick="chooseQ0('school')">
-          <div class="option-icon">🏫</div>
-          <div class="option-content">
-            <div class="option-title">Пойдёт в 10 класс</div>
-            <div class="option-desc">Хотим получить аттестат и поступить в вуз</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ0('college')">
-          <div class="option-icon">🎓</div>
-          <div class="option-content">
-            <div class="option-title">Хочет в колледж</div>
-            <div class="option-desc">Уже думаем о профессии и практике</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ0('undecided')">
-          <div class="option-icon">🤔</div>
-          <div class="option-content">
-            <div class="option-title">Ещё не решили</div>
-            <div class="option-desc">Не знаем, что лучше — нужна помощь</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== SCREEN 1A: SCHOOL BRANCH ===================== -->
-  <div class="screen" id="screen1a">
-    <button class="back-btn" onclick="goBack(0)">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 2 из 3 · Ветка: 10 класс</div>
-      <div class="q-text">Что важнее для вашей семьи?</div>
-      <div class="q-sub">Это поможет подобрать правильный маршрут</div>
-      <div class="options">
-        <button class="option-btn" onclick="chooseQ1a('career')">
-          <div class="option-icon">💼</div>
-          <div class="option-content">
-            <div class="option-title">Быстрее начать зарабатывать</div>
-            <div class="option-desc">Ребёнок хочет работать по профессии как можно раньше</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ1a('university')">
-          <div class="option-icon">🏛️</div>
-          <div class="option-content">
-            <div class="option-title">Поступить в хороший вуз</div>
-            <div class="option-desc">Важен диплом о высшем образовании</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ1a('both')">
-          <div class="option-icon">⚖️</div>
-          <div class="option-content">
-            <div class="option-title">И то, и другое</div>
-            <div class="option-desc">Хотим и профессию, и возможность учиться дальше</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== SCREEN 1B: COLLEGE BRANCH ===================== -->
-  <div class="screen" id="screen1b">
-    <button class="back-btn" onclick="goBack(0)">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 2 из 3 · Ветка: Колледж</div>
-      <div class="q-text">Какое направление интересует ребёнка?</div>
-      <div class="q-sub">Выберите то, что ближе всего</div>
-      <div class="specialty-grid" id="specGrid">
-        <button class="spec-card" onclick="chooseSpec(this, 'it')">
-          <span class="spec-icon">💻</span>
-          <div class="spec-name">IT и программирование</div>
-          <div class="spec-desc">Разработка, дизайн, аналитика</div>
-        </button>
-        <button class="spec-card" onclick="chooseSpec(this, 'business')">
-          <span class="spec-icon">📊</span>
-          <div class="spec-name">Бизнес и экономика</div>
-          <div class="spec-desc">Менеджмент, бухучёт, маркетинг</div>
-        </button>
-        <button class="spec-card" onclick="chooseSpec(this, 'law')">
-          <span class="spec-icon">⚖️</span>
-          <div class="spec-name">Право и безопасность</div>
-          <div class="spec-desc">Юриспруденция, охрана</div>
-        </button>
-        <button class="spec-card" onclick="chooseSpec(this, 'social')">
-          <span class="spec-icon">🤝</span>
-          <div class="spec-name">Социальная сфера</div>
-          <div class="spec-desc">Педагогика, психология, соцработа</div>
-        </button>
-        <button class="spec-card" onclick="chooseSpec(this, 'creative')">
-          <span class="spec-icon">🎨</span>
-          <div class="spec-name">Творчество и медиа</div>
-          <div class="spec-desc">Дизайн, реклама, журналистика</div>
-        </button>
-        <button class="spec-card" onclick="chooseSpec(this, 'other')">
-          <span class="spec-icon">🌟</span>
-          <div class="spec-name">Ещё не определились</div>
-          <div class="spec-desc">Поможем выбрать вместе</div>
-        </button>
-      </div>
-      <button class="btn-next" id="btnNextSpec" disabled onclick="goToScreen('screen2b')">
-        Продолжить →
+    <div class="btn-row">
+      <button class="btn-primary" id="btn1" disabled onclick="goToScreen(2)">
+        Далее
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
   </div>
 
-  <!-- ===================== SCREEN 1C: UNDECIDED BRANCH ===================== -->
-  <div class="screen" id="screen1c">
-    <button class="back-btn" onclick="goBack(0)">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 2 из 3 · Помогаем выбрать</div>
-      <div class="q-text">Что ребёнок любит делать в свободное время?</div>
-      <div class="q-sub">Интересы — лучший ориентир при выборе профессии</div>
-      <div class="options">
-        <button class="option-btn" onclick="chooseQ1c('tech')">
-          <div class="option-icon">🔧</div>
-          <div class="option-content">
-            <div class="option-title">Разбирать, создавать, программировать</div>
-            <div class="option-desc">Техника, гаджеты, компьютеры</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ1c('people')">
-          <div class="option-icon">👥</div>
-          <div class="option-content">
-            <div class="option-title">Общаться, помогать, организовывать</div>
-            <div class="option-desc">Люди, события, команды</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ1c('creative')">
-          <div class="option-icon">🎭</div>
-          <div class="option-content">
-            <div class="option-title">Рисовать, снимать, создавать</div>
-            <div class="option-desc">Творчество, искусство, медиа</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-        <button class="option-btn" onclick="chooseQ1c('numbers')">
-          <div class="option-icon">📐</div>
-          <div class="option-content">
-            <div class="option-title">Считать, анализировать, планировать</div>
-            <div class="option-desc">Математика, логика, стратегия</div>
-          </div>
-          <div class="option-arrow">›</div>
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== SCREEN 2A: SCHOOL → COMPARE ===================== -->
   <div class="screen" id="screen2a">
-    <button class="back-btn" onclick="goBack('screen1a')">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 3 из 3 · Честное сравнение</div>
-      <div class="q-text">10 класс vs Колледж: что говорит статистика</div>
-      <div class="q-sub">Смотрите на цифры, а не на стереотипы</div>
-      <table class="compare-table">
-        <thead>
-          <tr>
-            <th></th>
-            <th class="col-college">Колледж</th>
-            <th class="col-school">10–11 класс</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Срок до диплома</td>
-            <td class="val-college">2–3 года <span class="badge-win">быстрее</span></td>
-            <td class="val-school">2 года + вуз 4–6 лет</td>
-          </tr>
-          <tr>
-            <td>Первая зарплата</td>
-            <td class="val-college">в 19–20 лет <span class="badge-win">раньше</span></td>
-            <td class="val-school">в 22–24 года</td>
-          </tr>
-          <tr>
-            <td>Поступление в вуз</td>
-            <td class="val-college">без ЕГЭ по портфолио</td>
-            <td class="val-school">только через ЕГЭ</td>
-          </tr>
-          <tr>
-            <td>Стоимость обучения</td>
-            <td class="val-college">от 12 000 ₽/мес <span class="badge-win">дешевле</span></td>
-            <td class="val-school">бесплатно, но репетиторы</td>
-          </tr>
-          <tr>
-            <td>Практика</td>
-            <td class="val-college">с 1-го курса</td>
-            <td class="val-school">только в вузе</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="insight show">
-        <div class="insight-title">💡 Важно знать</div>
-        <div class="insight-text">После колледжа можно поступить в вуз на 2–3 курс по специальности — без ЕГЭ. Многие студенты совмещают работу и учёбу уже на 2-м курсе.</div>
+    <div class="screen-label">Шаг 2 из 3</div>
+    <h2 class="screen-title">Какое направление интересует больше всего?</h2>
+    <p class="screen-desc">Все специальности — с государственным дипломом СПО и обучением онлайн из любой точки мира.</p>
+    <div class="spec-grid">
+      <div class="spec-card" onclick="selectSpec(this,'fullstack')">
+        <span class="spec-tag tag-it">IT</span>
+        <div class="spec-name">Fullstack-разработчик</div>
+        <div class="spec-desc">Python, Java, JavaScript, React, Docker — разработка веб-сервисов от интерфейса до сервера</div>
+        <div class="spec-meta">
+          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
+          <span class="spec-salary">от 98 000 ₽/мес.</span>
+        </div>
       </div>
-      <button class="btn-next" onclick="showResult('school')">Получить мой маршрут →</button>
+      <div class="spec-card" onclick="selectSpec(this,'gamedev')">
+        <span class="spec-tag tag-it">IT</span>
+        <div class="spec-name">Разработчик игр</div>
+        <div class="spec-desc">Unity, Unreal Engine, C#, геймдизайн, 3D — создание компьютерных игр с нуля</div>
+        <div class="spec-meta">
+          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
+          <span class="spec-salary">от 82 000 ₽/мес.</span>
+        </div>
+      </div>
+      <div class="spec-card" onclick="selectSpec(this,'design')">
+        <span class="spec-tag tag-design">Дизайн</span>
+        <div class="spec-name">Графический дизайнер</div>
+        <div class="spec-desc">Figma, Adobe Photoshop, Illustrator, After Effects — брендинг, упаковка, веб-дизайн</div>
+        <div class="spec-meta">
+          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
+          <span class="spec-salary">от 65 000 ₽/мес.</span>
+        </div>
+      </div>
+      <div class="spec-card" onclick="selectSpec(this,'marketing')">
+        <span class="spec-tag tag-marketing">Маркетинг</span>
+        <div class="spec-name">Интернет-маркетолог</div>
+        <div class="spec-desc">Таргет, контекст, SEO, SMM, аналитика — продвижение товаров и услуг онлайн</div>
+        <div class="spec-meta">
+          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>3 г. 10 мес.</span>
+          <span class="spec-salary">от 75 000 ₽/мес.</span>
+        </div>
+      </div>
+      <div class="spec-card" onclick="selectSpec(this,'law')">
+        <span class="spec-tag tag-law">Право</span>
+        <div class="spec-name">Юрист</div>
+        <div class="spec-desc">ФГОС 40.02.04 Юриспруденция — гражданское, уголовное, корпоративное право</div>
+        <div class="spec-meta">
+          <span class="spec-meta-item"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>2 г. 10 мес.</span>
+          <span class="spec-salary">от 85 000 ₽/мес.</span>
+        </div>
+      </div>
+      <div class="spec-card" onclick="selectSpec(this,'unsure')">
+        <span class="spec-tag" style="background:rgba(255,255,255,0.08);color:rgba(255,255,255,0.5)">Не определился</span>
+        <div class="spec-name">Помогите выбрать</div>
+        <div class="spec-desc">Подберём направление по интересам ребёнка на бесплатной консультации</div>
+        <div class="spec-meta"><span class="spec-meta-item">Бесплатная консультация</span></div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="btn2a" disabled onclick="goToResult()">
+        Получить маршрут
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
     </div>
   </div>
 
-  <!-- ===================== SCREEN 2B: COLLEGE → CONFIRM ===================== -->
   <div class="screen" id="screen2b">
-    <button class="back-btn" onclick="goBack('screen1b')">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 3 из 3 · Почти готово!</div>
-      <div class="q-text" id="screen2bTitle">Отличный выбор! Вот что у нас есть</div>
-      <div class="q-sub" id="screen2bSub">В Онлайн-колледже №1 по вашему направлению</div>
-      <div class="options" id="screen2bOptions">
-        <!-- filled by JS -->
+    <div class="screen-label">Шаг 2 из 3</div>
+    <h2 class="screen-title">Что важнее после школы?</h2>
+    <p class="screen-desc">Это поможет сравнить пути и найти оптимальный вариант.</p>
+    <div class="choices">
+      <div class="choice-card" onclick="selectChoice2b(this,'career')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+        <div class="choice-title">Быстрый старт карьеры</div>
+        <div class="choice-desc">Хочу начать зарабатывать как можно раньше</div>
       </div>
-      <div class="insight show" id="screen2bInsight">
-        <div class="insight-title">🎁 Специальное предложение</div>
-        <div class="insight-text">До 31 мая — первый месяц обучения в подарок при поступлении. Это экономия до 12 000 ₽.</div>
+      <div class="choice-card" onclick="selectChoice2b(this,'uni')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg></div>
+        <div class="choice-title">Поступление в вуз</div>
+        <div class="choice-desc">Хочу получить высшее образование</div>
       </div>
-      <button class="btn-next" onclick="showResult('college')">Получить мой маршрут →</button>
+      <div class="choice-card" onclick="selectChoice2b(this,'both')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></div>
+        <div class="choice-title">Оба варианта</div>
+        <div class="choice-desc">Хочу и профессию, и возможность поступить в вуз</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="btn2b" disabled onclick="goToScreen('compare')">
+        Далее
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
     </div>
   </div>
 
-  <!-- ===================== SCREEN 2C: UNDECIDED → RECOMMEND ===================== -->
   <div class="screen" id="screen2c">
-    <button class="back-btn" onclick="goBack('screen1c')">← Назад</button>
-    <div class="question-card">
-      <div class="q-step-tag">Шаг 3 из 3 · Ваш результат</div>
-      <div class="q-text" id="screen2cTitle">На основе интересов ребёнка</div>
-      <div class="q-sub">Мы подобрали подходящие направления</div>
-      <div class="options" id="screen2cOptions">
-        <!-- filled by JS -->
+    <div class="screen-label">Шаг 2 из 3</div>
+    <h2 class="screen-title">Что больше всего интересует ребёнка?</h2>
+    <p class="screen-desc">Выберите ближайшую область — это поможет сузить выбор.</p>
+    <div class="choices" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="choice-card" onclick="selectChoice2c(this,'tech')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+        <div class="choice-title">Технологии и IT</div>
+        <div class="choice-desc">Программирование, игры, сайты</div>
       </div>
-      <div class="insight show">
-        <div class="insight-title">💡 Хорошая новость</div>
-        <div class="insight-text" id="screen2cInsight">В колледже можно попробовать направление и сменить специальность после 1-го курса — без потери времени.</div>
+      <div class="choice-card" onclick="selectChoice2c(this,'creative')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg></div>
+        <div class="choice-title">Творчество и дизайн</div>
+        <div class="choice-desc">Рисование, визуальные образы, бренды</div>
       </div>
-      <button class="btn-next" onclick="showResult('undecided')">Получить мой маршрут →</button>
+      <div class="choice-card" onclick="selectChoice2c(this,'business')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+        <div class="choice-title">Бизнес и маркетинг</div>
+        <div class="choice-desc">Продажи, реклама, предпринимательство</div>
+      </div>
+      <div class="choice-card" onclick="selectChoice2c(this,'social')">
+        <div class="choice-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
+        <div class="choice-title">Право и общество</div>
+        <div class="choice-desc">Юриспруденция, помощь людям</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" id="btn2c" disabled onclick="goToResult('undecided')">
+        Получить маршрут
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+      <button class="btn-secondary" onclick="goToScreen(1)">Назад</button>
     </div>
   </div>
 
-  <!-- ===================== RESULT SCREENS ===================== -->
-
-  <!-- Result: School branch -->
-  <div class="screen" id="resultSchool">
-    <div class="result-card show">
-      <span class="result-emoji">🗺️</span>
-      <div class="result-title">Ваш маршрут готов!</div>
-      <div class="result-sub" id="resultSchoolSub">Мы учли ваши приоритеты и составили оптимальный путь</div>
-      <div class="route-visual">
-        <div class="route-title">📍 Маршрут вашего ребёнка</div>
-        <div class="route-steps" id="routeSchoolSteps">
-          <!-- filled by JS -->
-        </div>
-      </div>
-      <div class="offer-block">
-        <div class="offer-tag">🎁 Предложение до 31 мая</div>
-        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
-        <div class="offer-sub">При поступлении до 31 мая — первый месяц бесплатно. Это реальная экономия до 12 000 ₽ и возможность попробовать без риска.</div>
-        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
-        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('school')">
-          🎓 Узнать подробнее и записаться
-        </a>
-        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
-      </div>
+  <div class="screen" id="screenCompare">
+    <div class="screen-label">Шаг 3 из 3</div>
+    <h2 class="screen-title">10 класс или колледж — честное сравнение</h2>
+    <p class="screen-desc">Данные основаны на реальных программах Онлайн-колледжа №1.</p>
+    <table class="compare-table">
+      <thead><tr><th>Критерий</th><th>Колледж №1</th><th>10–11 класс + вуз</th></tr></thead>
+      <tbody>
+        <tr><td>Срок до диплома</td><td><span class="check">2–4 года</span></td><td><span class="neutral">6–7 лет</span></td></tr>
+        <tr><td>Стоимость обучения</td><td><span class="check">от 22 000 ₽/мес.</span></td><td><span class="neutral">от 80 000 ₽/год (вуз)</span></td></tr>
+        <tr><td>Вступительные экзамены</td><td><span class="check">Без ОГЭ и ЕГЭ</span></td><td><span class="cross">ЕГЭ обязателен</span></td></tr>
+        <tr><td>Диплом</td><td><span class="check">Гос. диплом СПО</span></td><td><span class="neutral">Гос. диплом ВО</span></td></tr>
+        <tr><td>Поступление в вуз</td><td><span class="check">Без ЕГЭ, по сокращённой программе</span></td><td><span class="neutral">По результатам ЕГЭ</span></td></tr>
+        <tr><td>Отсрочка от армии</td><td><span class="check">Есть</span></td><td><span class="check">Есть</span></td></tr>
+        <tr><td>Практика с 1 курса</td><td><span class="check">Да, реальные проекты</span></td><td><span class="cross">Нет</span></td></tr>
+        <tr><td>Формат</td><td><span class="check">Онлайн, гибкий график</span></td><td><span class="neutral">Очно или смешанный</span></td></tr>
+      </tbody>
+    </table>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="goToScreen('2a_from_compare')">
+        Выбрать специальность в колледже
+        <svg viewBox="0 0 24 24" width="16" height="16" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
     </div>
   </div>
 
-  <!-- Result: College branch -->
-  <div class="screen" id="resultCollege">
-    <div class="result-card show">
-      <span class="result-emoji">🎉</span>
-      <div class="result-title">Отличный выбор!</div>
-      <div class="result-sub">Колледж — это правильное решение. Вот ваш персональный маршрут</div>
-      <div class="route-visual">
-        <div class="route-title">📍 Маршрут вашего ребёнка</div>
-        <div class="route-steps" id="routeCollegeSteps">
-          <!-- filled by JS -->
-        </div>
+  <div class="screen" id="screenResult">
+    <div class="result-hero">
+      <img src="assets/route-map.jpg" alt="Маршрутная карта" class="result-map" />
+      <div class="result-body">
+        <div class="result-tag">Ваш персональный маршрут</div>
+        <h2 class="result-title" id="resultTitle"></h2>
+        <p class="result-sub" id="resultSub"></p>
+        <div class="route-steps" id="routeSteps"></div>
       </div>
-      <div class="offer-block">
-        <div class="offer-tag">🎁 Предложение до 31 мая</div>
-        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
-        <div class="offer-sub">Вы уже приняли решение — осталось сделать шаг. При поступлении до 31 мая первый месяц за наш счёт.</div>
-        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
-        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('college')">
-          🎓 Записаться и получить подарок
-        </a>
-        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
+    </div>
+    <div class="program-detail" id="programDetail"></div>
+    <div class="section-heading">Стоимость обучения</div>
+    <div class="pricing-grid">
+      <div class="pricing-card featured">
+        <div class="pricing-label">Свободный трек</div>
+        <div class="pricing-price">от 22 000 ₽</div>
+        <div class="pricing-note">в месяц при оплате за год</div>
+        <ul class="pricing-features">
+          <li>Видеоуроки в удобное время</li>
+          <li>Углублённый английский язык</li>
+          <li>Учебная и производственная практика</li>
+          <li>Личный куратор и наставник</li>
+          <li>Государственный диплом СПО</li>
+          <li>Отсрочка от армии</li>
+        </ul>
       </div>
+      <div class="pricing-card">
+        <div class="pricing-label">Очное обучение</div>
+        <div class="pricing-price">от 24 444 ₽</div>
+        <div class="pricing-note">в месяц при оплате за год</div>
+        <ul class="pricing-features">
+          <li>Онлайн-занятия по расписанию</li>
+          <li>Все уроки в записи</li>
+          <li>Углублённый английский язык</li>
+          <li>Личный куратор и наставник</li>
+          <li>Государственный диплом СПО</li>
+          <li>Отсрочка от армии</li>
+        </ul>
+      </div>
+      <div class="pricing-card">
+        <div class="pricing-label">Очно-заочное</div>
+        <div class="pricing-price">от 22 000 ₽</div>
+        <div class="pricing-note">в месяц при оплате за год</div>
+        <ul class="pricing-features">
+          <li>Гибкий формат обучения</li>
+          <li>Видеоуроки на платформе</li>
+          <li>Производственная практика</li>
+          <li>Личный куратор</li>
+          <li>Государственный диплом СПО</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section-divider"></div>
+    <div class="offer-block">
+      <div class="offer-label">Специальное предложение</div>
+      <h2 class="offer-title">Первый месяц<br /><span>в подарок</span></h2>
+      <p class="offer-desc">Запишитесь на открытый урок — познакомьтесь с форматом, преподавателями и платформой без обязательств.</p>
+      <a href="https://get.onlinecollege-1.ru/eventmay" class="offer-cta" target="_blank" rel="noopener">
+        Записаться бесплатно
+        <svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <div class="offer-trust">
+        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Без ОГЭ и ЕГЭ</span>
+        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Гос. диплом СПО</span>
+        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Грант до 60 000 ₽</span>
+        <span class="offer-trust-item"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>Лицензия с 1998 года</span>
+      </div>
+    </div>
+    <div class="btn-row" style="margin-top: 32px;">
+      <button class="btn-secondary" onclick="restart()">Пройти заново</button>
     </div>
   </div>
 
-  <!-- Result: Undecided branch -->
-  <div class="screen" id="resultUndecided">
-    <div class="result-card show">
-      <span class="result-emoji">💡</span>
-      <div class="result-title">Маршрут составлен!</div>
-      <div class="result-sub">На основе интересов вашего ребёнка мы подобрали оптимальный путь</div>
-      <div class="route-visual">
-        <div class="route-title">📍 Маршрут вашего ребёнка</div>
-        <div class="route-steps" id="routeUndecidedSteps">
-          <!-- filled by JS -->
-        </div>
-      </div>
-      <div class="offer-block">
-        <div class="offer-tag">🎁 Предложение до 31 мая</div>
-        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
-        <div class="offer-sub">Пока вы думаете — время идёт. До 31 мая первый месяц бесплатно — это лучший способ попробовать и принять решение без риска.</div>
-        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
-        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('undecided')">
-          🎓 Попробовать бесплатно
-        </a>
-        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="footer-note">
-    Онлайн-колледж №1 · <a href="https://www.onlinecollege1.ru">onlinecollege1.ru</a>
-  </div>
-
-</div><!-- /main -->
+</div>
 
 <script>
-  // ===== STATE =====
-  const state = {
-    branch: null,       // 'school' | 'college' | 'undecided'
-    q1a: null,          // school sub-answer
-    spec: null,         // college specialty
-    q1c: null,          // undecided interest
-    currentScreen: 'screen0',
-    history: []
+  var path=null,priority=null,interest=null,selectedSpec=null;
+  var SPECS={
+    fullstack:{name:'Fullstack-разработчик',sub:'IT-специальность · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 98 000 ₽/мес.',skills:['Python','Java','JavaScript','React','Vue','Docker','PostgreSQL','Git','ChatGPT API','Android'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + введение в IT и Python'},{n:'Шаг 3',t:'2–3 курс — специализация',d:'Frontend, backend, базы данных, реальные проекты'},{n:'Шаг 4',t:'Диплом + карьера',d:'Дипломный проект по реальному брифу, старт карьеры'}]},
+    gamedev:{name:'Разработчик игр',sub:'IT-специальность · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 82 000 ₽/мес.',skills:['Unity','C#','Unreal Engine','Blender','Геймдизайн','GDD','VR','AI-инструменты'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Анализ игр, принципы геймплея, первые прототипы'},{n:'Шаг 3',t:'2–3 курс — разработка',d:'Unity, C#, 3D-моделирование, левел-дизайн'},{n:'Шаг 4',t:'Диплом + карьера',d:'Unreal Engine, VR, дипломная игра по реальному брифу'}]},
+    design:{name:'Графический дизайнер',sub:'Дизайн · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 65 000 ₽/мес.',skills:['Adobe Photoshop','Adobe Illustrator','Figma','After Effects','Blender','Tilda','MidJourney','ChatGPT'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + основы визуальных коммуникаций'},{n:'Шаг 3',t:'2 курс — инструменты',d:'Типографика, веб-прототипирование, Adobe-пакет'},{n:'Шаг 4',t:'Диплом + карьера',d:'Айдентика, упаковка, 3D-анимация, дипломный проект'}]},
+    marketing:{name:'Интернет-маркетолог',sub:'Маркетинг · Государственный диплом СПО · 3 года 10 мес. после 9 класса',duration:'3 г. 10 мес.',salary:'от 75 000 ₽/мес.',skills:['Таргет','Контекстная реклама','SEO','SMM','Email-маркетинг','CRM','Веб-аналитика','Маркетплейсы'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Школьная программа + введение в маркетинг'},{n:'Шаг 3',t:'2 курс — инструменты',d:'Таргет, контент, аналитика, первые кампании'},{n:'Шаг 4',t:'Диплом + карьера',d:'CRM, маркетплейсы, стратегический маркетинговый план'}]},
+    law:{name:'Юрист',sub:'ФГОС 40.02.04 Юриспруденция · Государственный диплом СПО · 2 года 10 мес. после 9 класса',duration:'2 г. 10 мес.',salary:'от 85 000 ₽/мес.',skills:['Гражданское право','Уголовное право','Административное право','Корпоративное право','Юридические документы','Судебная практика'],steps:[{n:'Шаг 1',t:'Подать заявку',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'},{n:'Шаг 2',t:'1 курс — основы',d:'Базовые дисциплины + введение в право'},{n:'Шаг 3',t:'2 курс — специализация',d:'Гражданское, уголовное, административное право'},{n:'Шаг 4',t:'Диплом + карьера',d:'Корпоративное право, судебная практика, дипломный проект'}]},
+    unsure:{name:'Подбор специальности',sub:'Бесплатная консультация · Определим направление вместе',duration:'По запросу',salary:'Зависит от специальности',skills:['IT','Дизайн','Маркетинг','Право'],steps:[{n:'Шаг 1',t:'Консультация',d:'Бесплатный разбор интересов и сильных сторон ребёнка'},{n:'Шаг 2',t:'Выбор направления',d:'Подберём 2–3 подходящие специальности'},{n:'Шаг 3',t:'Пробный урок',d:'Попробуете формат обучения без обязательств'},{n:'Шаг 4',t:'Поступление',d:'Без ОГЭ и ЕГЭ — только аттестат за 9 класс'}]}
   };
-
-  const TG_TOKEN = '8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM';
-  const TG_CHAT  = '1342421992';
-
-  // ===== NAVIGATION =====
-  function goToScreen(id) {
-    document.getElementById(state.currentScreen).classList.remove('active');
-    document.getElementById(id).classList.add('active');
-    state.history.push(state.currentScreen);
-    state.currentScreen = id;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  function goBack(target) {
-    const id = typeof target === 'number' ? 'screen' + target : target;
-    document.getElementById(state.currentScreen).classList.remove('active');
-    document.getElementById(id).classList.add('active');
-    state.currentScreen = id;
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  }
-
-  // ===== MAP PROGRESS =====
-  function updateMap(step, branch) {
-    const icons  = ['🎯', '🗺️', '🔍', '🏁'];
-    const labels = ['Старт', 'Путь', 'Детали', 'Маршрут'];
-    const branchLabels = {
-      school:    ['Старт', '10 класс', 'Сравнение', 'Маршрут'],
-      college:   ['Старт', 'Колледж', 'Специальность', 'Маршрут'],
-      undecided: ['Старт', 'Интересы', 'Подбор', 'Маршрут']
-    };
-    const bl = branch ? branchLabels[branch] : labels;
-
-    for (let i = 0; i < 4; i++) {
-      const dot = document.getElementById('dot' + i);
-      const lbl = document.getElementById('lbl' + i);
-      dot.classList.remove('active', 'done', 'locked');
-      lbl.classList.remove('active', 'done');
-      lbl.textContent = bl[i];
-
-      if (i < step) {
-        dot.classList.add('done');
-        dot.textContent = '✓';
-        lbl.classList.add('done');
-      } else if (i === step) {
-        dot.classList.add('active');
-        dot.textContent = icons[i];
-        lbl.classList.add('active');
-      } else {
-        dot.classList.add('locked');
-        dot.textContent = i === 3 ? '🏁' : '❓';
-      }
-    }
-
-    for (let i = 0; i < 3; i++) {
-      const conn = document.getElementById('conn' + i);
-      conn.classList.toggle('done', i < step);
-    }
-  }
-
-  // ===== QUALIFIER =====
-  function chooseQ0(branch) {
-    state.branch = branch;
-    if (branch === 'school') {
-      updateMap(1, 'school');
-      goToScreen('screen1a');
-    } else if (branch === 'college') {
-      updateMap(1, 'college');
-      goToScreen('screen1b');
-    } else {
-      updateMap(1, 'undecided');
-      goToScreen('screen1c');
-    }
-  }
-
-  // ===== SCHOOL BRANCH =====
-  function chooseQ1a(answer) {
-    state.q1a = answer;
-    updateMap(2, 'school');
-    goToScreen('screen2a');
-  }
-
-  // ===== COLLEGE BRANCH =====
-  let selectedSpec = null;
-  function chooseSpec(el, spec) {
-    document.querySelectorAll('.spec-card').forEach(c => c.classList.remove('selected'));
-    el.classList.add('selected');
-    selectedSpec = spec;
-    state.spec = spec;
-    document.getElementById('btnNextSpec').disabled = false;
-
-    const specData = {
-      it:       { title: 'IT и программирование', icon: '💻', programs: ['Разработчик ПО', 'Веб-дизайнер', 'Системный администратор'] },
-      business: { title: 'Бизнес и экономика', icon: '📊', programs: ['Менеджмент', 'Бухгалтерский учёт', 'Маркетинг и реклама'] },
-      law:      { title: 'Право и безопасность', icon: '⚖️', programs: ['Право и организация социального обеспечения', 'Правоохранительная деятельность'] },
-      social:   { title: 'Социальная сфера', icon: '🤝', programs: ['Дошкольное образование', 'Социальная работа', 'Психология'] },
-      creative: { title: 'Творчество и медиа', icon: '🎨', programs: ['Дизайн', 'Реклама', 'Журналистика'] },
-      other:    { title: 'Поможем выбрать', icon: '🌟', programs: ['Подберём направление вместе', 'Бесплатная консультация', 'Тест профориентации'] }
-    };
-
-    const d = specData[spec];
-    document.getElementById('screen2bTitle').textContent = d.icon + ' ' + d.title + ' — у нас есть!';
-    document.getElementById('screen2bSub').textContent = 'Доступные программы в Онлайн-колледже №1:';
-
-    const opts = document.getElementById('screen2bOptions');
-    opts.innerHTML = d.programs.map(p => `
-      <div class="option-btn" style="cursor:default;">
-        <div class="option-icon">✅</div>
-        <div class="option-content">
-          <div class="option-title">${p}</div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  // ===== UNDECIDED BRANCH =====
-  function chooseQ1c(interest) {
-    state.q1c = interest;
-    updateMap(2, 'undecided');
-
-    const interestData = {
-      tech:     {
-        title: '💻 Технические направления',
-        options: [
-          { icon: '💻', title: 'Разработчик ПО', desc: 'Зарплата от 80 000 ₽ уже на старте' },
-          { icon: '🔒', title: 'Информационная безопасность', desc: 'Одна из самых востребованных профессий 2026' },
-          { icon: '🌐', title: 'Веб-дизайн и разработка', desc: 'Фриланс с первого курса' }
-        ],
-        insight: 'IT-специалисты из колледжа востребованы не меньше, чем из вуза — работодатели смотрят на навыки, а не диплом.'
-      },
-      people:   {
-        title: '🤝 Социальные направления',
-        options: [
-          { icon: '📊', title: 'Менеджмент', desc: 'Управление командами и проектами' },
-          { icon: '🤝', title: 'Социальная работа', desc: 'Помощь людям — стабильная профессия' },
-          { icon: '🎓', title: 'Педагогика', desc: 'Дошкольное и дополнительное образование' }
-        ],
-        insight: 'Навыки общения и организации — самые ценные в 2026 году. Колледж даёт практику с первого курса.'
-      },
-      creative: {
-        title: '🎨 Творческие направления',
-        options: [
-          { icon: '🎨', title: 'Графический дизайн', desc: 'Портфолио вместо диплома' },
-          { icon: '📱', title: 'Реклама и PR', desc: 'SMM, контент, продвижение' },
-          { icon: '📷', title: 'Медиа и журналистика', desc: 'Видео, подкасты, тексты' }
-        ],
-        insight: 'В творческих профессиях колледж даёт то, чего нет в школе — реальные проекты и портфолио.'
-      },
-      numbers:  {
-        title: '📐 Аналитические направления',
-        options: [
-          { icon: '📊', title: 'Бухгалтерский учёт', desc: 'Стабильная профессия с гарантированным трудоустройством' },
-          { icon: '💹', title: 'Экономика и финансы', desc: 'Банки, страхование, инвестиции' },
-          { icon: '💻', title: 'Анализ данных', desc: 'Самая быстрорастущая профессия 2026' }
-        ],
-        insight: 'Аналитики из колледжа часто получают первую работу ещё на стажировке — до получения диплома.'
-      }
-    };
-
-    const d = interestData[interest];
-    document.getElementById('screen2cTitle').textContent = d.title;
-    document.getElementById('screen2cInsight').textContent = d.insight;
-
-    const opts = document.getElementById('screen2cOptions');
-    opts.innerHTML = d.options.map(o => `
-      <div class="option-btn" style="cursor:default;">
-        <div class="option-icon">${o.icon}</div>
-        <div class="option-content">
-          <div class="option-title">${o.title}</div>
-          <div class="option-desc">${o.desc}</div>
-        </div>
-      </div>
-    `).join('');
-
-    goToScreen('screen2c');
-  }
-
-  // ===== SHOW RESULT =====
-  function showResult(branch) {
-    updateMap(3, branch);
-
-    const schoolRoutes = {
-      career: [
-        { n: '1', text: '<strong>Сейчас:</strong> Подать документы в колледж до 1 августа' },
-        { n: '2', text: '<strong>Год 1–2:</strong> Получить профессию и начать стажировку' },
-        { n: '3', text: '<strong>Год 2–3:</strong> Первая работа и реальный доход' },
-        { n: '4', text: '<strong>Год 4+:</strong> При желании — вуз без ЕГЭ по портфолио' }
-      ],
-      university: [
-        { n: '1', text: '<strong>Сейчас:</strong> Рассмотреть колледж как путь в вуз без ЕГЭ' },
-        { n: '2', text: '<strong>Год 1–3:</strong> Колледж + параллельно готовиться к вузу' },
-        { n: '3', text: '<strong>Год 3:</strong> Поступление в вуз на 2–3 курс по специальности' },
-        { n: '4', text: '<strong>Итог:</strong> Диплом вуза + 3 года практического опыта' }
-      ],
-      both: [
-        { n: '1', text: '<strong>Сейчас:</strong> Колледж — лучший старт для обоих целей' },
-        { n: '2', text: '<strong>Год 1–2:</strong> Профессия + стажировка + первые деньги' },
-        { n: '3', text: '<strong>Год 3:</strong> Поступление в вуз без ЕГЭ (по желанию)' },
-        { n: '4', text: '<strong>Итог:</strong> Профессия, опыт и возможность высшего образования' }
-      ]
-    };
-
-    const collegeRoutes = {
-      it:       [
-        { n: '1', text: '<strong>Сейчас:</strong> Поступить на IT-направление до 1 августа' },
-        { n: '2', text: '<strong>Год 1:</strong> Основы программирования + первые проекты' },
-        { n: '3', text: '<strong>Год 2:</strong> Стажировка в IT-компании' },
-        { n: '4', text: '<strong>Год 2–3:</strong> Работа и диплом одновременно' }
-      ],
-      business: [
-        { n: '1', text: '<strong>Сейчас:</strong> Поступить на бизнес-направление' },
-        { n: '2', text: '<strong>Год 1:</strong> Основы менеджмента и экономики' },
-        { n: '3', text: '<strong>Год 2:</strong> Практика в компании' },
-        { n: '4', text: '<strong>Год 3:</strong> Диплом + готовое резюме' }
-      ],
-      default: [
-        { n: '1', text: '<strong>Сейчас:</strong> Поступить в Онлайн-колледж №1' },
-        { n: '2', text: '<strong>Год 1:</strong> Профессиональная база + практика' },
-        { n: '3', text: '<strong>Год 2:</strong> Стажировка и первый опыт работы' },
-        { n: '4', text: '<strong>Год 2–3:</strong> Диплом и карьера' }
-      ]
-    };
-
-    const undecidedRoutes = {
-      tech:     [
-        { n: '1', text: '<strong>Сейчас:</strong> Пройти бесплатную консультацию по IT-направлениям' },
-        { n: '2', text: '<strong>Август:</strong> Поступить на IT-специальность' },
-        { n: '3', text: '<strong>Год 1:</strong> Попробовать — если не понравится, сменить направление' },
-        { n: '4', text: '<strong>Год 2–3:</strong> Стажировка и первая работа' }
-      ],
-      people:   [
-        { n: '1', text: '<strong>Сейчас:</strong> Консультация по социальным и управленческим направлениям' },
-        { n: '2', text: '<strong>Август:</strong> Поступить на подходящую специальность' },
-        { n: '3', text: '<strong>Год 1–2:</strong> Практика с реальными людьми и командами' },
-        { n: '4', text: '<strong>Год 3:</strong> Диплом и готовность к работе' }
-      ],
-      creative: [
-        { n: '1', text: '<strong>Сейчас:</strong> Консультация по творческим направлениям' },
-        { n: '2', text: '<strong>Август:</strong> Поступить на дизайн или медиа' },
-        { n: '3', text: '<strong>Год 1:</strong> Первые проекты и портфолио' },
-        { n: '4', text: '<strong>Год 2–3:</strong> Фриланс + диплом' }
-      ],
-      numbers:  [
-        { n: '1', text: '<strong>Сейчас:</strong> Консультация по аналитическим направлениям' },
-        { n: '2', text: '<strong>Август:</strong> Поступить на экономику или IT-аналитику' },
-        { n: '3', text: '<strong>Год 1–2:</strong> Практика с реальными данными' },
-        { n: '4', text: '<strong>Год 3:</strong> Диплом и стабильная карьера' }
-      ]
-    };
-
-    let steps = [];
-    if (branch === 'school') {
-      steps = schoolRoutes[state.q1a] || schoolRoutes.both;
-      const subs = {
-        career: 'Вы хотите, чтобы ребёнок быстрее начал зарабатывать — вот оптимальный путь:',
-        university: 'Вы хотите вуз — но колледж даёт туда более короткий путь:',
-        both: 'Вы хотите и профессию, и образование — вот как совместить:'
-      };
-      document.getElementById('resultSchoolSub').textContent = subs[state.q1a] || subs.both;
-      const stepsEl = document.getElementById('routeSchoolSteps');
-      stepsEl.innerHTML = steps.map(s => `
-        <div class="route-step">
-          <div class="route-step-num">${s.n}</div>
-          <div class="route-step-text">${s.text}</div>
-        </div>
-      `).join('');
-      goToScreen('resultSchool');
-
-    } else if (branch === 'college') {
-      steps = collegeRoutes[state.spec] || collegeRoutes.default;
-      const stepsEl = document.getElementById('routeCollegeSteps');
-      stepsEl.innerHTML = steps.map(s => `
-        <div class="route-step">
-          <div class="route-step-num">${s.n}</div>
-          <div class="route-step-text">${s.text}</div>
-        </div>
-      `).join('');
-      goToScreen('resultCollege');
-
-    } else {
-      steps = undecidedRoutes[state.q1c] || undecidedRoutes.tech;
-      const stepsEl = document.getElementById('routeUndecidedSteps');
-      stepsEl.innerHTML = steps.map(s => `
-        <div class="route-step">
-          <div class="route-step-num">${s.n}</div>
-          <div class="route-step-text">${s.text}</div>
-        </div>
-      `).join('');
-      goToScreen('resultUndecided');
-    }
-
-    launchConfetti();
-    sendTelegramAuto();
-  }
-
-  // ===== TELEGRAM =====
-  function sendTelegramAuto() {
-    const branchNames = {
-      school: '🏫 10 класс',
-      college: '🎓 Колледж',
-      undecided: '🤔 Не решили'
-    };
-    const specNames = {
-      it: 'IT', business: 'Бизнес', law: 'Право',
-      social: 'Социальная сфера', creative: 'Творчество', other: 'Не определились'
-    };
-    const interestNames = {
-      tech: 'Технарь', people: 'Коммуникатор', creative: 'Творческий', numbers: 'Аналитик'
-    };
-
-    let detail = '';
-    if (state.branch === 'school') detail = `Приоритет: ${state.q1a}`;
-    if (state.branch === 'college') detail = `Специальность: ${specNames[state.spec] || state.spec}`;
-    if (state.branch === 'undecided') detail = `Интерес: ${interestNames[state.q1c] || state.q1c}`;
-
-    const text = `🗺 Новый результат /proftest\n\nВетка: ${branchNames[state.branch]}\n${detail}\n\n⏰ ${new Date().toLocaleString('ru-RU')}`;
-    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TG_CHAT, text })
-    }).catch(() => {});
-  }
-
-  function sendTelegram(branch) {
-    const text = `🔥 Клик по кнопке оффера /proftest\nВетка: ${branch}\n⏰ ${new Date().toLocaleString('ru-RU')}`;
-    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ chat_id: TG_CHAT, text })
-    }).catch(() => {});
-  }
-
-  // ===== CONFETTI =====
-  function launchConfetti() {
-    const wrap = document.getElementById('confettiWrap');
-    wrap.innerHTML = '';
-    const colors = ['#FB8125', '#07B396', '#D571FF', '#C2F5FF', '#FFD700', '#FF6B6B'];
-    for (let i = 0; i < 60; i++) {
-      const el = document.createElement('div');
-      el.className = 'confetti-piece';
-      el.style.cssText = `
-        left: ${Math.random() * 100}%;
-        background: ${colors[Math.floor(Math.random() * colors.length)]};
-        width: ${6 + Math.random() * 8}px;
-        height: ${6 + Math.random() * 8}px;
-        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
-        animation-duration: ${1.5 + Math.random() * 2}s;
-        animation-delay: ${Math.random() * 0.5}s;
-      `;
-      wrap.appendChild(el);
-    }
-    setTimeout(() => { wrap.innerHTML = ''; }, 3500);
-  }
-
-  // ===== INIT =====
-  updateMap(0, null);
+  var UNDECIDED_MAP={tech:'fullstack',creative:'design',business:'marketing',social:'law'};
+  function startQuiz(){document.querySelector('.hero').style.display='none';document.getElementById('progressTrack').style.display='block';document.getElementById('quizWrap').style.display='block';showScreen('screen1');updateProgress(1);window.scrollTo({top:0,behavior:'smooth'});}
+  function showScreen(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});document.getElementById(id).classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  function updateProgress(step){for(var i=1;i<=4;i++){var el=document.getElementById('ps'+i);el.classList.remove('active','done');if(i<step)el.classList.add('done');else if(i===step)el.classList.add('active');}}
+  function selectChoice(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');path=value;document.getElementById('btn1').disabled=false;}
+  function selectChoice2b(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');priority=value;document.getElementById('btn2b').disabled=false;}
+  function selectChoice2c(el,value){el.closest('.choices').querySelectorAll('.choice-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');interest=value;document.getElementById('btn2c').disabled=false;}
+  function selectSpec(el,value){el.closest('.spec-grid').querySelectorAll('.spec-card').forEach(function(c){c.classList.remove('selected');});el.classList.add('selected');selectedSpec=value;document.getElementById('btn2a').disabled=false;}
+  function goToScreen(target){if(target===1){showScreen('screen1');updateProgress(1);}else if(target===2){if(path==='college'){showScreen('screen2a');updateProgress(2);}else if(path==='school'){showScreen('screen2b');updateProgress(2);}else{showScreen('screen2c');updateProgress(2);}}else if(target==='compare'){showScreen('screenCompare');updateProgress(3);}else if(target==='2a_from_compare'){path='college';showScreen('screen2a');updateProgress(2);}}
+  function goToResult(mode){var specKey=selectedSpec;if(mode==='undecided'&&interest)specKey=UNDECIDED_MAP[interest]||'unsure';if(!specKey)specKey='unsure';var spec=SPECS[specKey];document.getElementById('resultTitle').textContent=spec.name;document.getElementById('resultSub').textContent=spec.sub;var stepsHtml=spec.steps.map(function(s){return '<div class="route-step"><div class="route-step-num">'+s.n+'</div><div class="route-step-title">'+s.t+'</div><div class="route-step-desc">'+s.d+'</div></div>';}).join('');document.getElementById('routeSteps').innerHTML=stepsHtml;var skillsHtml=spec.skills.map(function(s){return '<span class="skill-tag">'+s+'</span>';}).join('');document.getElementById('programDetail').innerHTML='<h3>'+spec.name+'</h3><div class="program-stats"><div class="program-stat"><span class="program-stat-val">'+spec.duration+'</span><span class="program-stat-label">Срок обучения (после 9 кл.)</span></div><div class="program-stat"><span class="program-stat-val">'+spec.salary+'</span><span class="program-stat-label">Средняя зарплата выпускника</span></div><div class="program-stat"><span class="program-stat-val">от 22 000 ₽</span><span class="program-stat-label">Стоимость в месяц</span></div></div><div class="section-heading">Инструменты и навыки</div><div class="program-skills">'+skillsHtml+'</div>';showScreen('screenResult');updateProgress(4);}
+  function restart(){path=null;priority=null;interest=null;selectedSpec=null;document.querySelectorAll('.choice-card,.spec-card').forEach(function(c){c.classList.remove('selected');});['btn1','btn2a','btn2b','btn2c'].forEach(function(id){var el=document.getElementById(id);if(el)el.disabled=true;});showScreen('screen1');updateProgress(1);}
 </script>
-
 </body>
 </html>
