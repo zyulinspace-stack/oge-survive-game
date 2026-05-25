@@ -1,0 +1,1451 @@
+<!DOCTYPE html>
+<!-- build: 20260525-v1 -->
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Маршрутная карта после 9 класса — Онлайн-колледж №1</title>
+  <meta name="description" content="Интерактивный навигатор для родителей девятиклассников. Узнайте лучший маршрут для вашего ребёнка после 9 класса — за 3 минуты.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --orange:      #FB8125;
+      --orange-dark: #e06b10;
+      --teal:        #07B396;
+      --teal-dark:   #069680;
+      --purple:      #D571FF;
+      --dark:        #131D0E;
+      --gray:        #6B7280;
+      --border:      #E5E7EB;
+      --white:       #FFFFFF;
+      --sky:         #C2F5FF;
+      --sky-light:   #E8FBFF;
+      --bg:          #F8FFFE;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Nunito', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 200;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    }
+    .logo-text {
+      font-size: 17px;
+      font-weight: 900;
+      color: var(--dark);
+      text-decoration: none;
+      line-height: 1.2;
+    }
+    .logo-text span { color: var(--orange); }
+    .header-badge {
+      background: #FFF3E8;
+      color: var(--orange);
+      font-size: 11px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 50px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    /* ===== MAIN WRAPPER ===== */
+    .main {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 0 16px 60px;
+    }
+
+    /* ===== HERO ===== */
+    .hero {
+      text-align: center;
+      padding: 36px 0 28px;
+    }
+    .hero-emoji {
+      font-size: 52px;
+      margin-bottom: 14px;
+      display: block;
+      animation: floatEmoji 3s ease-in-out infinite;
+    }
+    @keyframes floatEmoji {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: white;
+      color: var(--teal);
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 6px 14px;
+      border-radius: 50px;
+      margin-bottom: 16px;
+      box-shadow: 0 2px 10px rgba(7,179,150,0.18);
+    }
+    .hero h1 {
+      font-size: 28px;
+      font-weight: 900;
+      line-height: 1.25;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 22px; }
+    }
+    .hero p {
+      font-size: 15px;
+      color: #4B5563;
+      font-weight: 500;
+      line-height: 1.6;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* ===== PROGRESS MAP ===== */
+    .progress-map {
+      background: white;
+      border-radius: 20px;
+      padding: 20px 20px 16px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+      border: 1.5px solid var(--border);
+    }
+    .map-title {
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray);
+      margin-bottom: 14px;
+    }
+    .map-steps {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      position: relative;
+    }
+    .map-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+      position: relative;
+      z-index: 2;
+    }
+    .map-step-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #F3F4F6;
+      border: 2.5px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      position: relative;
+    }
+    .map-step-dot.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      box-shadow: 0 0 0 6px rgba(251,129,37,0.15);
+      transform: scale(1.15);
+    }
+    .map-step-dot.done {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+    .map-step-dot.locked {
+      opacity: 0.35;
+    }
+    .map-step-label {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--gray);
+      margin-top: 6px;
+      text-align: center;
+      line-height: 1.3;
+      max-width: 64px;
+      transition: color 0.3s;
+    }
+    .map-step-label.active { color: var(--orange); }
+    .map-step-label.done { color: var(--teal); }
+    .map-connector {
+      flex: 1;
+      height: 3px;
+      background: var(--border);
+      margin-bottom: 22px;
+      position: relative;
+      z-index: 1;
+      transition: background 0.4s;
+      max-width: 40px;
+    }
+    .map-connector.done { background: var(--teal); }
+
+    /* ===== QUESTION CARD ===== */
+    .question-card {
+      background: white;
+      border-radius: 24px;
+      padding: 28px 24px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      border: 1.5px solid var(--border);
+      animation: cardIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    @keyframes cardIn {
+      from { opacity: 0; transform: translateY(20px) scale(0.97); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .q-step-tag {
+      display: inline-block;
+      background: #FFF7ED;
+      color: var(--orange);
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 12px;
+      border-radius: 50px;
+      margin-bottom: 14px;
+    }
+    .q-text {
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+    @media (max-width: 480px) {
+      .q-text { font-size: 17px; }
+    }
+    .q-sub {
+      font-size: 13px;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    /* ===== ANSWER OPTIONS ===== */
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #F9FAFB;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-family: inherit;
+      width: 100%;
+    }
+    .option-btn:hover {
+      border-color: var(--teal);
+      background: var(--sky-light);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(7,179,150,0.12);
+    }
+    .option-btn.selected {
+      border-color: var(--teal);
+      background: var(--sky-light);
+      box-shadow: 0 4px 16px rgba(7,179,150,0.15);
+    }
+    .option-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .option-content { flex: 1; }
+    .option-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 2px;
+    }
+    .option-desc {
+      font-size: 12px;
+      color: var(--gray);
+      font-weight: 500;
+      line-height: 1.4;
+    }
+    .option-arrow {
+      color: var(--gray);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform 0.2s;
+    }
+    .option-btn:hover .option-arrow { transform: translateX(4px); }
+
+    /* ===== INSIGHT BLOCK ===== */
+    .insight {
+      background: linear-gradient(135deg, #F0FDF9 0%, #E8FBFF 100%);
+      border: 1.5px solid #A7F3D0;
+      border-radius: 16px;
+      padding: 16px 18px;
+      margin-top: 16px;
+      display: none;
+    }
+    .insight.show { display: block; animation: cardIn 0.3s ease; }
+    .insight-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--teal-dark);
+      margin-bottom: 6px;
+    }
+    .insight-text {
+      font-size: 13px;
+      color: #065F46;
+      font-weight: 500;
+      line-height: 1.55;
+    }
+
+    /* ===== COMPARISON TABLE ===== */
+    .compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 13px;
+    }
+    .compare-table th {
+      padding: 10px 12px;
+      font-weight: 800;
+      font-size: 12px;
+      text-align: center;
+    }
+    .compare-table th:first-child { text-align: left; color: var(--gray); }
+    .compare-table th.col-college { background: #FFF7ED; color: var(--orange); border-radius: 8px 8px 0 0; }
+    .compare-table th.col-school { background: #F9FAFB; color: var(--gray); border-radius: 8px 8px 0 0; }
+    .compare-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 600;
+    }
+    .compare-table td:first-child { color: var(--gray); font-size: 12px; }
+    .compare-table td.val-college { text-align: center; background: #FFFBF5; color: var(--dark); }
+    .compare-table td.val-school { text-align: center; color: var(--gray); }
+    .compare-table tr:last-child td { border-bottom: none; }
+    .badge-win {
+      display: inline-block;
+      background: var(--orange);
+      color: white;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 50px;
+      margin-left: 4px;
+    }
+
+    /* ===== RESULT SCREEN ===== */
+    .result-card {
+      background: white;
+      border-radius: 24px;
+      padding: 32px 24px 28px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+      border: 1.5px solid var(--border);
+      text-align: center;
+      animation: cardIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      display: none;
+    }
+    .result-card.show { display: block; }
+    .result-emoji {
+      font-size: 56px;
+      margin-bottom: 16px;
+      display: block;
+    }
+    .result-title {
+      font-size: 24px;
+      font-weight: 900;
+      color: var(--dark);
+      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+    @media (max-width: 480px) {
+      .result-title { font-size: 20px; }
+    }
+    .result-sub {
+      font-size: 14px;
+      color: #4B5563;
+      font-weight: 500;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    /* ===== ROUTE VISUAL ===== */
+    .route-visual {
+      background: linear-gradient(135deg, #FFF7ED 0%, #FFFBEB 100%);
+      border: 2px solid var(--orange);
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .route-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--orange);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin-bottom: 12px;
+    }
+    .route-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .route-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .route-step-num {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--orange);
+      color: white;
+      font-size: 12px;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .route-step-text {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--dark);
+      line-height: 1.5;
+    }
+    .route-step-text strong { color: var(--orange); }
+
+    /* ===== OFFER BLOCK ===== */
+    .offer-block {
+      background: linear-gradient(135deg, #1A1A2E 0%, #16213E 100%);
+      border-radius: 20px;
+      padding: 24px 22px;
+      margin-top: 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .offer-block::before {
+      content: '';
+      position: absolute;
+      top: -40px; right: -40px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(251,129,37,0.25) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .offer-block::after {
+      content: '';
+      position: absolute;
+      bottom: -30px; left: -30px;
+      width: 120px; height: 120px;
+      background: radial-gradient(circle, rgba(7,179,150,0.2) 0%, transparent 65%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .offer-tag {
+      display: inline-block;
+      background: rgba(251,129,37,0.2);
+      color: #FFA85C;
+      font-size: 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 5px 14px;
+      border-radius: 50px;
+      margin-bottom: 12px;
+      position: relative;
+      z-index: 1;
+    }
+    .offer-title {
+      font-size: 22px;
+      font-weight: 900;
+      color: white;
+      line-height: 1.25;
+      margin-bottom: 8px;
+      position: relative;
+      z-index: 1;
+    }
+    @media (max-width: 480px) {
+      .offer-title { font-size: 18px; }
+    }
+    .offer-sub {
+      font-size: 13px;
+      color: rgba(255,255,255,0.7);
+      font-weight: 500;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .offer-countdown {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255,255,255,0.1);
+      color: #FFA85C;
+      font-size: 13px;
+      font-weight: 800;
+      padding: 7px 16px;
+      border-radius: 50px;
+      margin-bottom: 18px;
+      position: relative;
+      z-index: 1;
+    }
+    .offer-countdown .dot {
+      width: 6px; height: 6px;
+      background: #FFA85C;
+      border-radius: 50%;
+      animation: pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+    .btn-offer {
+      display: block;
+      background: var(--orange);
+      color: white;
+      font-family: inherit;
+      font-size: 16px;
+      font-weight: 900;
+      padding: 16px 28px;
+      border-radius: 14px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 6px 24px rgba(251,129,37,0.4);
+      animation: offerPulse 2.5s ease-in-out infinite;
+    }
+    @keyframes offerPulse {
+      0%, 100% { box-shadow: 0 6px 24px rgba(251,129,37,0.4); }
+      50% { box-shadow: 0 6px 32px rgba(251,129,37,0.65); }
+    }
+    .btn-offer:hover {
+      background: var(--orange-dark);
+      transform: translateY(-2px);
+      animation: none;
+      box-shadow: 0 10px 32px rgba(251,129,37,0.5);
+    }
+    .offer-note {
+      font-size: 11px;
+      color: rgba(255,255,255,0.45);
+      margin-top: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ===== SCREENS ===== */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ===== BACK BTN ===== */
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      color: var(--gray);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      padding: 8px 0;
+      margin-bottom: 16px;
+      transition: color 0.2s;
+    }
+    .back-btn:hover { color: var(--dark); }
+
+    /* ===== SPECIALTY GRID ===== */
+    .specialty-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    @media (max-width: 380px) {
+      .specialty-grid { grid-template-columns: 1fr; }
+    }
+    .spec-card {
+      background: #F9FAFB;
+      border: 2px solid var(--border);
+      border-radius: 14px;
+      padding: 14px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: left;
+      font-family: inherit;
+    }
+    .spec-card:hover {
+      border-color: var(--orange);
+      background: #FFF7ED;
+      transform: translateY(-2px);
+    }
+    .spec-card.selected {
+      border-color: var(--orange);
+      background: #FFF7ED;
+    }
+    .spec-icon { font-size: 24px; margin-bottom: 6px; display: block; }
+    .spec-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--dark);
+      line-height: 1.3;
+    }
+    .spec-desc {
+      font-size: 11px;
+      color: var(--gray);
+      font-weight: 500;
+      margin-top: 3px;
+      line-height: 1.4;
+    }
+
+    /* ===== NEXT BTN ===== */
+    .btn-next {
+      display: block;
+      width: 100%;
+      background: var(--teal);
+      color: white;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 900;
+      padding: 15px 24px;
+      border-radius: 14px;
+      border: none;
+      cursor: pointer;
+      margin-top: 18px;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn-next:hover { background: var(--teal-dark); transform: translateY(-1px); }
+    .btn-next:disabled {
+      background: var(--border);
+      color: var(--gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* ===== FOOTER ===== */
+    .footer-note {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray);
+      font-weight: 500;
+      margin-top: 32px;
+      padding-bottom: 20px;
+    }
+    .footer-note a { color: var(--teal); text-decoration: none; font-weight: 700; }
+
+    /* ===== CONFETTI ===== */
+    .confetti-wrap {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      pointer-events: none;
+      z-index: 9999;
+      overflow: hidden;
+      height: 100vh;
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      border-radius: 2px;
+      animation: confettiFall linear forwards;
+    }
+    @keyframes confettiFall {
+      0% { transform: translateY(-20px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <a href="https://www.onlinecollege1.ru" class="logo-text">
+    Онлайн-колледж <span>№1</span>
+  </a>
+  <div class="header-badge">🗺 Навигатор</div>
+</header>
+
+<!-- CONFETTI -->
+<div class="confetti-wrap" id="confettiWrap"></div>
+
+<div class="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <span class="hero-emoji">🗺️</span>
+    <div class="hero-badge">⏱ 3 минуты · Бесплатно</div>
+    <h1>Маршрутная карта<br>после 9 класса</h1>
+    <p>Ответьте на несколько вопросов — и получите персональный маршрут для вашего ребёнка с конкретными следующими шагами</p>
+  </div>
+
+  <!-- PROGRESS MAP -->
+  <div class="progress-map">
+    <div class="map-title">🧭 Ваш маршрут</div>
+    <div class="map-steps" id="mapSteps">
+      <div class="map-step">
+        <div class="map-step-dot active" id="dot0">🎯</div>
+        <div class="map-step-label active" id="lbl0">Старт</div>
+      </div>
+      <div class="map-connector" id="conn0"></div>
+      <div class="map-step">
+        <div class="map-step-dot locked" id="dot1">❓</div>
+        <div class="map-step-label" id="lbl1">Путь</div>
+      </div>
+      <div class="map-connector" id="conn1"></div>
+      <div class="map-step">
+        <div class="map-step-dot locked" id="dot2">❓</div>
+        <div class="map-step-label" id="lbl2">Детали</div>
+      </div>
+      <div class="map-connector" id="conn2"></div>
+      <div class="map-step">
+        <div class="map-step-dot locked" id="dot3">🏁</div>
+        <div class="map-step-label" id="lbl3">Маршрут</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 0: QUALIFIER ===================== -->
+  <div class="screen active" id="screen0">
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 1 из 3</div>
+      <div class="q-text">Ваш ребёнок после 9 класса скорее всего...</div>
+      <div class="q-sub">Выберите то, что ближе к вашей ситуации сейчас</div>
+      <div class="options">
+        <button class="option-btn" onclick="chooseQ0('school')">
+          <div class="option-icon">🏫</div>
+          <div class="option-content">
+            <div class="option-title">Пойдёт в 10 класс</div>
+            <div class="option-desc">Хотим получить аттестат и поступить в вуз</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ0('college')">
+          <div class="option-icon">🎓</div>
+          <div class="option-content">
+            <div class="option-title">Хочет в колледж</div>
+            <div class="option-desc">Уже думаем о профессии и практике</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ0('undecided')">
+          <div class="option-icon">🤔</div>
+          <div class="option-content">
+            <div class="option-title">Ещё не решили</div>
+            <div class="option-desc">Не знаем, что лучше — нужна помощь</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 1A: SCHOOL BRANCH ===================== -->
+  <div class="screen" id="screen1a">
+    <button class="back-btn" onclick="goBack(0)">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 2 из 3 · Ветка: 10 класс</div>
+      <div class="q-text">Что важнее для вашей семьи?</div>
+      <div class="q-sub">Это поможет подобрать правильный маршрут</div>
+      <div class="options">
+        <button class="option-btn" onclick="chooseQ1a('career')">
+          <div class="option-icon">💼</div>
+          <div class="option-content">
+            <div class="option-title">Быстрее начать зарабатывать</div>
+            <div class="option-desc">Ребёнок хочет работать по профессии как можно раньше</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ1a('university')">
+          <div class="option-icon">🏛️</div>
+          <div class="option-content">
+            <div class="option-title">Поступить в хороший вуз</div>
+            <div class="option-desc">Важен диплом о высшем образовании</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ1a('both')">
+          <div class="option-icon">⚖️</div>
+          <div class="option-content">
+            <div class="option-title">И то, и другое</div>
+            <div class="option-desc">Хотим и профессию, и возможность учиться дальше</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 1B: COLLEGE BRANCH ===================== -->
+  <div class="screen" id="screen1b">
+    <button class="back-btn" onclick="goBack(0)">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 2 из 3 · Ветка: Колледж</div>
+      <div class="q-text">Какое направление интересует ребёнка?</div>
+      <div class="q-sub">Выберите то, что ближе всего</div>
+      <div class="specialty-grid" id="specGrid">
+        <button class="spec-card" onclick="chooseSpec(this, 'it')">
+          <span class="spec-icon">💻</span>
+          <div class="spec-name">IT и программирование</div>
+          <div class="spec-desc">Разработка, дизайн, аналитика</div>
+        </button>
+        <button class="spec-card" onclick="chooseSpec(this, 'business')">
+          <span class="spec-icon">📊</span>
+          <div class="spec-name">Бизнес и экономика</div>
+          <div class="spec-desc">Менеджмент, бухучёт, маркетинг</div>
+        </button>
+        <button class="spec-card" onclick="chooseSpec(this, 'law')">
+          <span class="spec-icon">⚖️</span>
+          <div class="spec-name">Право и безопасность</div>
+          <div class="spec-desc">Юриспруденция, охрана</div>
+        </button>
+        <button class="spec-card" onclick="chooseSpec(this, 'social')">
+          <span class="spec-icon">🤝</span>
+          <div class="spec-name">Социальная сфера</div>
+          <div class="spec-desc">Педагогика, психология, соцработа</div>
+        </button>
+        <button class="spec-card" onclick="chooseSpec(this, 'creative')">
+          <span class="spec-icon">🎨</span>
+          <div class="spec-name">Творчество и медиа</div>
+          <div class="spec-desc">Дизайн, реклама, журналистика</div>
+        </button>
+        <button class="spec-card" onclick="chooseSpec(this, 'other')">
+          <span class="spec-icon">🌟</span>
+          <div class="spec-name">Ещё не определились</div>
+          <div class="spec-desc">Поможем выбрать вместе</div>
+        </button>
+      </div>
+      <button class="btn-next" id="btnNextSpec" disabled onclick="goToScreen('screen2b')">
+        Продолжить →
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 1C: UNDECIDED BRANCH ===================== -->
+  <div class="screen" id="screen1c">
+    <button class="back-btn" onclick="goBack(0)">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 2 из 3 · Помогаем выбрать</div>
+      <div class="q-text">Что ребёнок любит делать в свободное время?</div>
+      <div class="q-sub">Интересы — лучший ориентир при выборе профессии</div>
+      <div class="options">
+        <button class="option-btn" onclick="chooseQ1c('tech')">
+          <div class="option-icon">🔧</div>
+          <div class="option-content">
+            <div class="option-title">Разбирать, создавать, программировать</div>
+            <div class="option-desc">Техника, гаджеты, компьютеры</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ1c('people')">
+          <div class="option-icon">👥</div>
+          <div class="option-content">
+            <div class="option-title">Общаться, помогать, организовывать</div>
+            <div class="option-desc">Люди, события, команды</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ1c('creative')">
+          <div class="option-icon">🎭</div>
+          <div class="option-content">
+            <div class="option-title">Рисовать, снимать, создавать</div>
+            <div class="option-desc">Творчество, искусство, медиа</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+        <button class="option-btn" onclick="chooseQ1c('numbers')">
+          <div class="option-icon">📐</div>
+          <div class="option-content">
+            <div class="option-title">Считать, анализировать, планировать</div>
+            <div class="option-desc">Математика, логика, стратегия</div>
+          </div>
+          <div class="option-arrow">›</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 2A: SCHOOL → COMPARE ===================== -->
+  <div class="screen" id="screen2a">
+    <button class="back-btn" onclick="goBack('screen1a')">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 3 из 3 · Честное сравнение</div>
+      <div class="q-text">10 класс vs Колледж: что говорит статистика</div>
+      <div class="q-sub">Смотрите на цифры, а не на стереотипы</div>
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th class="col-college">Колледж</th>
+            <th class="col-school">10–11 класс</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Срок до диплома</td>
+            <td class="val-college">2–3 года <span class="badge-win">быстрее</span></td>
+            <td class="val-school">2 года + вуз 4–6 лет</td>
+          </tr>
+          <tr>
+            <td>Первая зарплата</td>
+            <td class="val-college">в 19–20 лет <span class="badge-win">раньше</span></td>
+            <td class="val-school">в 22–24 года</td>
+          </tr>
+          <tr>
+            <td>Поступление в вуз</td>
+            <td class="val-college">без ЕГЭ по портфолио</td>
+            <td class="val-school">только через ЕГЭ</td>
+          </tr>
+          <tr>
+            <td>Стоимость обучения</td>
+            <td class="val-college">от 12 000 ₽/мес <span class="badge-win">дешевле</span></td>
+            <td class="val-school">бесплатно, но репетиторы</td>
+          </tr>
+          <tr>
+            <td>Практика</td>
+            <td class="val-college">с 1-го курса</td>
+            <td class="val-school">только в вузе</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="insight show">
+        <div class="insight-title">💡 Важно знать</div>
+        <div class="insight-text">После колледжа можно поступить в вуз на 2–3 курс по специальности — без ЕГЭ. Многие студенты совмещают работу и учёбу уже на 2-м курсе.</div>
+      </div>
+      <button class="btn-next" onclick="showResult('school')">Получить мой маршрут →</button>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 2B: COLLEGE → CONFIRM ===================== -->
+  <div class="screen" id="screen2b">
+    <button class="back-btn" onclick="goBack('screen1b')">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 3 из 3 · Почти готово!</div>
+      <div class="q-text" id="screen2bTitle">Отличный выбор! Вот что у нас есть</div>
+      <div class="q-sub" id="screen2bSub">В Онлайн-колледже №1 по вашему направлению</div>
+      <div class="options" id="screen2bOptions">
+        <!-- filled by JS -->
+      </div>
+      <div class="insight show" id="screen2bInsight">
+        <div class="insight-title">🎁 Специальное предложение</div>
+        <div class="insight-text">До 31 мая — первый месяц обучения в подарок при поступлении. Это экономия до 12 000 ₽.</div>
+      </div>
+      <button class="btn-next" onclick="showResult('college')">Получить мой маршрут →</button>
+    </div>
+  </div>
+
+  <!-- ===================== SCREEN 2C: UNDECIDED → RECOMMEND ===================== -->
+  <div class="screen" id="screen2c">
+    <button class="back-btn" onclick="goBack('screen1c')">← Назад</button>
+    <div class="question-card">
+      <div class="q-step-tag">Шаг 3 из 3 · Ваш результат</div>
+      <div class="q-text" id="screen2cTitle">На основе интересов ребёнка</div>
+      <div class="q-sub">Мы подобрали подходящие направления</div>
+      <div class="options" id="screen2cOptions">
+        <!-- filled by JS -->
+      </div>
+      <div class="insight show">
+        <div class="insight-title">💡 Хорошая новость</div>
+        <div class="insight-text" id="screen2cInsight">В колледже можно попробовать направление и сменить специальность после 1-го курса — без потери времени.</div>
+      </div>
+      <button class="btn-next" onclick="showResult('undecided')">Получить мой маршрут →</button>
+    </div>
+  </div>
+
+  <!-- ===================== RESULT SCREENS ===================== -->
+
+  <!-- Result: School branch -->
+  <div class="screen" id="resultSchool">
+    <div class="result-card show">
+      <span class="result-emoji">🗺️</span>
+      <div class="result-title">Ваш маршрут готов!</div>
+      <div class="result-sub" id="resultSchoolSub">Мы учли ваши приоритеты и составили оптимальный путь</div>
+      <div class="route-visual">
+        <div class="route-title">📍 Маршрут вашего ребёнка</div>
+        <div class="route-steps" id="routeSchoolSteps">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="offer-block">
+        <div class="offer-tag">🎁 Предложение до 31 мая</div>
+        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
+        <div class="offer-sub">При поступлении до 31 мая — первый месяц бесплатно. Это реальная экономия до 12 000 ₽ и возможность попробовать без риска.</div>
+        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
+        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('school')">
+          🎓 Узнать подробнее и записаться
+        </a>
+        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result: College branch -->
+  <div class="screen" id="resultCollege">
+    <div class="result-card show">
+      <span class="result-emoji">🎉</span>
+      <div class="result-title">Отличный выбор!</div>
+      <div class="result-sub">Колледж — это правильное решение. Вот ваш персональный маршрут</div>
+      <div class="route-visual">
+        <div class="route-title">📍 Маршрут вашего ребёнка</div>
+        <div class="route-steps" id="routeCollegeSteps">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="offer-block">
+        <div class="offer-tag">🎁 Предложение до 31 мая</div>
+        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
+        <div class="offer-sub">Вы уже приняли решение — осталось сделать шаг. При поступлении до 31 мая первый месяц за наш счёт.</div>
+        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
+        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('college')">
+          🎓 Записаться и получить подарок
+        </a>
+        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Result: Undecided branch -->
+  <div class="screen" id="resultUndecided">
+    <div class="result-card show">
+      <span class="result-emoji">💡</span>
+      <div class="result-title">Маршрут составлен!</div>
+      <div class="result-sub">На основе интересов вашего ребёнка мы подобрали оптимальный путь</div>
+      <div class="route-visual">
+        <div class="route-title">📍 Маршрут вашего ребёнка</div>
+        <div class="route-steps" id="routeUndecidedSteps">
+          <!-- filled by JS -->
+        </div>
+      </div>
+      <div class="offer-block">
+        <div class="offer-tag">🎁 Предложение до 31 мая</div>
+        <div class="offer-title">Первый месяц<br>обучения в подарок</div>
+        <div class="offer-sub">Пока вы думаете — время идёт. До 31 мая первый месяц бесплатно — это лучший способ попробовать и принять решение без риска.</div>
+        <div class="offer-countdown"><span class="dot"></span> Осталось 5 дней</div>
+        <a href="https://get.onlinecollege-1.ru/eventmay" class="btn-offer" onclick="sendTelegram('undecided')">
+          🎓 Попробовать бесплатно
+        </a>
+        <div class="offer-note">Бесплатная консультация · Без обязательств</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    Онлайн-колледж №1 · <a href="https://www.onlinecollege1.ru">onlinecollege1.ru</a>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+  // ===== STATE =====
+  const state = {
+    branch: null,       // 'school' | 'college' | 'undecided'
+    q1a: null,          // school sub-answer
+    spec: null,         // college specialty
+    q1c: null,          // undecided interest
+    currentScreen: 'screen0',
+    history: []
+  };
+
+  const TG_TOKEN = '8628493926:AAG3H644IzGr7kyrI1G8ZIiA7D53IdIBbvM';
+  const TG_CHAT  = '1342421992';
+
+  // ===== NAVIGATION =====
+  function goToScreen(id) {
+    document.getElementById(state.currentScreen).classList.remove('active');
+    document.getElementById(id).classList.add('active');
+    state.history.push(state.currentScreen);
+    state.currentScreen = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function goBack(target) {
+    const id = typeof target === 'number' ? 'screen' + target : target;
+    document.getElementById(state.currentScreen).classList.remove('active');
+    document.getElementById(id).classList.add('active');
+    state.currentScreen = id;
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ===== MAP PROGRESS =====
+  function updateMap(step, branch) {
+    const icons  = ['🎯', '🗺️', '🔍', '🏁'];
+    const labels = ['Старт', 'Путь', 'Детали', 'Маршрут'];
+    const branchLabels = {
+      school:    ['Старт', '10 класс', 'Сравнение', 'Маршрут'],
+      college:   ['Старт', 'Колледж', 'Специальность', 'Маршрут'],
+      undecided: ['Старт', 'Интересы', 'Подбор', 'Маршрут']
+    };
+    const bl = branch ? branchLabels[branch] : labels;
+
+    for (let i = 0; i < 4; i++) {
+      const dot = document.getElementById('dot' + i);
+      const lbl = document.getElementById('lbl' + i);
+      dot.classList.remove('active', 'done', 'locked');
+      lbl.classList.remove('active', 'done');
+      lbl.textContent = bl[i];
+
+      if (i < step) {
+        dot.classList.add('done');
+        dot.textContent = '✓';
+        lbl.classList.add('done');
+      } else if (i === step) {
+        dot.classList.add('active');
+        dot.textContent = icons[i];
+        lbl.classList.add('active');
+      } else {
+        dot.classList.add('locked');
+        dot.textContent = i === 3 ? '🏁' : '❓';
+      }
+    }
+
+    for (let i = 0; i < 3; i++) {
+      const conn = document.getElementById('conn' + i);
+      conn.classList.toggle('done', i < step);
+    }
+  }
+
+  // ===== QUALIFIER =====
+  function chooseQ0(branch) {
+    state.branch = branch;
+    if (branch === 'school') {
+      updateMap(1, 'school');
+      goToScreen('screen1a');
+    } else if (branch === 'college') {
+      updateMap(1, 'college');
+      goToScreen('screen1b');
+    } else {
+      updateMap(1, 'undecided');
+      goToScreen('screen1c');
+    }
+  }
+
+  // ===== SCHOOL BRANCH =====
+  function chooseQ1a(answer) {
+    state.q1a = answer;
+    updateMap(2, 'school');
+    goToScreen('screen2a');
+  }
+
+  // ===== COLLEGE BRANCH =====
+  let selectedSpec = null;
+  function chooseSpec(el, spec) {
+    document.querySelectorAll('.spec-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedSpec = spec;
+    state.spec = spec;
+    document.getElementById('btnNextSpec').disabled = false;
+
+    const specData = {
+      it:       { title: 'IT и программирование', icon: '💻', programs: ['Разработчик ПО', 'Веб-дизайнер', 'Системный администратор'] },
+      business: { title: 'Бизнес и экономика', icon: '📊', programs: ['Менеджмент', 'Бухгалтерский учёт', 'Маркетинг и реклама'] },
+      law:      { title: 'Право и безопасность', icon: '⚖️', programs: ['Право и организация социального обеспечения', 'Правоохранительная деятельность'] },
+      social:   { title: 'Социальная сфера', icon: '🤝', programs: ['Дошкольное образование', 'Социальная работа', 'Психология'] },
+      creative: { title: 'Творчество и медиа', icon: '🎨', programs: ['Дизайн', 'Реклама', 'Журналистика'] },
+      other:    { title: 'Поможем выбрать', icon: '🌟', programs: ['Подберём направление вместе', 'Бесплатная консультация', 'Тест профориентации'] }
+    };
+
+    const d = specData[spec];
+    document.getElementById('screen2bTitle').textContent = d.icon + ' ' + d.title + ' — у нас есть!';
+    document.getElementById('screen2bSub').textContent = 'Доступные программы в Онлайн-колледже №1:';
+
+    const opts = document.getElementById('screen2bOptions');
+    opts.innerHTML = d.programs.map(p => `
+      <div class="option-btn" style="cursor:default;">
+        <div class="option-icon">✅</div>
+        <div class="option-content">
+          <div class="option-title">${p}</div>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ===== UNDECIDED BRANCH =====
+  function chooseQ1c(interest) {
+    state.q1c = interest;
+    updateMap(2, 'undecided');
+
+    const interestData = {
+      tech:     {
+        title: '💻 Технические направления',
+        options: [
+          { icon: '💻', title: 'Разработчик ПО', desc: 'Зарплата от 80 000 ₽ уже на старте' },
+          { icon: '🔒', title: 'Информационная безопасность', desc: 'Одна из самых востребованных профессий 2026' },
+          { icon: '🌐', title: 'Веб-дизайн и разработка', desc: 'Фриланс с первого курса' }
+        ],
+        insight: 'IT-специалисты из колледжа востребованы не меньше, чем из вуза — работодатели смотрят на навыки, а не диплом.'
+      },
+      people:   {
+        title: '🤝 Социальные направления',
+        options: [
+          { icon: '📊', title: 'Менеджмент', desc: 'Управление командами и проектами' },
+          { icon: '🤝', title: 'Социальная работа', desc: 'Помощь людям — стабильная профессия' },
+          { icon: '🎓', title: 'Педагогика', desc: 'Дошкольное и дополнительное образование' }
+        ],
+        insight: 'Навыки общения и организации — самые ценные в 2026 году. Колледж даёт практику с первого курса.'
+      },
+      creative: {
+        title: '🎨 Творческие направления',
+        options: [
+          { icon: '🎨', title: 'Графический дизайн', desc: 'Портфолио вместо диплома' },
+          { icon: '📱', title: 'Реклама и PR', desc: 'SMM, контент, продвижение' },
+          { icon: '📷', title: 'Медиа и журналистика', desc: 'Видео, подкасты, тексты' }
+        ],
+        insight: 'В творческих профессиях колледж даёт то, чего нет в школе — реальные проекты и портфолио.'
+      },
+      numbers:  {
+        title: '📐 Аналитические направления',
+        options: [
+          { icon: '📊', title: 'Бухгалтерский учёт', desc: 'Стабильная профессия с гарантированным трудоустройством' },
+          { icon: '💹', title: 'Экономика и финансы', desc: 'Банки, страхование, инвестиции' },
+          { icon: '💻', title: 'Анализ данных', desc: 'Самая быстрорастущая профессия 2026' }
+        ],
+        insight: 'Аналитики из колледжа часто получают первую работу ещё на стажировке — до получения диплома.'
+      }
+    };
+
+    const d = interestData[interest];
+    document.getElementById('screen2cTitle').textContent = d.title;
+    document.getElementById('screen2cInsight').textContent = d.insight;
+
+    const opts = document.getElementById('screen2cOptions');
+    opts.innerHTML = d.options.map(o => `
+      <div class="option-btn" style="cursor:default;">
+        <div class="option-icon">${o.icon}</div>
+        <div class="option-content">
+          <div class="option-title">${o.title}</div>
+          <div class="option-desc">${o.desc}</div>
+        </div>
+      </div>
+    `).join('');
+
+    goToScreen('screen2c');
+  }
+
+  // ===== SHOW RESULT =====
+  function showResult(branch) {
+    updateMap(3, branch);
+
+    const schoolRoutes = {
+      career: [
+        { n: '1', text: '<strong>Сейчас:</strong> Подать документы в колледж до 1 августа' },
+        { n: '2', text: '<strong>Год 1–2:</strong> Получить профессию и начать стажировку' },
+        { n: '3', text: '<strong>Год 2–3:</strong> Первая работа и реальный доход' },
+        { n: '4', text: '<strong>Год 4+:</strong> При желании — вуз без ЕГЭ по портфолио' }
+      ],
+      university: [
+        { n: '1', text: '<strong>Сейчас:</strong> Рассмотреть колледж как путь в вуз без ЕГЭ' },
+        { n: '2', text: '<strong>Год 1–3:</strong> Колледж + параллельно готовиться к вузу' },
+        { n: '3', text: '<strong>Год 3:</strong> Поступление в вуз на 2–3 курс по специальности' },
+        { n: '4', text: '<strong>Итог:</strong> Диплом вуза + 3 года практического опыта' }
+      ],
+      both: [
+        { n: '1', text: '<strong>Сейчас:</strong> Колледж — лучший старт для обоих целей' },
+        { n: '2', text: '<strong>Год 1–2:</strong> Профессия + стажировка + первые деньги' },
+        { n: '3', text: '<strong>Год 3:</strong> Поступление в вуз без ЕГЭ (по желанию)' },
+        { n: '4', text: '<strong>Итог:</strong> Профессия, опыт и возможность высшего образования' }
+      ]
+    };
+
+    const collegeRoutes = {
+      it:       [
+        { n: '1', text: '<strong>Сейчас:</strong> Поступить на IT-направление до 1 августа' },
+        { n: '2', text: '<strong>Год 1:</strong> Основы программирования + первые проекты' },
+        { n: '3', text: '<strong>Год 2:</strong> Стажировка в IT-компании' },
+        { n: '4', text: '<strong>Год 2–3:</strong> Работа и диплом одновременно' }
+      ],
+      business: [
+        { n: '1', text: '<strong>Сейчас:</strong> Поступить на бизнес-направление' },
+        { n: '2', text: '<strong>Год 1:</strong> Основы менеджмента и экономики' },
+        { n: '3', text: '<strong>Год 2:</strong> Практика в компании' },
+        { n: '4', text: '<strong>Год 3:</strong> Диплом + готовое резюме' }
+      ],
+      default: [
+        { n: '1', text: '<strong>Сейчас:</strong> Поступить в Онлайн-колледж №1' },
+        { n: '2', text: '<strong>Год 1:</strong> Профессиональная база + практика' },
+        { n: '3', text: '<strong>Год 2:</strong> Стажировка и первый опыт работы' },
+        { n: '4', text: '<strong>Год 2–3:</strong> Диплом и карьера' }
+      ]
+    };
+
+    const undecidedRoutes = {
+      tech:     [
+        { n: '1', text: '<strong>Сейчас:</strong> Пройти бесплатную консультацию по IT-направлениям' },
+        { n: '2', text: '<strong>Август:</strong> Поступить на IT-специальность' },
+        { n: '3', text: '<strong>Год 1:</strong> Попробовать — если не понравится, сменить направление' },
+        { n: '4', text: '<strong>Год 2–3:</strong> Стажировка и первая работа' }
+      ],
+      people:   [
+        { n: '1', text: '<strong>Сейчас:</strong> Консультация по социальным и управленческим направлениям' },
+        { n: '2', text: '<strong>Август:</strong> Поступить на подходящую специальность' },
+        { n: '3', text: '<strong>Год 1–2:</strong> Практика с реальными людьми и командами' },
+        { n: '4', text: '<strong>Год 3:</strong> Диплом и готовность к работе' }
+      ],
+      creative: [
+        { n: '1', text: '<strong>Сейчас:</strong> Консультация по творческим направлениям' },
+        { n: '2', text: '<strong>Август:</strong> Поступить на дизайн или медиа' },
+        { n: '3', text: '<strong>Год 1:</strong> Первые проекты и портфолио' },
+        { n: '4', text: '<strong>Год 2–3:</strong> Фриланс + диплом' }
+      ],
+      numbers:  [
+        { n: '1', text: '<strong>Сейчас:</strong> Консультация по аналитическим направлениям' },
+        { n: '2', text: '<strong>Август:</strong> Поступить на экономику или IT-аналитику' },
+        { n: '3', text: '<strong>Год 1–2:</strong> Практика с реальными данными' },
+        { n: '4', text: '<strong>Год 3:</strong> Диплом и стабильная карьера' }
+      ]
+    };
+
+    let steps = [];
+    if (branch === 'school') {
+      steps = schoolRoutes[state.q1a] || schoolRoutes.both;
+      const subs = {
+        career: 'Вы хотите, чтобы ребёнок быстрее начал зарабатывать — вот оптимальный путь:',
+        university: 'Вы хотите вуз — но колледж даёт туда более короткий путь:',
+        both: 'Вы хотите и профессию, и образование — вот как совместить:'
+      };
+      document.getElementById('resultSchoolSub').textContent = subs[state.q1a] || subs.both;
+      const stepsEl = document.getElementById('routeSchoolSteps');
+      stepsEl.innerHTML = steps.map(s => `
+        <div class="route-step">
+          <div class="route-step-num">${s.n}</div>
+          <div class="route-step-text">${s.text}</div>
+        </div>
+      `).join('');
+      goToScreen('resultSchool');
+
+    } else if (branch === 'college') {
+      steps = collegeRoutes[state.spec] || collegeRoutes.default;
+      const stepsEl = document.getElementById('routeCollegeSteps');
+      stepsEl.innerHTML = steps.map(s => `
+        <div class="route-step">
+          <div class="route-step-num">${s.n}</div>
+          <div class="route-step-text">${s.text}</div>
+        </div>
+      `).join('');
+      goToScreen('resultCollege');
+
+    } else {
+      steps = undecidedRoutes[state.q1c] || undecidedRoutes.tech;
+      const stepsEl = document.getElementById('routeUndecidedSteps');
+      stepsEl.innerHTML = steps.map(s => `
+        <div class="route-step">
+          <div class="route-step-num">${s.n}</div>
+          <div class="route-step-text">${s.text}</div>
+        </div>
+      `).join('');
+      goToScreen('resultUndecided');
+    }
+
+    launchConfetti();
+    sendTelegramAuto();
+  }
+
+  // ===== TELEGRAM =====
+  function sendTelegramAuto() {
+    const branchNames = {
+      school: '🏫 10 класс',
+      college: '🎓 Колледж',
+      undecided: '🤔 Не решили'
+    };
+    const specNames = {
+      it: 'IT', business: 'Бизнес', law: 'Право',
+      social: 'Социальная сфера', creative: 'Творчество', other: 'Не определились'
+    };
+    const interestNames = {
+      tech: 'Технарь', people: 'Коммуникатор', creative: 'Творческий', numbers: 'Аналитик'
+    };
+
+    let detail = '';
+    if (state.branch === 'school') detail = `Приоритет: ${state.q1a}`;
+    if (state.branch === 'college') detail = `Специальность: ${specNames[state.spec] || state.spec}`;
+    if (state.branch === 'undecided') detail = `Интерес: ${interestNames[state.q1c] || state.q1c}`;
+
+    const text = `🗺 Новый результат /proftest\n\nВетка: ${branchNames[state.branch]}\n${detail}\n\n⏰ ${new Date().toLocaleString('ru-RU')}`;
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT, text })
+    }).catch(() => {});
+  }
+
+  function sendTelegram(branch) {
+    const text = `🔥 Клик по кнопке оффера /proftest\nВетка: ${branch}\n⏰ ${new Date().toLocaleString('ru-RU')}`;
+    fetch(`https://api.telegram.org/bot${TG_TOKEN}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ chat_id: TG_CHAT, text })
+    }).catch(() => {});
+  }
+
+  // ===== CONFETTI =====
+  function launchConfetti() {
+    const wrap = document.getElementById('confettiWrap');
+    wrap.innerHTML = '';
+    const colors = ['#FB8125', '#07B396', '#D571FF', '#C2F5FF', '#FFD700', '#FF6B6B'];
+    for (let i = 0; i < 60; i++) {
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.cssText = `
+        left: ${Math.random() * 100}%;
+        background: ${colors[Math.floor(Math.random() * colors.length)]};
+        width: ${6 + Math.random() * 8}px;
+        height: ${6 + Math.random() * 8}px;
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
+        animation-duration: ${1.5 + Math.random() * 2}s;
+        animation-delay: ${Math.random() * 0.5}s;
+      `;
+      wrap.appendChild(el);
+    }
+    setTimeout(() => { wrap.innerHTML = ''; }, 3500);
+  }
+
+  // ===== INIT =====
+  updateMap(0, null);
+</script>
+
+</body>
+</html>
