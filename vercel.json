@@ -12,6 +12,8 @@
     { "src": "/game.html", "dest": "/game.html" },
     { "src": "/proftest", "dest": "/proftest.html" },
     { "src": "/proftest.html", "dest": "/proftest.html" },
+    { "src": "/test", "dest": "/test.html" },
+    { "src": "/test.html", "dest": "/test.html" },
     {
       "src": "/things/(.*)",
       "dest": "https://stranger-quiz.vercel.app/$1"

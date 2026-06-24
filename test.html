@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Навигатор поступления — Онлайн-колледж №1</title>
+<meta name="description" content="Пройдите бесплатный тест и узнайте, какой маршрут после школы подходит вашему ребёнку: колледж или вуз. Онлайн-колледж №1."/>
+<link rel="icon" href="/logo.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --orange:#FF6B35;--orange2:#FF8C5A;--ob:rgba(255,107,53,.1);
+  --green:#3DB87A;--green2:#2E9A63;
+  --purple:#7C3AED;--blue:#2563EB;--yellow:#F59E0B;
+  --dark:#1A1F2E;--dark2:#2D3448;
+  --bg:#F7F8FA;--white:#fff;
+  --text:#1A1F2E;--muted:#6B7280;--border:#E5E7EB;
+  --r:20px;--rs:12px;
+  --sh:0 4px 24px rgba(0,0,0,.08);--shl:0 12px 48px rgba(0,0,0,.14)
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* HEADER */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);padding:14px 5vw;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:300}
+.hdr-logo{height:40px;width:auto}
+.hdr-tag{font-size:13px;font-weight:700;color:var(--muted)}
+
+/* LAYOUT */
+.wrap{max-width:1100px;margin:0 auto;padding:40px 5vw 80px;display:grid;grid-template-columns:380px 1fr;gap:44px;align-items:start}
+
+/* LEFT PANEL */
+.panel{position:sticky;top:96px;background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:30px 28px;box-shadow:var(--sh)}
+.chips{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:800;letter-spacing:.03em;padding:6px 12px;border-radius:100px}
+.chip-o{background:var(--ob);color:var(--orange)}
+.chip-g{background:rgba(61,184,122,.12);color:var(--green2)}
+.panel h2{font-size:22px;font-weight:900;line-height:1.25;letter-spacing:-.02em;margin-bottom:18px}
+.panel-lead{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:12px}
+.panel ul{list-style:none;display:flex;flex-direction:column;gap:12px}
+.panel li{display:flex;gap:10px;font-size:15px;line-height:1.45;color:var(--text)}
+.panel li svg{flex-shrink:0;width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+
+/* QUIZ COLUMN */
+.qcol{min-width:0}
+.screen{display:none}
+.screen.active{display:block;animation:fadeUp .35s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* PROGRESS */
+.prog{margin-bottom:28px}
+.prog-bg{background:var(--border);border-radius:100px;height:6px;overflow:hidden;margin-bottom:8px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--orange2));border-radius:100px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+.prog-step{font-size:13px;font-weight:800;color:var(--muted)}
+
+.qtitle{font-size:clamp(23px,3.2vw,34px);font-weight:900;line-height:1.18;letter-spacing:-.02em;margin-bottom:28px}
+
+/* OPTIONS */
+.opts{display:flex;flex-direction:column;gap:14px}
+.opt{display:flex;align-items:center;gap:16px;background:var(--white);border:2px solid var(--border);border-radius:var(--rs);padding:20px 22px;cursor:pointer;transition:all .2s;text-align:left;font-family:inherit;font-size:16px;font-weight:600;line-height:1.4;color:var(--text)}
+.opt:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:var(--sh)}
+.opt.sel{border-color:var(--orange);background:var(--ob)}
+.opt-radio{flex-shrink:0;width:24px;height:24px;border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.opt.sel .opt-radio{border-color:var(--orange);background:var(--orange)}
+.opt-radio svg{width:12px;height:12px;stroke:#fff;fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .2s}
+.opt.sel .opt-radio svg{opacity:1}
+
+.nav{display:flex;align-items:center;gap:14px;margin-top:32px}
+.btn{display:inline-flex;align-items:center;gap:9px;font-size:16px;font-weight:700;padding:15px 30px;border-radius:100px;border:none;cursor:pointer;transition:all .2s;text-decoration:none;font-family:inherit}
+.btn-p{background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;box-shadow:0 4px 20px rgba(255,107,53,.3)}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(255,107,53,.45)}
+.btn-s{background:transparent;color:var(--muted);border:2px solid var(--border)}
+.btn-s:hover{border-color:var(--muted);color:var(--text)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* RESULT */
+#result{display:none}
+#result.active{display:block;animation:fadeUp .4s ease}
+.res-wrap{max-width:760px;margin:0 auto;padding:48px 5vw 80px}
+.res-badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:var(--orange);background:var(--ob);padding:7px 16px;border-radius:100px;margin-bottom:18px}
+.res-route{font-size:13px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.res-title{font-size:clamp(28px,4.5vw,44px);font-weight:900;line-height:1.1;letter-spacing:-.02em;margin-bottom:14px}
+.res-path{display:inline-block;font-size:15px;font-weight:700;color:var(--white);background:linear-gradient(135deg,var(--dark),var(--dark2));padding:12px 20px;border-radius:var(--rs);margin-bottom:30px;line-height:1.5}
+.res-body p{font-size:16px;line-height:1.7;color:var(--text);margin-bottom:18px}
+.res-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:26px 26px;margin:26px 0;box-shadow:var(--sh)}
+.res-card h3{font-size:19px;font-weight:900;letter-spacing:-.01em;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.res-card h3 .ic{width:34px;height:34px;border-radius:9px;background:var(--ob);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.res-card p{font-size:15px;line-height:1.6;margin-bottom:14px}
+.res-card ul{list-style:none;display:flex;flex-direction:column;gap:10px;margin:14px 0}
+.res-card li{display:flex;gap:10px;font-size:15px;line-height:1.5}
+.res-card li::before{content:'🔹';flex-shrink:0}
+.code-box{background:linear-gradient(135deg,var(--orange),var(--orange2));border-radius:var(--r);padding:26px;text-align:center;color:#fff;margin-top:28px}
+.code-box .cb-label{font-size:13px;font-weight:700;opacity:.9;text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px}
+.code-box .cb-word{font-size:34px;font-weight:900;letter-spacing:.04em;margin-bottom:14px}
+.code-box p{font-size:14px;line-height:1.5;opacity:.95;margin-bottom:20px}
+.code-box .btn-w{background:#fff;color:var(--orange);font-weight:800}
+.code-box .btn-w:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.25)}
+.res-restart{text-align:center;margin-top:24px}
+.res-restart button{background:none;border:none;color:var(--muted);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;text-decoration:underline}
+
+/* MOBILE */
+@media(max-width:860px){
+  .wrap{grid-template-columns:1fr;gap:24px;padding:24px 5vw 60px}
+  .panel{position:static;order:2;padding:24px 22px}
+  .panel h2{font-size:19px}
+  .qcol{order:1}
+  .hdr-tag{display:none}
+}
+
+/* START SCREEN */
+.start-wrap{max-width:560px;margin:0 auto;padding:48px 5vw 80px}
+.start-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:38px 34px;box-shadow:var(--sh)}
+.start-h{font-size:clamp(26px,4vw,38px);font-weight:900;letter-spacing:-.02em;line-height:1.12;margin-bottom:12px}
+.start-sub{font-size:16px;color:var(--muted);line-height:1.55;margin-bottom:24px}
+.start-card ul{list-style:none;display:flex;flex-direction:column;gap:11px;margin-bottom:28px}
+.start-card li{display:flex;gap:10px;font-size:15px;line-height:1.45}
+.start-card li svg{flex-shrink:0;width:20px;height:20px;stroke:var(--green);fill:none;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;margin-top:1px}
+.lead-form{display:flex;flex-direction:column;gap:14px}
+.lead-form label{font-size:13px;font-weight:700;color:var(--text);display:flex;flex-direction:column;gap:7px}
+.lead-form input{font-family:inherit;font-size:16px;padding:14px 16px;border:2px solid var(--border);border-radius:var(--rs);transition:border-color .2s;color:var(--text)}
+.lead-form input:focus{outline:none;border-color:var(--orange)}
+.lead-form .btn{margin-top:10px;justify-content:center}
+.start-note{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <img src="data:image/png;base64,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" class="hdr-logo" alt="Онлайн-колледж №1"/>
+  <span class="hdr-tag">Навигатор поступления</span>
+</header>
+
+
+<!-- START -->
+<div class="start-wrap" id="start">
+  <div class="start-card">
+    <div class="chips">
+      <span class="chip chip-g">БЕСПЛАТНО</span>
+      <span class="chip chip-o">1–2 МИНУТЫ</span>
+    </div>
+    <h1 class="start-h">Навигатор поступления</h1>
+    <p class="start-sub">Пройдите тест и узнайте, какой маршрут после школы подходит вашему ребёнку.</p>
+    <div class="panel-lead">После теста вы получите:</div>
+    <ul>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>персональную рекомендацию по дальнейшему маршруту</span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>подборку полезных материалов и гайдов под вашу ситуацию</span></li>
+    </ul>
+    <form class="lead-form" id="leadForm">
+      <label>Имя<input id="fname" type="text" autocomplete="given-name" placeholder="Ваше имя" required/></label>
+      <label>Фамилия<input id="lname" type="text" autocomplete="family-name" placeholder="Ваша фамилия" required/></label>
+      <button type="submit" class="btn btn-p">Начать тест
+        <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+      <p class="start-note">Нажимая «Начать тест», вы соглашаетесь на обработку введённых данных.</p>
+    </form>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div class="wrap" id="quiz" style="display:none">
+  <!-- LEFT PANEL -->
+  <aside class="panel">
+    <div class="chips">
+      <span class="chip chip-g">БЕСПЛАТНО</span>
+      <span class="chip chip-o">1–2 МИНУТЫ</span>
+    </div>
+    <h2>Пройдите тест и узнайте, какой маршрут после школы подходит вашему ребёнку</h2>
+    <div class="panel-lead">После теста вы получите:</div>
+    <ul>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>персональную рекомендацию по дальнейшему маршруту</span></li>
+      <li><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><span>подборку полезных материалов и гайдов под вашу ситуацию</span></li>
+    </ul>
+  </aside>
+
+  <!-- QUESTIONS -->
+  <div class="qcol">
+    <div class="prog">
+      <div class="prog-bg"><div class="prog-fill" id="progFill" style="width:16.6%"></div></div>
+      <div class="prog-step" id="progStep">Вопрос 1 из 6</div>
+    </div>
+
+    <!-- Q1 -->
+    <section class="screen active" data-q="1">
+      <h2 class="qtitle">Какой класс ваш ребёнок окончил в этом учебном году?</h2>
+      <div class="opts" id="opts1"></div>
+    </section>
+    <!-- Q2 -->
+    <section class="screen" data-q="2">
+      <h2 class="qtitle">Как ребёнку даётся учёба в школе?</h2>
+      <div class="opts" id="opts2"></div>
+    </section>
+    <!-- Q3 -->
+    <section class="screen" data-q="3">
+      <h2 class="qtitle">Как вы в семье относитесь к сдаче ОГЭ / ЕГЭ?</h2>
+      <div class="opts" id="opts3"></div>
+    </section>
+    <!-- Q4 -->
+    <section class="screen" data-q="4">
+      <h2 class="qtitle">Как вы оцениваете финансовую готовность семьи к дальнейшему обучению?</h2>
+      <div class="opts" id="opts4"></div>
+    </section>
+    <!-- Q5 -->
+    <section class="screen" data-q="5">
+      <h2 class="qtitle">Насколько ребёнок сейчас понимает, кем хочет стать?</h2>
+      <div class="opts" id="opts5"></div>
+    </section>
+    <!-- Q6 -->
+    <section class="screen" data-q="6">
+      <h2 class="qtitle">К каким профессиональным сферам ребёнок проявляет больше интереса?</h2>
+      <div class="opts" id="opts6"></div>
+    </section>
+
+    <div class="nav">
+      <button class="btn btn-s" id="backBtn" onclick="goBack()" style="display:none">
+        <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg> Назад
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- RESULT -->
+<div id="result">
+  <div class="res-wrap">
+    <div class="res-badge" id="resBadge">Ваш персональный маршрут</div>
+    <div class="res-route" id="resRoute"></div>
+    <h1 class="res-title" id="resTitle"></h1>
+    <div class="res-path" id="resPath"></div>
+    <div class="res-body" id="resBody"></div>
+  </div>
+</div>
+
+<script>
+const BOT_URL = "https://bot.onlinecollege-1.ru/navigator3006_1";
+const RESULTS_ENDPOINT = "https://script.google.com/macros/s/AKfycbyh0fZOztC4baa7tT1fPm9YL5ASTiOo7fGuCdCvZHchFeOaVotr63y4JBXt2NTnzL39zA/exec";
+
+// ---- QUESTIONS DATA ----
+// score: {college: n} or {uni: n} or null
+const Q = {
+  1: { scored:false, options:[
+    {t:"8 класс или младше", grade:"8"},
+    {t:"9 класс", grade:"9"},
+    {t:"10 класс", grade:"10-11"},
+    {t:"11 класс", grade:"10-11"}
+  ]},
+  2: { scored:true, options:[
+    {t:"Учится легко, оценки хорошие, со школьной программой справляется без проблем", uni:2},
+    {t:"Скучает за партой, но оживает, когда есть практические или творческие задания", college:2},
+    {t:"Оценки средние, мотивация нестабильная, часто не понимает, зачем это нужно", college:1}
+  ]},
+  3: { scored:true, options:[
+    {t:"Ребёнок уверенно справится, готовы сдавать и рассчитываем на высокие баллы", uni:2},
+    {t:"Считаем это серьёзным стрессом, есть сомнения, что получится набрать нужные баллы", college:1},
+    {t:"Хотим по возможности избежать сдачи ЕГЭ, если есть достойные альтернативы", college:3}
+  ]},
+  4: { scored:true, options:[
+    {t:"Готовы вкладываться: репетиторы, при необходимости платное обучение в вузе", uni:2},
+    {t:"Бюджет ограничен, важно качественное образование по разумной стоимости", college:1},
+    {t:"Хотим, чтобы ребёнок как можно быстрее получил профессию и начал зарабатывать", college:2}
+  ]},
+  5: { scored:false, options:[
+    {t:"Уже точно знает, кем хочет быть, и есть понимание, куда поступать", m:"M1"},
+    {t:"Есть 2–3 интересных варианта, но боимся выбрать не то", m:"M2"},
+    {t:"Пока не знает, интересы часто меняются", m:"M2"}
+  ]},
+  6: { scored:true, options:[
+    {t:"IT, разработка, дизайн, маркетинг, реклама, медиа", college:1},
+    {t:"Право, юриспруденция, коммуникации, гуманитарные направления", college:1},
+    {t:"Медицина, фундаментальная наука, сложная инженерия", uni:4},
+    {t:"Пока нет ярко выраженных интересов", college:1}
+  ]}
+};
+
+const answers = {}; // qNum -> option index
+let current = 1;
+
+// ---- RENDER OPTIONS ----
+function renderOpts(qNum){
+  const box = document.getElementById('opts'+qNum);
+  box.innerHTML='';
+  Q[qNum].options.forEach((opt,i)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(answers[qNum]===i?' sel':'');
+    b.innerHTML='<span class="opt-radio"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span><span>'+opt.t+'</span>';
+    b.onclick=()=>selectOpt(qNum,i);
+    box.appendChild(b);
+  });
+}
+for(let q=1;q<=6;q++) renderOpts(q);
+
+function selectOpt(qNum,i){
+  answers[qNum]=i;
+  renderOpts(qNum);
+  setTimeout(()=>{ if(qNum<6){ goTo(qNum+1);} else { showResult(); } }, 260);
+}
+
+function goTo(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.querySelector('.screen[data-q="'+n+'"]').classList.add('active');
+  current=n;
+  document.getElementById('progFill').style.width=(n/6*100).toFixed(1)+'%';
+  document.getElementById('progStep').textContent='Вопрос '+n+' из 6';
+  document.getElementById('backBtn').style.display = n>1 ? 'inline-flex':'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function goBack(){ if(current>1) goTo(current-1); }
+
+// ---- ROUTE ALGORITHM ----
+function computeRoute(){
+  let college=0, uni=0;
+  [2,3,4,6].forEach(q=>{
+    const opt=Q[q].options[answers[q]];
+    if(opt.college) college+=opt.college;
+    if(opt.uni) uni+=opt.uni;
+  });
+  const q6idx=answers[6];
+  let branch; // 'college' or 'uni'
+  if(uni>college) branch='uni';
+  else if(college>uni) branch='college';
+  else { branch = (q6idx===2) ? 'uni' : 'college'; } // tie: Q6 ответ3 → вуз
+  if(branch==='uni') return {route:'M3', college, uni};
+  // college branch: M1 if Q5 ответ1, else M2
+  const route = (answers[5]===0) ? 'M1' : 'M2';
+  return {route, college, uni};
+}
+function gradeGroup(){ return Q[1].options[answers[1]].grade; }
+
+// ---- RESULT CONTENT ----
+const RES = {
+  M1: {
+    title:"Уверенный старт: колледж", code:"СТАРТ",
+    "8":{ path:"9 класс → Поступление в колледж → Профессия и государственный диплом в 18–19 лет",
+      body:`<p>Выбор колледжа после 9 класса — это стратегия осознанного старта. Пока сверстники будут тратить два года на подготовку к ЕГЭ, ваш ребёнок может уже осваивать востребованную профессию. Этот маршрут позволяет раньше получить финансовую независимость и практические навыки.</p><p>Запас времени даёт вам преимущество: можно без спешки изучить рынок образования, присмотреться к направлениям и сформировать надёжный «План Б».</p>`,
+      events:["понять, как изменились колледжи и почему это теперь престижно","увидеть изнутри, как обучают современным профессиям","узнать у экспертов приёмной комиссии про льготы, аккредитацию и госдипломы","составить пошаговый план подготовки, чтобы 9 класс прошёл спокойно"],
+      box:"Мы собрали подборку, которая заменит десятки часов поиска в интернете и обсуждений на родительских форумах. Внутри — только то, что реально пригодится семье, выбирающей колледж как маршрут после 9 класса." },
+    "9":{ path:"Окончание 9 класса → Поступление в колледж → Профессия и государственный диплом в 18–19 лет",
+      body:`<p>Идеальный сценарий для семьи заключается в прямом переходе к специальности. Этот маршрут позволяет подростку сразу погрузиться в профильные предметы и практику, а семье — сэкономить бюджет на репетиторах.</p><p>Сейчас главная задача — грамотно использовать лето. В ближайшие недели предстоит выбрать конкретное учебное заведение и направление, разобраться с правилами приёма и вовремя подать документы, чтобы избежать суеты в конце августа.</p>`,
+      events:["по каким критериям оценивать учебные заведения до подачи документов","как выстроить надёжный «План Б» на случай любых непредвиденных ситуаций","как пройти процесс зачисления спокойно и без очередей","как устроено обучение и практика на современных направлениях"],
+      box:"Мы собрали подборку, которая заменит десятки часов поиска в интернете и обсуждений на родительских форумах. Внутри собрано только то, что реально пригодится семье, поступающей в колледж в этом году." },
+    "10-11":{ path:"Окончание школы → Поступление → Профессия и карьера",
+      body:`<p>В старших классах обычно проясняются реальные шансы на поступление через сдачу ЕГЭ. По результатам теста маршрут через колледж выглядит для вашей семьи наиболее устойчивым вариантом освоения профессии.</p><p>Если вы планируете поступать в вуз, рекомендуем подготовить запасной сценарий. Заранее изученный вариант с колледжем поможет быстро сориентироваться и принять решение при любых результатах экзаменов. Сейчас важно использовать лето для сбора информации о правилах приёма и сроках подачи документов.</p>`,
+      events:["как грамотно выстроить «План Б» для выпускника школы","в какие даты подавать документы и какие справки потребуются","как пройти процесс зачисления спокойно и без стресса","как устроено обучение на востребованных направлениях"],
+      box:"Мы собрали инструкции, которые помогут быстрее разобраться во всех доступных вариантах после школы. Внутри находятся алгоритмы выбора вузов и колледжей, разборы карьерных перспектив и советы по поддержке подростка в период экзаменов. Эта подборка сэкономит вам десятки часов поиска информации." }
+  },
+  M2: {
+    title:"Безопасный выбор: колледж", code:"ВЫБОР",
+    "8":{ path:"9 класс → Поступление в колледж → Знакомство с профессиями → Выбор специальности",
+      body:`<p>В этом возрасте интересы меняются очень быстро. Угадать с профессией сейчас практически невозможно, поэтому запас времени даёт вам огромное преимущество. Вы можете заранее выбрать учебное заведение, которое подстраивается под подростка.</p><p>Советуем обратить внимание на учебные заведения с гибкой образовательной системой. В таком формате студенты первого курса пробуют сразу несколько направлений на практике. Если ребёнок поймёт, что ошибся с выбором, он сможет сменить специальность без потери года. Это снимает страх принять неверное решение и защищает семью от будущих финансовых потерь.</p>`,
+      events:["как устроена система обучения с правом сменить профессию","как помочь подростку найти своё дело без давления","какие специальности будут стабильно востребованы через несколько лет","по каким критериям оценивать учебные заведения до подачи документов"],
+      box:"Мы собрали видео и гайды от психологов и профориентологов. Внутри находятся инструменты для комфортного обсуждения будущего в семье, разбор главных ошибок при выборе карьерного пути и список вопросов, которые помогут подростку принять взвешенное решение." },
+    "9":{ path:"Окончание 9 класса → Поступление в колледж → Практика на 1 курсе → Точный выбор профессии",
+      body:`<p>Девятый класс заканчивается, но у подростка пока нет чёткого понимания своих карьерных целей. Выбирать специальность наугад слишком рискованно.</p><p>Советуем обратить внимание на учебные заведения с гибкой образовательной системой. В таком формате студенты первого курса пробуют сразу несколько направлений на практике. Если ребёнок поймёт, что ошибся с выбором, он сможет сменить специальность без потери года. Это снимает страх принять неверное решение и защищает семью от будущих финансовых потерь.</p>`,
+      events:["как устроена программа, позволяющая менять направления","как пройти процесс зачисления спокойно и без очередей","какие документы понадобятся для приёмной комиссии","как поддержать ребёнка в момент выбора специальности"],
+      box:"Мы подготовили материалы для семей, которым сложно определиться с одним направлением. Подборка включает запись эфира о ловушках мышления при поиске профессии, пошаговый алгоритм для семейных обсуждений и чек-листы для проверки колледжей на надёжность." },
+    "10-11":{ path:"Окончание школы → Поступление → Практика в разных направлениях → Освоение специальности",
+      body:`<p>Старшая школа требует финальных решений, однако у ребёнка сохраняются сомнения в выборе будущей сферы. Подготовка к ЕГЭ по случайным предметам часто приводит к сильному выгоранию.</p><p>Колледж с гибкой системой первого курса послужит отличной альтернативой или сильным запасным планом. Подросток получает свободу пробовать разные направления на практике. В случае ошибки он может сменить специальность без потери года. Если результаты школьных экзаменов окажутся ниже ожидаемых, такой формат гарантирует спокойный вход в профессию.</p>`,
+      events:["как грамотно выстроить «План Б» с правом смены направления","в какие даты подавать документы для зачисления","как поступить на востребованную профессию без результатов ЕГЭ","как выстроить комфортный диалог с подростком о его будущем"],
+      box:"Мы собрали инструкции, которые снимут тревогу из-за неопределённости. Внутри находятся рекомендации психологов по выбору пути, обзоры современных профессий и алгоритмы действий для создания запасного образовательного сценария." }
+  },
+  M3: {
+    title:"Классический путь: школа и ЕГЭ → вуз", code:"ПЛАН",
+    "8":{ path:"9 класс → 10–11 классы → Поступление в вуз",
+      body:`<p>Судя по результатам диагностики, ребёнок хорошо справляется с академической нагрузкой. Семья готова к формату сдачи ЕГЭ и поступлению в вуз. Запас времени позволяет вам плавно подойти к выбору профильных предметов.</p><p>При этом даже самым сильным ученикам полезна страховка. Интересы подростка могут поменяться, поэтому создание запасного образовательного сценария заранее снижает напряжение в будущем. Рассмотрение современного колледжа в качестве резервного варианта даст семье уверенность при любых обстоятельствах.</p>`,
+      events:["как грамотно сформировать резервный сценарий обучения","чем отличаются программы современных колледжей от школьных","по каким критериям оценивать любые учебные заведения","как помочь подростку с выбором будущей профессии"],
+      box:"Мы собрали подборку материалов и инструкций. Внутри находятся рекомендации психологов по выбору пути, обзоры современных профессий и алгоритмы действий для создания запасного образовательного сценария." },
+    "9":{ path:"10 класс → Подготовка к ЕГЭ → Поступление в вуз",
+      body:`<p>Результаты теста показывают готовность вашей семьи к продолжению обучения в школе. У ребёнка есть потенциал для освоения сложных академических программ. Впереди два года интенсивной учёбы.</p><p>Чтобы этот период прошёл комфортно, полезно иметь под рукой надёжный запасной план. Знакомство с альтернативными форматами обучения снимает страх перед экзаменами. Если вы заранее подберёте сильный колледж для подстраховки, подросток будет чувствовать себя гораздо спокойнее на ЕГЭ.</p>`,
+      events:["как выстроить надёжный резервный план поступления","какие специальности можно освоить без результатов ЕГЭ","как работают приёмные комиссии и когда подавать документы","как защитить семью от стресса из-за школьных оценок"],
+      box:"Мы подготовили инструкции для родителей старшеклассников. Подборка включает статьи о высшем образовании, алгоритмы для обсуждения будущего в семье и чек-листы психологической поддержки." },
+    "10-11":{ path:"Сдача ЕГЭ → Поступление в вуз → Высшее образование",
+      body:`<p>В старших классах всё внимание сосредоточено на подготовке к экзаменам. Диагностика подтверждает, что ваша семья нацелена на классическое высшее образование. Сейчас главная задача заключается в сохранении спокойствия и планомерном повторении материала.</p><p>В этот напряжённый период особенно нужна страховка. Результаты ЕГЭ иногда оказываются ниже ожидаемых баллов. Наличие запасного плана в виде хорошего колледжа спасает от потери целого года. Подросток сможет получить профессию, а в вуз поступить позже по внутренним испытаниям.</p>`,
+      events:["как поступить на востребованную специальность без учёта баллов ЕГЭ","в какие даты подавать документы для резервного зачисления","как устроено обучение в колледже на практике","как снизить тревожность подростка перед экзаменами"],
+      box:"Мы собрали материалы, которые помогут семье пройти период экзаменов с минимальными потерями нервных клеток. Внутри находятся рекомендации психологов, разборы карьерных траекторий и статьи об изменениях в системе высшего образования." }
+  }
+};
+
+function sendResult(route, data, college, uni){
+  if(!RESULTS_ENDPOINT) return;
+  const ans=i=>{const o=Q[i].options[answers[i]];return o?o.t:'';};
+  const payload={
+    ts:new Date().toISOString(),
+    name:(window.lead&&window.lead.name)||'', surname:(window.lead&&window.lead.surname)||'',
+    class:ans(1),
+    q2_uchoba:ans(2), q3_ege:ans(3), q4_finance:ans(4), q5_proff:ans(5), q6_sphere:ans(6),
+    ball_college:college, ball_vuz:uni,
+    marshrut:data.title, kod:data.code,
+    ua:navigator.userAgent
+  };
+  try{ fetch(RESULTS_ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload)}); }catch(e){}
+}
+function showResult(){
+  const {route}=computeRoute();
+  const grp=gradeGroup();
+  const data=RES[route];
+  const v=data[grp];
+  sendResult(route, data, computeRoute().college, computeRoute().uni);
+  document.getElementById('resRoute').textContent='Ваш персональный маршрут';
+  document.getElementById('resTitle').textContent=data.title;
+  document.getElementById('resPath').textContent=v.path;
+  const eventsHtml=v.events.map(e=>'<li>'+e+'</li>').join('');
+  document.getElementById('resBody').innerHTML=
+    v.body+
+    '<div class="res-card"><h3><span class="ic">🎓</span>Рекомендуем посетить дни открытых дверей</h3>'+
+    '<p>Летом Онлайн-колледж №1 проводит серию онлайн-встреч для родителей. Участие поможет вам:</p>'+
+    '<ul>'+eventsHtml+'</ul>'+
+    '<p>Напоминания об эфирах придут в бот «Навигатор поступления».</p></div>'+
+    '<div class="res-card"><h3><span class="ic">🎁</span>Ваш персональный бокс полезных материалов</h3><p>'+v.box+'</p></div>'+
+    '<div class="code-box"><div class="cb-label">Кодовое слово</div><div class="cb-word">'+data.code+'</div>'+
+    '<p>Чтобы получить бокс материалов, вернитесь в Telegram-бот и отправьте это слово в чат.</p>'+
+    '<a class="btn btn-w" href="'+BOT_URL+'" target="_blank" rel="noopener">Открыть Telegram-бот</a></div>'+
+    '<div class="res-restart"><button onclick="restart()">Пройти тест заново</button></div>';
+  document.getElementById('quiz').style.display='none';
+  document.getElementById('result').classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function restart(){
+  for(const k in answers) delete answers[k];
+  for(let q=1;q<=6;q++) renderOpts(q);
+  document.getElementById('result').classList.remove('active');
+  document.getElementById('quiz').style.display='grid';
+  goTo(1);
+}
+
+// LEAD FORM -> start quiz
+window.lead={name:'',surname:''};
+document.getElementById('leadForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const fn=document.getElementById('fname').value.trim();
+  const ln=document.getElementById('lname').value.trim();
+  if(!fn||!ln) return;
+  window.lead={name:fn,surname:ln};
+  document.getElementById('start').style.display='none';
+  document.getElementById('quiz').style.display='grid';
+  goTo(1);
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+</script>
+</body>
+</html>
