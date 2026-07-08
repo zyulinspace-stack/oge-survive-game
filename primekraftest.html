@@ -114,7 +114,7 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 
 <script>
 const IMG='https://primekraft.ru';
-const AI_ENDPOINT='';/* GPT off. Когда функция готова, поставь: '/api/podbor-ai' */
+const AI_ENDPOINT='/api/podbor-ai';
 async function enrichWithAI(profile,picks){try{const items=picks.map(x=>({id:x.id,name:CAT[x.id].n,reason:x.reason}));const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({profile,items})});if(!r.ok)return;const data=await r.json();if(data.analysis){const el=document.querySelector('.analysis');if(el)el.innerHTML=data.analysis;}if(data.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{if(ws[i]&&data.whys[x.id])ws[i].textContent=data.whys[x.id];});}}catch(e){}}
 /* ==================== КАТАЛОГ (реальные фото/цены с primekraft.ru) ==================== */
 const ART={protein:'🥛',gainer:'🍫',creatine:'💪',carnitine:'🔥',magnesium:'😴',omega:'🐟',vitamins:'🍊',amino:'🧬',pre:'⚡',snack:'🍪',isotonic:'💧'};
