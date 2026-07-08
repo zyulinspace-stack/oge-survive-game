@@ -1,13 +1,13 @@
 {
   "version": 2,
   "builds": [
-    { "src": "podbor-ai.js", "use": "@vercel/node" },
+    { "src": "api/podbor-ai.js", "use": "@vercel/node" },
     { "src": "**/*", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/logo.png", "dest": "/logo.png" },
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/api/podbor-ai", "dest": "/podbor-ai" },
+    { "src": "/api/podbor-ai", "dest": "/api/podbor-ai" },
     { "src": "/demo", "dest": "/demo.html" },
     { "src": "/demo.html", "dest": "/demo.html" },
     { "src": "/game", "dest": "/game.html" },
