@@ -14,6 +14,8 @@
     { "src": "/proftest.html", "dest": "/proftest.html" },
     { "src": "/test", "dest": "/test.html" },
     { "src": "/test.html", "dest": "/test.html" },
+    { "src": "/primekraftest", "dest": "/primekraftest.html" },
+    { "src": "/primekraftest.html", "dest": "/primekraftest.html" },
     {
       "src": "/things/(.*)",
       "dest": "https://stranger-quiz.vercel.app/$1"
