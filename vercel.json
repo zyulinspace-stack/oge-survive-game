@@ -1,31 +1,12 @@
 {
-  "version": 2,
-  "builds": [
-    { "src": "api/podbor-ai.js", "use": "@vercel/node" },
-    { "src": "**/*", "use": "@vercel/static" }
-  ],
-  "routes": [
-    { "src": "/logo.png", "dest": "/logo.png" },
-    { "src": "/assets/(.*)", "dest": "/assets/$1" },
-    { "src": "/api/podbor-ai", "dest": "/api/podbor-ai" },
-    { "src": "/demo", "dest": "/demo.html" },
-    { "src": "/demo.html", "dest": "/demo.html" },
-    { "src": "/game", "dest": "/game.html" },
-    { "src": "/game.html", "dest": "/game.html" },
-    { "src": "/proftest", "dest": "/proftest.html" },
-    { "src": "/proftest.html", "dest": "/proftest.html" },
-    { "src": "/test", "dest": "/test.html" },
-    { "src": "/test.html", "dest": "/test.html" },
-    { "src": "/primekraftest", "dest": "/primekraftest.html" },
-    { "src": "/primekraftest.html", "dest": "/primekraftest.html" },
-    {
-      "src": "/things/(.*)",
-      "dest": "https://stranger-quiz.vercel.app/$1"
-    },
-    {
-      "src": "/things",
-      "dest": "https://stranger-quiz.vercel.app/"
-    },
-    { "src": "/(.*)", "dest": "/index.html" }
+  "rewrites": [
+    { "source": "/demo", "destination": "/demo.html" },
+    { "source": "/game", "destination": "/game.html" },
+    { "source": "/proftest", "destination": "/proftest.html" },
+    { "source": "/test", "destination": "/test.html" },
+    { "source": "/primekraftest", "destination": "/primekraftest.html" },
+    { "source": "/things", "destination": "https://stranger-quiz.vercel.app/" },
+    { "source": "/things/:path*", "destination": "https://stranger-quiz.vercel.app/:path*" },
+    { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]
 }
