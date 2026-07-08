@@ -386,7 +386,7 @@ async function enrichWithAI(profile,picks){
     if(!r.ok){if(pb)pb.innerHTML='';return;}
     const d=await r.json();
     const ab=document.getElementById('analysisbox');if(d.analysis&&ab)ab.innerHTML=d.analysis;
-    if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{if(ws[i]&&d.whys[x.id])ws[i].textContent=d.whys[x.id];});}
+    if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[CAT[x.id].n];if(ws[i]&&w)ws[i].textContent=w;});}
     if(pb){if(Array.isArray(d.plan)&&d.plan.length){pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row"><b>${p.when||''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
   }catch(e){if(pb)pb.innerHTML='';}
 }
