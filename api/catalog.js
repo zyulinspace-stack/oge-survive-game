@@ -74,9 +74,21 @@ function autoTags(n) {
 }
 
 // --- фасовка -------------------------------------------------------------
+// \b здесь не работает: он завязан на ASCII, а «900 г,» заканчивается
+// кириллической буквой — граница слова не срабатывает. Поэтому явный
+// lookahead на «не буква».
 function detectSize(n) {
-  const m = n.match(/(\d+\s*шт\s*[*х×]\s*\d+\s*(?:гр?|г)\b)|(\d+[.,]?\d*\s*(?:кг|гр|г|мл|л|капс|таб)\b)/i);
+  const m = n.match(/(\d+\s*шт\s*[*х×x]\s*\d+\s*гр?(?![а-яёa-z]))|(\d+[.,]?\d*\s*(?:кг|гр|мл|капсул|капс|таблет|таб|шт|г|л)(?![а-яёa-z]))/i);
   return m ? m[0].replace(/\s+/g, ' ').trim() : '';
+}
+
+// --- «насколько это флагман типа» ---------------------------------------
+// Дефолтом брали самый дешёвый товар в наличии — и в набор попадали
+// жевательные таблетки вместо порошкового креатина. До таблицы правил
+// от нутрициолога сортируем так: производные формы уходят вниз.
+const DERIVATIVE = /жеват|таблетк|коктейл|напиток|готов|стик|саше|пробник|порци|мини|набор|батончик|печень|конфет|мармелад|драже/;
+function canonicalRank(name) {
+  return DERIVATIVE.test(name.toLowerCase()) ? 1 : 0;
 }
 
 // В фиде встречаются названия со смешанной раскладкой: «Mагний+B6» —
@@ -109,14 +121,21 @@ function classify(items) {
         flav: f.flav,
         flavName: f.flavName,
         size: detectSize(raw),
+        rank: canonicalRank(raw),
         tags: Array.from(new Set(autoTags(n).concat(autoTags(nCyr))))
       });
       break; // один товар — один тип
     }
   }
-  // в наличии вперёд, дальше — по цене вверх
+  // в наличии вперёд → базовая форма вперёд → дальше по цене вверх.
+  // Для снеков (батончики/печенье) производная форма и есть сам товар,
+  // поэтому rank там не применяем.
+  const SNACK = { bar: 1, cookie: 1 };
   for (const k in out) {
-    out[k].sort((a, b) => (b.available - a.available) || (a.price - b.price));
+    out[k].sort((a, b) =>
+      (b.available - a.available) ||
+      (SNACK[k] ? 0 : a.rank - b.rank) ||
+      (a.price - b.price));
     if (out[k].length > MAX_PER_TYPE) out[k] = out[k].slice(0, MAX_PER_TYPE);
   }
   return { byType: out, matchedIds };
