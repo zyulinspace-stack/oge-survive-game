@@ -79,15 +79,23 @@ function detectSize(n) {
   return m ? m[0].replace(/\s+/g, ' ').trim() : '';
 }
 
+// В фиде встречаются названия со смешанной раскладкой: «Mагний+B6» —
+// латинская m, дальше кириллица. Такой товар не ловится ни латинским,
+// ни кириллическим правилом. Поэтому каждое имя проверяем дважды:
+// как есть и с латинскими двойниками, заменёнными на кириллицу.
+const HOMOGLYPH = { a:'а', c:'с', e:'е', o:'о', p:'р', x:'х', y:'у', k:'к', m:'м', t:'т' };
+function toCyr(n) { return n.replace(/[aceopxykmt]/g, ch => HOMOGLYPH[ch]); }
+
 function classify(items) {
   const out = {};
   const matchedIds = new Set();
   for (const it of items) {
     const raw = it.name || '';
     const n = raw.toLowerCase();
+    const nCyr = toCyr(n);
     for (const [key, test] of TYPE_RULES) {
-      if (!test(n)) continue;
-      const f = detectFlavor(n);
+      if (!test(n) && !test(nCyr)) continue;
+      const f = detectFlavor(n).flav ? detectFlavor(n) : detectFlavor(nCyr);
       out[key] = out[key] || [];
       matchedIds.add(it.id);
       out[key].push({
@@ -101,7 +109,7 @@ function classify(items) {
         flav: f.flav,
         flavName: f.flavName,
         size: detectSize(raw),
-        tags: autoTags(n)
+        tags: Array.from(new Set(autoTags(n).concat(autoTags(nCyr))))
       });
       break; // один товар — один тип
     }
