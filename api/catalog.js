@@ -10,7 +10,7 @@
 const FEED = 'https://primekraft.ru/bitrix/catalog_export/yandex.php';
 
 // сколько товаров одного типа отдаём фронту (защита от раздувания ответа)
-const MAX_PER_TYPE = 24;
+const MAX_PER_TYPE = 40;
 
 function decodeEntities(s) {
   return (s || '')
@@ -42,7 +42,9 @@ const TYPE_RULES = [
   ['isotonic',   n => /изотоник|isotonic|electrolyt|электролит/.test(n)],
   ['collagen',   n => /коллаген|collagen/.test(n)],
   ['glutamine',  n => /глютамин|glutamine/.test(n)],
-  ['arginine',   n => /аргинин|arginine/.test(n)],
+  ['arginine',   n => /аргинин|arginine|аакг|aakg/.test(n)],
+  ['joints',     n => /глюкозамин|хондроитин|glucosamine|chondroitin|\bмсм\b|\bmsm\b/.test(n)],
+  ['bundle',     n => /(стартовый|готовый)\s+набор|\bкомплект\b/.test(n)],
   ['zma',        n => /\bzma\b|цинк|zinc/.test(n)],
   ['multivit',   n => /мультивитамин|multivitamin|витаминно-минеральн/.test(n)],
   ['protein',    n => /протеин|protein/.test(n)] // общий протеин — последним
@@ -79,6 +81,7 @@ function detectSize(n) {
 
 function classify(items) {
   const out = {};
+  const matchedIds = new Set();
   for (const it of items) {
     const raw = it.name || '';
     const n = raw.toLowerCase();
@@ -86,6 +89,7 @@ function classify(items) {
       if (!test(n)) continue;
       const f = detectFlavor(n);
       out[key] = out[key] || [];
+      matchedIds.add(it.id);
       out[key].push({
         id: it.id,
         name: raw,
@@ -107,7 +111,7 @@ function classify(items) {
     out[k].sort((a, b) => (b.available - a.available) || (a.price - b.price));
     if (out[k].length > MAX_PER_TYPE) out[k] = out[k].slice(0, MAX_PER_TYPE);
   }
-  return out;
+  return { byType: out, matchedIds };
 }
 
 module.exports = async (req, res) => {
@@ -140,12 +144,11 @@ module.exports = async (req, res) => {
       };
     });
 
-    const byType = classify(items);
+    const { byType, matchedIds } = classify(items);
 
-    // диагностика: сколько разложили и что осталось за бортом —
-    // по этому списку дописываем правила на следующей итерации
-    const matchedIds = new Set();
-    for (const k in byType) for (const p of byType[k]) matchedIds.add(p.id);
+    // диагностика: что правила не разложили вообще.
+    // Считается ДО обрезки MAX_PER_TYPE, иначе обрезанные товары
+    // выглядели бы как нераспознанные.
     const unmatched = items.filter(i => !matchedIds.has(i.id)).map(i => i.name);
 
     const stats = {};
