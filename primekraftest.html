@@ -198,7 +198,7 @@ function recommend(P,tweaks){
   if(stimBlocked)out=out.filter(x=>!['preworkout'].includes(x.id));
   const filler=['omega3','vitc','magnesium'];
   for(const f of filler){if(out.length>=3)break;if(!out.find(x=>x.id===f)&&!seenCat[CAT[f].c]){seenCat[CAT[f].c]=1;out.push({id:f,reason:f==='omega3'?'joints':f==='vitc'?'immunity':'sleep'});}}
-  if(P.budget==='econom'||tweaks.cheap){const a=out.slice(0,1);const r=out.slice(1).sort((x,y)=>CAT[x.id].price-CAT[y.id].price).slice(0,2);out=a.concat(r);}
+  if(P.budget==='econom'||tweaks.cheap){const a=out.slice(0,1);const r=out.slice(1).sort((x,y)=>itemOf(x.id).price-itemOf(y.id).price).slice(0,2);out=a.concat(r);}
   return out.slice(0,5);
 }
 function proteinNorm(P){if(!P.weight)return null;const f=P.goal==='mass'?2.0:P.goal==='strength'?1.9:P.goal==='slim'?1.8:1.4;return Math.round(P.weight*f);}
@@ -256,8 +256,10 @@ function whyText(id,P){
     default: return 'Дополнение под ваш профиль.';
   }
 }
-function flavorLine(id,P){if(!CAT[id].flav||!P.flavor)return '';return `<div class="flav">Вкус под вас: <b>${FLAV[P.flavor]}</b></div>`;}
-function artHtml(it,em){if(it.img)return `<div class="art"><img src="${IMG+it.img}" alt="" loading="lazy" onerror="this.remove();this.parentElement.classList.add('ph');this.parentElement.textContent='${em}'"></div>`;return `<div class="art ph">${em}</div>`;}
+function flavorLine(id,P){const it=itemOf(id);if(!P.flavor&&!it.flavName)return '';
+  if(it.flavName)return `<div class="flav">Вкус: <b>${it.flavName}</b>${it.size?' · '+it.size:''}${it.variants&&it.variants.length>1?` · ещё ${it.variants.length-1} вариант(ов) на сайте`:''}</div>`;
+  if(!CAT[id].flav)return '';return `<div class="flav">Вкус под вас: <b>${FLAV[P.flavor]}</b></div>`;}
+function artHtml(it,em){if(it.img)return `<div class="art"><img src="${/^https?:/.test(it.img)?it.img:IMG+it.img}" alt="" loading="lazy" onerror="this.remove();this.parentElement.classList.add('ph');this.parentElement.textContent='${em}'"></div>`;return `<div class="art ph">${em}</div>`;}
 
 /* ---------- FLOW ---------- */
 const root=document.getElementById('root');
@@ -332,10 +334,10 @@ function finish(){
 /* ---------- РЕЗУЛЬТАТ ---------- */
 function currentPicks(){return recommend(P,tweaks).map(x=>({origId:x.id,id:swaps[x.id]||x.id,reason:swaps[x.id]?'swap':x.reason})).filter(x=>!removed[x.origId]);}
 function renderResult(){
-  const picks=currentPicks();const sum=picks.reduce((a,x)=>a+CAT[x.id].price,0);
+  const picks=currentPicks();const sum=picks.reduce((a,x)=>a+itemOf(x.id).price,0);
   const tags=capturedTags(P).map(t=>`<span class="tag">${t}</span>`).join('');
   const cards=picks.map(x=>{
-    const it=CAT[x.id],em=ART[it.c],anchor=(x.reason||'').startsWith('anchor');
+    const it=itemOf(x.id),em=ART[it.c],anchor=(x.reason||'').startsWith('anchor');
     const why=(x.reason==='swap'&&swapWhy[x.id])?swapWhy[x.id]:whyText(x.id,P);
     const loading=replacing===x.origId;
     return `<div class="prod">
@@ -345,8 +347,8 @@ function renderResult(){
         <h3>${it.n}</h3>
         <div class="why">${loading?'<span class="mini">ИИ подбирает замену…</span>':why}</div>
         ${flavorLine(x.id,P)}
-        <div class="price">${it.price} ₽</div>
-        <div class="buys"><a class="site" href="${IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
+        ${it.available===false?'<div class="flav" style="color:#c0392b">Сейчас нет на сайте — берите на Ozon/WB</div>':''}<div class="price">${it.price} ₽</div>
+        <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
         <button class="repl" onclick="replaceItem('${x.origId}')">🔄 Заменить через ИИ</button>
       </div>
       <button class="rm" title="Убрать" onclick="removeItem('${x.origId}')">✕</button>
@@ -381,12 +383,12 @@ async function enrichWithAI(profile,picks){
   const pb=document.getElementById('planbox');
   if(pb)pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div><div class="mini">ИИ составляет план приёма…</div></div>';
   try{
-    const items=picks.map(x=>({id:x.id,name:CAT[x.id].n,reason:x.reason}));
+    const items=picks.map(x=>({id:x.id,name:itemOf(x.id).n,reason:x.reason}));
     const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'enrich',profile,items})});
     if(!r.ok){if(pb)pb.innerHTML='';return;}
     const d=await r.json();
     const ab=document.getElementById('analysisbox');if(d.analysis&&ab)ab.innerHTML=d.analysis;
-    if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[CAT[x.id].n];if(ws[i]&&w)ws[i].textContent=w;});}
+    if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[itemOf(x.id).n];if(ws[i]&&w)ws[i].textContent=w;});}
     if(pb){if(Array.isArray(d.plan)&&d.plan.length){pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row"><b>${p.when||''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
   }catch(e){if(pb)pb.innerHTML='';}
 }
@@ -397,12 +399,12 @@ async function replaceItem(origId){
   const stimBlocked=(P.health||[]).includes('hyper')||(P.health||[]).includes('preg');
   let cand=Object.keys(CAT).filter(c=>!setIds.includes(c)&&(c!=='plant'||P.restrictions==='vegan'));
   if(stimBlocked)cand=cand.filter(c=>!['preworkout'].includes(c));
-  const candidates=cand.map(c=>({id:c,name:CAT[c].n,cat:CAT[c].c}));
+  const candidates=cand.map(c=>({id:c,name:itemOf(c).n,cat:CAT[c].c}));
   if(!candidates.length)return;
   replacing=origId;renderResult();
   let chosen=null,why=null;
   if(AI_ENDPOINT){
-    try{const cur=CAT[curId];
+    try{const cur=itemOf(curId);
       const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'replace',profile:P,current:{id:curId,name:cur.n,cat:cur.c},set:setIds,candidates})});
       if(r.ok){const d=await r.json();if(d.id&&CAT[d.id]&&!setIds.includes(d.id)){chosen=d.id;why=d.why;}}
     }catch(e){}
@@ -426,6 +428,47 @@ function saveLead(){
   console.log('LEAD',{contact:c,profile:P,picks:currentPicks().map(x=>x.id)});
   document.getElementById('savebox').innerHTML=`<div class="saved">✓ Подбор сохранён. Мы на связи!</div>`;
 }
+function pickVariant(list){
+  if(!Array.isArray(list)||!list.length)return null;
+  const avail=list.filter(x=>x.available);
+  const pool=avail.length?avail:list;
+  if(P&&P.flavor){const m=pool.filter(x=>x.flav===P.flavor);if(m.length)return m[0];}
+  if(P&&P.restrictions==='vegan'){const v=pool.filter(x=>(x.tags||[]).includes('vegan'));if(v.length)return v[0];}
+  if(P&&P.sweet==='yes'){const sf=pool.filter(x=>(x.tags||[]).includes('sugarfree'));if(sf.length)return sf[0];}
+  return pool[0];
+}
+/* Возвращает карточку типа с подставленным подходящим товаром из фида.
+   Если фид не доехал — отдаёт статичный CAT (страница не ломается). */
+function itemOf(id){
+  const c=CAT[id];if(!c)return c;
+  const v=pickVariant(c.variants);
+  if(!v)return c;
+  return Object.assign({},c,{
+    n:v.name||c.n, price:v.price||c.price, old:v.oldprice||c.old,
+    img:v.img||c.img, url:v.url||c.url, available:v.available,
+    flavName:v.flavName||'', size:v.size||'', tags:v.tags||[], variants:c.variants
+  });
+}
+async function loadCatalog(){
+  try{
+    const r=await fetch('/api/catalog');if(!r.ok)return;
+    const d=await r.json();const bt=(d&&d.byType)||{};
+    for(const k in bt){
+      if(!CAT[k])continue;
+      const list=Array.isArray(bt[k])?bt[k]:[bt[k]];   // совместимость со старым форматом
+      if(!list.length)continue;
+      CAT[k].variants=list;CAT[k].real=true;
+      const best=list[0];
+      if(best.name)CAT[k].n=best.name;
+      if(best.price)CAT[k].price=best.price;
+      if(best.oldprice)CAT[k].old=best.oldprice;
+      if(best.img)CAT[k].img=best.img;
+      if(best.url)CAT[k].url=best.url;
+      CAT[k].available=best.available;
+    }
+  }catch(e){}
+}
+loadCatalog();
 start();
 </script>
 </body>
