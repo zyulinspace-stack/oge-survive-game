@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Умный подбор питания — Prime Kraft</title>
+<title>Персональный подбор питания — Prime Kraft</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
 <style>
@@ -153,7 +153,7 @@ h2{font-size:23px;line-height:1.05}
 <div class="topbar"><div class="inner">
   <img src="https://primekraft.ru/images/Logo_primekraft-01.svg" alt="" onerror="this.style.display='none';document.getElementById('wmfb').style.display='inline'">
   <span id="wmfb" class="wm" style="display:none">PRIMEKRAFT</span>
-  <span class="tag">ИИ-подбор питания</span>
+  <span class="tag">Персональный подбор</span>
 </div></div>
 <div class="wrap"><div class="app"><div id="root"></div>
 </div></div>
@@ -319,10 +319,10 @@ function renderIntro(){
   root.innerHTML=`<div class="screen hero">
     <div class="shot"></div><div class="veil"></div><span class="rhomb"></span>
     <div class="inner">
-      <div class="kicker">ИИ-подбор спортпита</div>
-      <h1>ИИ соберёт<em>ваш комплекс</em></h1>
-      <p class="lead">Вопросы задаёт ИИ и подстраивается под ответы — как разговор с нутрициологом. В конце: набор, план приёма и возможность заменить любой продукт.</p>
-      <div class="pills"><span class="pill">ИИ ведёт опрос</span><span class="pill">План приёма</span><span class="pill">Замена через ИИ</span></div>
+      <div class="kicker">Подбор за 2 минуты</div>
+      <h1>Комплекс<em>под вашу цель</em></h1>
+      <p class="lead">Ответьте на несколько вопросов — и получите набор под вашу цель, режим и бюджет, с планом приёма по дням. Подбор на основе AI и каталога Prime Kraft.</p>
+      <div class="pills"><span class="pill">2 минуты</span><span class="pill">План приёма по дням</span><span class="pill">Любой продукт можно заменить</span></div>
       <button class="btn btn-accent" onclick="beginQuiz()">Начать подбор →</button>
     </div>
   </div>`;
@@ -343,7 +343,7 @@ function renderQById(id){
   const showSkip=asked.length>=8;
   root.innerHTML=`<div class="screen card">
     <div class="progress"><i style="width:${pct}%"></i></div>
-    <div class="deepnote">${AI_ENDPOINT?'ИИ ведёт опрос':'Опрос'} · <b>чем подробнее, тем точнее</b></div>
+    <div class="deepnote">Вопросы подстраиваются под ответы · <b>чем подробнее, тем точнее</b></div>
     <h2>${q.q}</h2>
     ${q.hint?`<div class="hint">${q.hint}</div>`:'<div style="height:8px"></div>'}
     ${bd}
@@ -394,13 +394,13 @@ function renderResult(){
     return `<div class="prod">
       ${artHtml(it,em)}
       <div class="info">
-        <div class="rolebadge ${anchor?'':'sup'}">${x.reason==='swap'?'Замена ИИ':anchor?'Основа набора':'Дополнение'}</div>
+        <div class="rolebadge ${anchor?'':'sup'}">${x.reason==='swap'?'Замена':anchor?'Основа набора':'Дополнение'}</div>
         <h3>${it.n}</h3>
-        <div class="why">${loading?'<span class="mini">ИИ подбирает замену…</span>':why}</div>
+        <div class="why">${loading?'<span class="mini">Подбираем замену…</span>':why}</div>
         ${flavorLine(x.id,P)}
         ${it.available===false?'<div class="flav" style="color:#c0392b">Сейчас нет на сайте — берите на Ozon/WB</div>':''}<div class="price">${it.price} ₽</div>
         <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
-        <button class="repl" onclick="replaceItem('${x.origId}')">🔄 Заменить через ИИ</button>
+        <button class="repl" onclick="replaceItem('${x.origId}')">Заменить продукт</button>
       </div>
       <button class="rm" title="Убрать" onclick="removeItem('${x.origId}')">✕</button>
     </div>`;
@@ -432,7 +432,7 @@ function renderResult(){
 }
 async function enrichWithAI(profile,picks){
   const pb=document.getElementById('planbox');
-  if(pb)pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div><div class="mini">ИИ составляет план приёма…</div></div>';
+  if(pb)pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div><div class="mini">Составляем план приёма…</div></div>';
   try{
     const items=picks.map(x=>({id:x.id,name:itemOf(x.id).n,reason:x.reason}));
     const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'enrich',profile,items})});
