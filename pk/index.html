@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Умный подбор питания — Prime Kraft</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Condensed:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#f1f1f1;--surface:#fff;--surface2:#f6f7f8;--border:#e4e6e9;--text:#1a1a1a;--muted:#7a828c;--accent:#ffcd00;--accent-dk:#ffad00;--ink:#141414;--cta:#141414;--ok:#12855f;--radius:16px;--maxw:520px;--head:64px;}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -16,7 +16,9 @@ body{background:var(--bg);color:var(--text);font-family:"Roboto",-apple-system,B
 .topbar img{height:26px;filter:brightness(0) invert(1)}
 .topbar .wm{color:#fff;font-weight:900;letter-spacing:1px;font-size:17px}
 .topbar .tag{margin-left:auto;color:#c9cdd3;font-size:11px;font-weight:500}
-.wrap{display:flex;justify-content:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 28px)}
+.wrap{display:flex;justify-content:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 28px);min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head))}
+.wrap:has(.hero){padding:0}
+.app:has(.hero){max-width:none}
 .app{width:100%;max-width:var(--maxw)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .screen{animation:fade .3s ease}
@@ -37,12 +39,14 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .deepnote b{color:#a8790a}
 .qnum{color:var(--muted);font-size:13px;font-weight:700}
 .hint{color:#5b6470;font-size:13px;line-height:1.4;margin:6px 0 16px;display:flex;gap:8px;background:#fffdf0;border:1px solid #f2e6a8;padding:10px 12px;border-radius:10px}
-.hint::before{content:"💡";flex:0 0 auto}
+.hint::before{content:"";flex:0 0 auto;width:9px;height:9px;background:var(--yellow);transform:rotate(45deg);margin-top:4px}
 .opts{display:flex;flex-direction:column;gap:10px}
 .opt{display:flex;align-items:center;gap:13px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:15px 16px;cursor:pointer;transition:.15s;font-size:15.5px;font-weight:600;text-align:left;color:var(--text);font-family:inherit;width:100%}
 .opt:hover{border-color:#c9ccd1}
 .opt.sel{border-color:var(--accent);background:#fffdf0;box-shadow:inset 0 0 0 1px var(--accent)}
-.opt .em{font-size:21px;width:25px;text-align:center;flex:0 0 25px}
+.opt .mark{flex:0 0 20px;width:20px;height:20px;border:2px solid #d3d6da;border-radius:5px;position:relative;transition:.15s}
+.opt.sel .mark{background:var(--yellow);border-color:var(--yellow)}
+.opt.sel .mark::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid #141414;border-width:0 2.5px 2.5px 0;transform:rotate(45deg)}
 .bodygrid{display:flex;gap:12px}
 .field{flex:1}
 .field label{display:block;color:var(--muted);font-size:13px;margin-bottom:7px;font-weight:500}
@@ -98,6 +102,51 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .disc{color:#9aa0a8;font-size:11px;line-height:1.5;text-align:center;margin-top:18px;padding:0 6px}
 .foot{color:#aab0b8;font-size:11px;text-align:center;margin-top:14px}
 .saved{background:#e7f6ef;border:1px solid #a6dcc4;color:var(--ok);border-radius:12px;padding:14px;font-size:14px;font-weight:700;text-align:center}
+
+/* ==== БРЕНД-СЛОЙ PRIME KRAFT (по primekraft.ru) ==== */
+:root{--disp:"Roboto Condensed","Roboto",Arial,sans-serif;--yellow:#ffcd00;--carbon:#1c1c1c}
+/* шапка как на сайте: карбон + жёлтая отбивка */
+.topbar{border-bottom:3px solid var(--yellow);background:var(--carbon)}
+.topbar .tag{background:none;border:0;padding:0;border-radius:0;text-transform:uppercase;letter-spacing:.9px;font-weight:900;font-size:10px;color:var(--yellow);font-family:var(--disp);font-style:italic}
+/* фирменный наклонный капс в заголовках */
+h1,h2,.total .sum{font-family:var(--disp);font-style:italic;font-weight:900;text-transform:uppercase;letter-spacing:.2px}
+h1{font-size:32px;line-height:.98}
+h2{font-size:23px;line-height:1.05}
+.plan-h,.prod .rolebadge{font-family:var(--disp);font-style:italic}
+.prod h3{font-family:var(--disp);font-weight:700;font-size:16px;line-height:1.1}
+/* кнопки: рубленые углы, наклонный капс */
+.btn{border-radius:4px;font-family:var(--disp);font-style:italic;font-weight:900;text-transform:uppercase;letter-spacing:.6px;font-size:17px}
+.btn-accent{background:var(--yellow);color:#111}
+.btn-primary{background:var(--carbon)}
+.buys a{border-radius:4px;font-family:var(--disp);font-style:italic;text-transform:uppercase;font-weight:900}
+.kicker{border-radius:0;font-family:var(--disp);font-style:italic;font-weight:900;font-size:12px;letter-spacing:1px;padding:5px 10px}
+.opt{border-radius:6px}
+.opt.sel{box-shadow:inset 0 0 0 2px var(--yellow)}
+.card{border-radius:8px}
+.prod,.field input,.total,.plan,.chip,.msg,.save,.save input[type=text]{border-radius:6px}
+/* ромб — графический элемент с баннеров */
+.rhomb{position:absolute;width:54px;height:54px;background:var(--yellow);transform:rotate(45deg);pointer-events:none}
+.rhomb::after{content:"";position:absolute;inset:38%;background:var(--carbon);transform:rotate(0)}
+/* ==== ГЕРОЙ-ЭКРАН ==== */
+.hero{position:relative;margin:0;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;flex-direction:column;justify-content:flex-end;
+  background:#0b0b0b linear-gradient(160deg,#2a2418,#0b0b0b 60%);overflow:hidden;isolation:isolate}
+.hero .shot{position:absolute;inset:0;background-image:url("https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260810_122913_69de5cf1-21ef-423c-b01a-3e441cbf14e3.png");background-size:cover;background-position:52% 22%;z-index:-2}
+.hero .veil{position:absolute;inset:0;z-index:-1;
+  background:linear-gradient(to top,rgba(8,8,8,.97) 6%,rgba(8,8,8,.86) 26%,rgba(8,8,8,.30) 55%,rgba(8,8,8,.55) 100%)}
+.hero .inner{width:100%;max-width:var(--maxw);margin:0 auto;padding:26px 20px calc(env(safe-area-inset-bottom) + 30px)}
+.hero .kicker{background:var(--yellow);color:#111;margin-bottom:12px}
+.hero h1{color:#fff;font-size:40px;line-height:.94;margin:0 0 12px;text-shadow:0 2px 24px rgba(0,0,0,.6)}
+.hero h1 em{color:var(--yellow);font-style:italic;display:block}
+.hero .lead{color:#d6d8dc;font-size:14.5px;line-height:1.45;margin:0 0 16px}
+.hero .pills{margin-bottom:18px}
+.hero .pill{background:rgba(255,255,255,.09);border-color:rgba(255,255,255,.18);color:#e8eaee;backdrop-filter:blur(3px)}
+.hero .rhomb{top:26px;right:-14px;opacity:.95}
+.hero .rhomb::after{background:#0e0e0e}
+.hero .btn-accent{box-shadow:0 8px 26px rgba(255,205,0,.28)}
+@media(max-width:380px){.hero h1{font-size:34px}.hero .lead{font-size:13.5px}}
+@media(min-width:768px){.hero .shot{background-position:50% 26%}.hero h1{font-size:58px}.hero .lead{font-size:16px;max-width:470px}.hero .inner{padding-bottom:52px}}
+@media(min-width:768px) and (min-height:900px){.hero .inner{padding-bottom:9vh}}
+
 </style>
 </head>
 <body>
@@ -107,7 +156,6 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
   <span class="tag">ИИ-подбор питания</span>
 </div></div>
 <div class="wrap"><div class="app"><div id="root"></div>
-  <div class="foot">MVP-демо · адаптивный ИИ-подбор из каталога Prime Kraft · не является медицинским назначением</div>
 </div></div>
 
 <script>
@@ -220,7 +268,7 @@ function analysisText(P){
   return s.join(' ');
 }
 function capturedTags(P){
-  const t=[];const g={slim:'Похудение',mass:'Набор массы',strength:'Сила/выносливость',health:'Поддержание'}[P.goal];if(g)t.push('🎯 '+g);
+  const t=[];const g={slim:'Похудение',mass:'Набор массы',strength:'Сила/выносливость',health:'Поддержание'}[P.goal];if(g)t.push(g);
   if(P.freq&&P.freq!=='0')t.push('🏋️ '+{'1_2':'1–2','3_4':'3–4','5':'5+'}[P.freq]+'/нед'+(P.ttype?' '+{strength:'силовые',cardio:'кардио',mixed:'микс'}[P.ttype]:''));
   if(P.diet_protein)t.push('🍗 белок: '+{low:'мало',mid:'средне',high:'много'}[P.diet_protein]);
   if(P.sleep&&P.sleep!=='good')t.push('😴 сон: '+{hard:'засыпание',tired:'разбитость'}[P.sleep]);
@@ -268,12 +316,15 @@ const loadMsgs=['Анализируем ваши ответы…','Считае�
 
 function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;renderIntro();}
 function renderIntro(){
-  root.innerHTML=`<div class="screen card">
-    <div class="kicker">Первый ИИ-подбор спортпита</div>
-    <h1>ИИ соберёт ваш комплекс</h1>
-    <p class="lead">Вопросы задаёт ИИ и подстраивается под ответы — как разговор с нутрициологом. В конце: набор, план приёма и возможность заменить любой продукт.</p>
-    <div><span class="pill">🧠 ИИ ведёт опрос</span><span class="pill">🗓️ План приёма</span><span class="pill">🔄 Замена через ИИ</span></div>
-    <button class="btn btn-primary" style="margin-top:8px" onclick="beginQuiz()">Начать подбор →</button>
+  root.innerHTML=`<div class="screen hero">
+    <div class="shot"></div><div class="veil"></div><span class="rhomb"></span>
+    <div class="inner">
+      <div class="kicker">ИИ-подбор спортпита</div>
+      <h1>ИИ соберёт<em>ваш комплекс</em></h1>
+      <p class="lead">Вопросы задаёт ИИ и подстраивается под ответы — как разговор с нутрициологом. В конце: набор, план приёма и возможность заменить любой продукт.</p>
+      <div class="pills"><span class="pill">ИИ ведёт опрос</span><span class="pill">План приёма</span><span class="pill">Замена через ИИ</span></div>
+      <button class="btn btn-accent" onclick="beginQuiz()">Начать подбор →</button>
+    </div>
   </div>`;
 }
 function beginQuiz(){renderQById('goal');}
@@ -285,9 +336,9 @@ function renderQById(id){
     bd=`<div class="bodygrid"><div class="field"><label>Вес, кг</label><input id="w" inputmode="numeric" value="${P.weight||''}" placeholder="80"></div><div class="field"><label>Рост, см</label><input id="h" inputmode="numeric" value="${P.height||''}" placeholder="180"></div></div><div class="nav"><button class="btn btn-primary" onclick="saveBody()">Далее →</button></div>`;
   } else if(q.multi){
     const arr=P[id]||[];
-    bd=`<div class="opts">`+q.opts.map(o=>`<button class="opt ${arr.includes(o.v)?'sel':''}" onclick="pickMulti('${id}','${o.v}')"><span class="em">${o.em}</span><span>${o.l}</span></button>`).join('')+`</div><div class="nav"><button class="btn btn-primary" onclick="afterMulti('${id}')">Далее →</button></div>`;
+    bd=`<div class="opts">`+q.opts.map(o=>`<button class="opt ${arr.includes(o.v)?'sel':''}" onclick="pickMulti('${id}','${o.v}')"><span class="mark"></span><span>${o.l}</span></button>`).join('')+`</div><div class="nav"><button class="btn btn-primary" onclick="afterMulti('${id}')">Далее →</button></div>`;
   } else {
-    bd=`<div class="opts">`+q.opts.map(o=>`<button class="opt ${sel===o.v?'sel':''}" onclick="pick('${id}','${o.v}')"><span class="em">${o.em}</span><span>${o.l}</span></button>`).join('')+`</div>`;
+    bd=`<div class="opts">`+q.opts.map(o=>`<button class="opt ${sel===o.v?'sel':''}" onclick="pick('${id}','${o.v}')"><span class="mark"></span><span>${o.l}</span></button>`).join('')+`</div>`;
   }
   const showSkip=asked.length>=8;
   root.innerHTML=`<div class="screen card">
