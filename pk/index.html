@@ -513,7 +513,9 @@ function cmpWhy(x){
 }
 function cmpBlock(picks){
   if(!picks.length)return '';
-  const li=picks.slice(0,4).map(x=>`<li><b style="color:#fff">${itemOf(x.id).name.split(',')[0]}</b> — ${cmpWhy(x)}</li>`).join('');
+  const li=picks.slice(0,4).map(x=>{const it=itemOf(x.id);const nm=((it&&it.name)||'').split(',')[0].trim();
+    return nm?`<li><b style="color:#fff">${nm}</b> — ${cmpWhy(x)}</li>`:'';}).filter(Boolean).join('');
+  if(!li)return '';
   return `<div class="cmp">
     <div class="ch">
       <div class="col usual"><div class="ct">Обычно берут</div><ul>
@@ -562,7 +564,7 @@ function renderResult(){
       <div style="margin-top:16px"><div class="qnum" style="margin-bottom:8px">Быстрая корректировка:</div><div id="chatlog"></div>
         <div class="chat-presets"><button class="chip" onclick="chat('cheap')">Дешевле</button><button class="chip" onclick="chat('noStim')">Без стимуляторов</button><button class="chip" onclick="chat('recovery')">Больше на восстановление</button></div></div>
     </div>
-    ${cmpBlock(picks)}
+    ${(()=>{try{return cmpBlock(picks)}catch(e){return ''}})()}
     <div class="save" id="savebox">
       <h2 style="font-size:16px">Сохранить подбор</h2>
       <p class="lead" style="font-size:13px;margin-bottom:12px">Пришлём набор и напомним, когда курс закончится.</p>
