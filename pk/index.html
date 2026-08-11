@@ -147,6 +147,49 @@ h2{font-size:23px;line-height:1.05}
 @media(min-width:768px){.hero .shot{background-position:50% 26%}.hero h1{font-size:58px}.hero .lead{font-size:16px;max-width:470px}.hero .inner{padding-bottom:52px}}
 @media(min-width:768px) and (min-height:900px){.hero .inner{padding-bottom:9vh}}
 
+
+/* ==== ИМЯ ==== */
+.namebox input{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;font-size:18px;font-weight:700;padding:15px;font-family:inherit;text-align:center}
+.namebox input:focus{outline:none;border-color:var(--yellow)}
+/* ==== ВРЕЗКА-ИНСАЙТ ==== */
+.insight{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;flex-direction:column;justify-content:flex-end;background:#0b0b0b;overflow:hidden;isolation:isolate}
+.insight .shot{position:absolute;inset:0;background-image:url("https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_113208_1b181c57-5819-4fde-b05e-a4d5712d658a.png");background-size:cover;background-position:70% 40%;z-index:-2}
+.insight .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(8,8,8,.97) 10%,rgba(8,8,8,.88) 34%,rgba(8,8,8,.42) 68%,rgba(8,8,8,.55) 100%)}
+.insight .inner{width:100%;max-width:var(--maxw);margin:0 auto;padding:26px 20px calc(env(safe-area-inset-bottom) + 30px)}
+.insight .kicker{background:var(--yellow);color:#111}
+.insight h2{color:#fff;font-size:30px;line-height:1.06;margin:0 0 12px}
+.insight p{color:#d6d8dc;font-size:15px;line-height:1.5;margin:0 0 20px}
+.insight p b{color:var(--yellow)}
+@media(min-width:768px){.insight h2{font-size:40px}}
+/* ==== ЭКРАН РАСЧЁТА ==== */
+.mathscr{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));background:#0d0d0d;overflow:hidden;display:flex;align-items:center}
+.mathscr .shaker{position:absolute;right:-70px;bottom:-30px;height:86%;opacity:.9;filter:drop-shadow(-26px 10px 40px rgba(0,0,0,.85)) drop-shadow(18px -12px 34px rgba(255,205,0,.16));pointer-events:none;z-index:0}
+.mathscr .glow{position:absolute;left:-20%;top:-10%;width:70%;height:70%;background:radial-gradient(circle,rgba(255,205,0,.13),transparent 65%);pointer-events:none;z-index:0}
+.mathscr .inner{position:relative;z-index:1;width:100%;max-width:var(--maxw);margin:0 auto;padding:28px 20px calc(env(safe-area-inset-bottom) + 28px)}
+.mathscr h2{color:#fff;font-size:30px;line-height:1.06;margin:0 0 18px}
+.calcrow{border-top:1px solid rgba(255,255,255,.12);padding:14px 0}
+.calcrow:first-of-type{border-top:0}
+.calcrow .big{font-family:var(--disp);font-style:italic;font-weight:900;font-size:38px;line-height:1;color:#fff;letter-spacing:-.5px}
+.calcrow.gap .big{color:var(--yellow)}
+.calcrow .cap{color:#b9bec6;font-size:13.5px;line-height:1.45;margin-top:6px;max-width:300px}
+.mathscr .foot2{color:#8f959d;font-size:13px;margin:16px 0 18px;max-width:320px}
+@media(min-width:768px){.mathscr h2{font-size:40px}.calcrow .big{font-size:46px}.mathscr .shaker{right:2%;height:92%}}
+@media(max-width:400px){.mathscr .shaker{opacity:.35;right:-90px}}
+/* ==== СРАВНЕНИЕ ==== */
+.cmp{background:var(--ink);border-radius:8px;overflow:hidden;margin:18px 0}
+.cmp .ch{display:grid;grid-template-columns:1fr 1fr}
+.cmp .col{padding:16px 15px}
+.cmp .col.usual{background:rgba(255,255,255,.04)}
+.cmp .ct{font-family:var(--disp);font-style:italic;font-weight:900;text-transform:uppercase;font-size:13px;letter-spacing:.5px;margin-bottom:10px}
+.cmp .col.usual .ct{color:#8f959d}
+.cmp .col.ours .ct{color:var(--yellow)}
+.cmp li{list-style:none;color:#e8eaee;font-size:13px;line-height:1.35;margin-bottom:9px;padding-left:12px;position:relative}
+.cmp li::before{content:"";position:absolute;left:0;top:5px;width:5px;height:5px;background:var(--yellow);transform:rotate(45deg)}
+.cmp .col.usual li{color:#9aa0a8}
+.cmp .col.usual li::before{background:#565b62}
+.cmp ul{margin:0;padding:0}
+.cmp .note{padding:13px 15px;border-top:1px solid rgba(255,255,255,.1);color:#b9bec6;font-size:12.5px;line-height:1.45}
+
 </style>
 </head>
 <body>
@@ -327,7 +370,21 @@ function renderIntro(){
     </div>
   </div>`;
 }
-function beginQuiz(){renderQById('goal');}
+function beginQuiz(){renderName();}
+function renderName(){
+  root.innerHTML=`<div class="screen card namebox">
+    <h2>Как к вам обращаться?</h2>
+    <p class="lead" style="margin-bottom:16px">Чтобы дальше говорить по-человечески, а не «уважаемый пользователь».</p>
+    <input id="nm" type="text" placeholder="Имя" value="${P.name||''}" autocomplete="given-name">
+    <div class="nav"><button class="btn btn-primary" onclick="saveName()">Дальше →</button></div>
+    <span class="skip" onclick="skipName()">Пропустить</span>
+  </div>`;
+  const el=document.getElementById('nm'); if(el){el.focus();el.onkeydown=e=>{if(e.key==='Enter')saveName();};}
+}
+function saveName(){const v=(document.getElementById('nm')||{}).value||'';P.name=v.trim().slice(0,20);renderQById('goal');}
+function skipName(){P.name='';renderQById('goal');}
+function hi(){return P.name?P.name+', ':'';}
+function cap(t){return t.charAt(0).toUpperCase()+t.slice(1);}
 function renderAiLoading(txt){root.innerHTML=`<div class="screen card"><div class="loader"><div class="ring"></div><div class="loadtxt">${txt}</div></div></div>`;}
 
 function renderQById(id){
@@ -355,7 +412,44 @@ function pick(id,v){P[id]=v;markAsked(id);setTimeout(stepNext,140);}
 function pickMulti(id,v){let a=P[id]||[];if(v==='none')a=['none'];else{a=a.filter(x=>x!=='none');a.includes(v)?a=a.filter(x=>x!==v):a.push(v);}P[id]=a;renderQById(id);}
 function afterMulti(id){markAsked(id);stepNext();}
 function saveBody(){P.weight=parseInt(document.getElementById('w').value)||0;P.height=parseInt(document.getElementById('h').value)||0;markAsked('body');stepNext();}
-function stepNext(){if(asked.length>=16)return ensureFinish();if(AI_ENDPOINT)return aiNext();return localNext();}
+let insightShown=false;
+function insightText(){
+  const t=[];
+  if(P.freq==='5'||P.freq==='3_4')t.push('тренировок '+(P.freq==='5'?'пять и больше':'три-четыре')+' в неделю');
+  if(P.sleep==='hard'||P.sleep==='tired')t.push('со сном непросто');
+  if(P.stress==='high')t.push('стресса хватает');
+  if(P.sweet==='yes')t.push('вечером тянет на сладкое');
+  if(P.meals==='12')t.push('едите всего один-два раза в день');
+  if(!t.length)return null;
+  const facts=t.slice(0,2).join(', а ещё ');
+  let body='';
+  if((P.sleep==='hard'||P.sleep==='tired')&&(P.freq==='5'||P.freq==='3_4'))
+    body='Мышцы растут не в зале, а во сне. Если спать мало, а тренироваться много, усталость копится и результат стоит на месте — <b>значит упор нужен на восстановление</b>, а не только на белок.';
+  else if(P.meals==='12')
+    body='При одном-двух приёмах пищи набрать нужное количество белка обычной едой почти нереально — <b>придётся добирать порциями</b>, иначе тренировки уходят в пустоту.';
+  else if(P.sweet==='yes')
+    body='Вечерняя тяга на сладкое — это чаще всего нехватка энергии днём, а не слабая воля. <b>Её лечат режимом питания</b>, а не запретами.';
+  else
+    body='Это уже меняет набор: под такую нагрузку нужен <b>не только протеин</b>, но и то, что помогает держать темп.';
+  return {facts, body};
+}
+function renderInsight(){
+  const d=insightText(); if(!d)return stepNext(true);
+  root.innerHTML=`<div class="screen insight">
+    <div class="shot"></div><div class="veil"></div><span class="rhomb" style="top:26px;right:-14px"></span>
+    <div class="inner">
+      <div class="kicker">Уже кое-что видно</div>
+      <h2>${cap(hi()||'')}${hi()?'у вас':'У вас'} ${d.facts}</h2>
+      <p>${d.body}</p>
+      <button class="btn btn-accent" onclick="stepNext(true)">Понятно, дальше →</button>
+    </div>
+  </div>`;
+}
+function stepNext(skipInsight){
+  if(asked.length>=16)return ensureFinish();
+  if(!skipInsight&&!insightShown&&asked.length===6){insightShown=true;return renderInsight();}
+  if(AI_ENDPOINT)return aiNext();return localNext();
+}
 async function aiNext(){
   renderAiLoading('Подбираю следующий вопрос…');
   const available=Object.keys(QBANK).filter(id=>!asked.includes(id)).map(id=>({id,desc:DESC[id]||id}));
@@ -379,7 +473,57 @@ function finish(){
   P.health=P.health||[];let i=0;
   root.innerHTML=`<div class="screen card"><div class="loader"><div class="ring"></div><div class="loadtxt" id="lt">${loadMsgs[0]}</div></div></div>`;
   const t=setInterval(()=>{i++;const el=document.getElementById('lt');if(el&&loadMsgs[i])el.textContent=loadMsgs[i];},600);
-  setTimeout(()=>{clearInterval(t);renderResult();},2100);
+  setTimeout(()=>{clearInterval(t);renderMath();},2100);
+}
+
+function mathData(P){
+  const norm=proteinNorm(P); if(!norm)return null;
+  const f={'12':0.48,'3':0.62,'45':0.72}[P.meals]||0.6;
+  const food=Math.round(norm*f/5)*5;
+  const gap=Math.max(0,norm-food);
+  const port=Math.max(1,Math.round(gap/25));
+  const water=(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0)).toFixed(1).replace('.',',');
+  const meal={'12':'один-два раза в день','3':'три раза в день','45':'четыре-пять раз в день'}[P.meals]||'как получается';
+  return {norm,food,gap,port,water,meal};
+}
+function renderMath(){
+  const d=mathData(P); if(!d)return renderResult();
+  root.innerHTML=`<div class="screen mathscr">
+    <span class="glow"></span>
+    <img class="shaker" src="shaker.png" alt="" onerror="this.remove()">
+    <div class="inner">
+      <div class="kicker">Считаем по вашим ответам</div>
+      <h2>${hi()?cap(hi())+'вот':'Вот'} ваши цифры</h2>
+      <div class="calcrow"><div class="big">${d.norm} г</div><div class="cap">Столько белка в день нужно при весе ${P.weight} кг и вашей нагрузке.</div></div>
+      <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Примерно столько получается с обычной едой, если есть ${d.meal}.</div></div>
+      <div class="calcrow gap"><div class="big">${d.gap} г</div><div class="cap">Не хватает каждый день. Это ${d.port} ${d.port===1?'порция':d.port<5?'порции':'порций'} протеина — или недобор, который тормозит результат.</div></div>
+      <div class="foot2">Ещё ориентир: ${d.water} л воды в день. Дальше собрали набор, который закрывает эту разницу.</div>
+      <button class="btn btn-accent" onclick="renderResult()">Показать набор →</button>
+    </div>
+  </div>`;
+}
+
+function cmpWhy(x){
+  const d=mathData(P);
+  if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
+  const m={sleep:'потому что со сном непросто',stress:'потому что стресса хватает',energy:'потому что энергии на тренировке не хватает',
+    recovery:'потому что восстановление идёт медленно',immunity:'потому что часто простужаетесь',joints:'потому что суставы дают о себе знать',
+    swap:'ваша замена',sweet:'вместо вечернего сладкого',mass:'потому что вес набирается тяжело'};
+  return m[x.reason]||'под вашу цель и режим';
+}
+function cmpBlock(picks){
+  if(!picks.length)return '';
+  const li=picks.slice(0,4).map(x=>`<li><b style="color:#fff">${itemOf(x.id).name.split(',')[0]}</b> — ${cmpWhy(x)}</li>`).join('');
+  return `<div class="cmp">
+    <div class="ch">
+      <div class="col usual"><div class="ct">Обычно берут</div><ul>
+        <li>Протеин — потому что его берут все</li>
+        <li>Что посоветовал знакомый</li>
+        <li>Что было со скидкой</li></ul></div>
+      <div class="col ours"><div class="ct">Собрали вам</div><ul>${li}</ul></div>
+    </div>
+    <div class="note">Разница не в количестве банок, а в том, что справа собрано из ваших ответов${P.name?', '+P.name:''}.</div>
+  </div>`;
 }
 
 /* ---------- РЕЗУЛЬТАТ ---------- */
@@ -418,6 +562,7 @@ function renderResult(){
       <div style="margin-top:16px"><div class="qnum" style="margin-bottom:8px">Быстрая корректировка:</div><div id="chatlog"></div>
         <div class="chat-presets"><button class="chip" onclick="chat('cheap')">Дешевле</button><button class="chip" onclick="chat('noStim')">Без стимуляторов</button><button class="chip" onclick="chat('recovery')">Больше на восстановление</button></div></div>
     </div>
+    ${cmpBlock(picks)}
     <div class="save" id="savebox">
       <h2 style="font-size:16px">Сохранить подбор</h2>
       <p class="lead" style="font-size:13px;margin-bottom:12px">Пришлём набор и напомним, когда курс закончится.</p>
