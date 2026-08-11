@@ -513,7 +513,7 @@ function cmpWhy(x){
 }
 function cmpBlock(picks){
   if(!picks.length)return '';
-  const li=picks.slice(0,4).map(x=>{const it=itemOf(x.id);const nm=((it&&it.name)||'').split(',')[0].trim();
+  const li=picks.slice(0,4).map(x=>{const it=itemOf(x.id);const nm=((it&&(it.n||it.name))||'').split(',')[0].trim();
     return nm?`<li><b style="color:#fff">${nm}</b> — ${cmpWhy(x)}</li>`:'';}).filter(Boolean).join('');
   if(!li)return '';
   return `<div class="cmp">
