@@ -17,8 +17,8 @@ body{background:var(--bg);color:var(--text);font-family:"Roboto",-apple-system,B
 .topbar .wm{color:#fff;font-weight:900;letter-spacing:1px;font-size:17px}
 .topbar .tag{margin-left:auto;color:#c9cdd3;font-size:11px;font-weight:500}
 .wrap{display:flex;justify-content:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 28px);min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head))}
-.wrap:has(.hero),.wrap:has(.insight),.wrap:has(.mathscr){padding:0}
-.app:has(.hero),.app:has(.insight),.app:has(.mathscr){max-width:none}
+.wrap:has(.hero),.wrap:has(.insight),.wrap:has(.mathscr),.wrap:has(.milestone){padding:0}
+.app:has(.hero),.app:has(.insight),.app:has(.mathscr),.app:has(.milestone){max-width:none}
 .app{width:100%;max-width:var(--maxw)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .screen{animation:fade .3s ease}
@@ -225,20 +225,20 @@ h2{font-size:23px;line-height:1.05}
 
 /* ==== ВЕХА С ПРОЦЕНТОМ ==== */
 .milestone{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;align-items:center;justify-content:center;background:#0b0b0b;overflow:hidden;isolation:isolate;text-align:center}
-.milestone .shot{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2;animation:msIn 6s ease-out both}
-@keyframes msIn{from{transform:scale(1.14)}to{transform:scale(1.02)}}
-.milestone .veil{position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 50% at 50% 45%,rgba(8,8,8,.55),rgba(8,8,8,.9) 75%)}
-.milestone .in{padding:0 24px;max-width:520px}
-.msring{position:relative;width:190px;height:190px;margin:0 auto 22px}
-.msring svg{width:190px;height:190px;transform:rotate(-90deg)}
-.msring circle{fill:none;stroke-width:3}
-.msring .bg{stroke:rgba(255,255,255,.16)}
-.msring .fg{stroke:var(--yellow);stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1)}
-.msnum{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);font-style:italic;font-weight:900;font-size:56px;color:#fff;letter-spacing:-1px}
-.mstxt{color:#d6d8dc;font-size:15px;line-height:1.5;margin:0 0 6px}
-.mstxt b{color:#fff}
-.mssub{color:#9aa0a8;font-size:13.5px;line-height:1.5;margin:0 0 22px}
-@media(min-width:768px){.msring,.msring svg{width:230px;height:230px}.msnum{font-size:68px}}
+.milestone .shot{position:absolute;inset:0;background-size:cover;background-position:center 35%;z-index:-2;animation:msIn 7s ease-out both}
+@keyframes msIn{from{transform:scale(1.12)}to{transform:scale(1.02)}}
+.milestone .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(to bottom,rgba(8,8,8,.42),rgba(8,8,8,.30) 40%,rgba(8,8,8,.82))}
+.milestone .in{padding:0 24px;max-width:640px;width:100%}
+.msring{position:relative;width:min(60vw,300px);aspect-ratio:1;margin:0 auto 30px}
+.msring svg{width:100%;height:100%;transform:rotate(-90deg);filter:drop-shadow(0 4px 20px rgba(0,0,0,.5))}
+.msring circle{fill:none;stroke-width:2.5}
+.msring .bg{stroke:rgba(255,255,255,.22)}
+.msring .fg{stroke:#fff;stroke-linecap:round;transition:stroke-dashoffset 1.6s cubic-bezier(.2,.8,.2,1)}
+.msmid{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.msnum{font-family:var(--disp);font-style:italic;font-weight:900;font-size:clamp(46px,11vw,76px);color:#fff;line-height:1;letter-spacing:-1px;text-shadow:0 2px 20px rgba(0,0,0,.5)}
+.mscap{color:rgba(255,255,255,.85);font-size:13px;line-height:1.35;max-width:150px}
+.mstxt{color:#fff;font-size:clamp(20px,4.4vw,30px);line-height:1.15;margin:0 0 22px;text-shadow:0 2px 18px rgba(0,0,0,.6)}
+@media(min-width:768px){.msring{width:320px}}
 /* ==== ТЁМНЫЙ ОПРОС НА ФОТО ==== */
 body.quiz{background:#0b0b0b}
 body.quiz::before{content:"";position:fixed;inset:0;background:url("https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_bb9c5a7f-de82-46b8-9a77-499780e0bfdc.png") center 40%/cover no-repeat;filter:blur(3px) brightness(.34) saturate(.9);transform:scale(1.06);z-index:0;animation:bgIn 1.2s ease both}
@@ -641,11 +641,12 @@ const MS_IMG=["https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7M
 const MS_AT={3:0,6:1,9:2};
 let msShown={};
 function msLine(){
-  if(P.goal==='mass')return 'Уже видно: цель — масса. Значит основа набора будет калорийнее обычной.';
-  if(P.goal==='slim')return 'Уже видно: цель — снижение веса. Значит белок важнее калорий.';
-  if(P.sleep==='hard'||P.sleep==='tired')return 'Уже видно: со сном непросто — учтём это в наборе.';
-  if(P.freq==='5')return 'Уже видно: нагрузка серьёзная — набор будет под неё.';
-  return 'Ответы записаны, набор постепенно складывается.';
+  const nm=P.name?P.name+', ':'';
+  if(!asked.includes('sleep')&&!asked.includes('stress'))
+    return nm?nm+'основа набора ясна. Дальше — про режим и восстановление':'Основа набора ясна. Дальше — про режим и восстановление';
+  if(!asked.includes('meals')&&!asked.includes('diet_protein'))
+    return nm?nm+'дальше пара вопросов про еду — от них зависит расчёт':'Дальше пара вопросов про еду — от них зависит расчёт';
+  return nm?nm+'осталось немного — уточним детали и посчитаем цифры':'Осталось немного — уточним детали и посчитаем цифры';
 }
 function renderMilestone(n){
   document.body.classList.remove('quiz');
@@ -656,17 +657,16 @@ function renderMilestone(n){
     <div class="in">
       <div class="msring">
         <svg viewBox="0 0 190 190"><circle class="bg" cx="95" cy="95" r="88"></circle><circle class="fg" id="msfg" cx="95" cy="95" r="88" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle></svg>
-        <div class="msnum" id="msnum">0%</div>
+        <div class="msmid"><div class="msnum" id="msnum">0%</div><div class="mscap">вашего подбора готово</div></div>
       </div>
-      <p class="mstxt"><b>${hi()?hi():''}${msLine()}</b></p>
-      <p class="mssub">${pct}% вашего подбора готово</p>
+      <p class="mstxt">${msLine()}</p>
       <button class="btn btn-accent" onclick="stepNext(true)">Продолжить →</button>
     </div>
   </div>`;
   requestAnimationFrame(()=>{
     const c=document.getElementById('msfg'); if(c)c.setAttribute('stroke-dashoffset',(C*(1-pct/100)).toFixed(1));
     const el=document.getElementById('msnum'); let v=0;
-    const t=setInterval(()=>{v+=Math.max(1,Math.round(pct/22));if(v>=pct){v=pct;clearInterval(t);}if(el)el.textContent=v+'%';},40);
+    const t=setInterval(()=>{v+=Math.max(1,Math.round(pct/24));if(v>=pct){v=pct;clearInterval(t);}if(el)el.textContent=v+'%';},38);
   });
 }
 function renderInsight(){
