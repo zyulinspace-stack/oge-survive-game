@@ -17,8 +17,9 @@ body{background:var(--bg);color:var(--text);font-family:"Roboto",-apple-system,B
 .topbar .wm{color:#fff;font-weight:900;letter-spacing:1px;font-size:17px}
 .topbar .tag{margin-left:auto;color:#c9cdd3;font-size:11px;font-weight:500}
 .wrap{display:flex;justify-content:center;padding:16px 16px calc(env(safe-area-inset-bottom) + 28px);min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head))}
-.wrap:has(.hero),.wrap:has(.insight),.wrap:has(.mathscr),.wrap:has(.milestone){padding:0}
-.app:has(.hero),.app:has(.insight),.app:has(.mathscr),.app:has(.milestone){max-width:none}
+.wrap:has(.hero),.wrap:has(.insight),.wrap:has(.mathscr),.wrap:has(.milestone),.wrap:has(.loadscr){padding:0}
+.app:has(.hero),.app:has(.insight),.app:has(.mathscr),.app:has(.milestone),.app:has(.loadscr){max-width:none}
+@media(min-width:900px){.app:has(.rhead){max-width:820px}}
 .app{width:100%;max-width:var(--maxw)}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .screen{animation:fade .3s ease}
@@ -292,6 +293,28 @@ body.quiz .wrap{position:relative;z-index:2}
 .opt{transition:transform .12s ease,border-color .15s ease,background .15s ease}
 .opt:active{transform:scale(.985)}
 
+
+/* ==== ПОЛНОЭКРАННАЯ ЗАГРУЗКА ==== */
+.loadscr{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;align-items:center;justify-content:center;text-align:center;background:#0b0b0b;overflow:hidden;isolation:isolate}
+.loadscr .shot{position:absolute;inset:0;background-size:cover;background-position:center 40%;z-index:-2;filter:brightness(.5);animation:msIn 12s ease-out both}
+.loadscr .veil{position:absolute;inset:0;z-index:-1;background:radial-gradient(65% 55% at 50% 45%,rgba(8,8,8,.5),rgba(8,8,8,.93) 78%)}
+.loadscr .in{padding:0 24px;max-width:560px;width:100%}
+.lbar{height:4px;background:rgba(255,255,255,.16);border-radius:100px;overflow:hidden;margin:0 auto 10px;max-width:340px}
+.lbar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--accent-dk));border-radius:100px;transition:width .5s linear}
+.lpct{font-family:var(--disp);font-style:italic;font-weight:900;font-size:15px;color:var(--yellow);margin-bottom:34px}
+.lmsg{color:#fff;font-size:clamp(19px,4.2vw,28px);line-height:1.2;margin:0 0 8px;min-height:2.4em;transition:opacity .3s}
+.lnote{margin-top:30px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:14px 16px;color:#c9ced5;font-size:13px;line-height:1.5;backdrop-filter:blur(6px)}
+.lnote b{color:var(--yellow);display:block;margin-bottom:3px}
+/* ==== ШАПКА РЕЗУЛЬТАТА ==== */
+.rhead{background:var(--ink);color:#fff;border-radius:8px;padding:26px 22px;margin-bottom:16px;position:relative;overflow:hidden}
+.rhead::after{content:"";position:absolute;width:150px;height:150px;background:var(--yellow);opacity:.13;transform:rotate(45deg);right:-70px;top:-60px}
+.rhead h1{font-size:clamp(23px,5vw,34px);line-height:1.08;margin:0 0 10px;color:#fff;position:relative}
+.rhead h1 em{color:var(--yellow);font-style:italic}
+.rhead p{margin:0;color:#b9bec6;font-size:14px;line-height:1.5;position:relative}
+.rsteps{display:flex;gap:6px;margin-bottom:16px}
+.rstep{flex:1;text-align:center;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);padding-top:9px;border-top:3px solid #dcdee1}
+.rstep.on{color:var(--text);border-top-color:var(--yellow)}
+
 </style>
 </head>
 <body>
@@ -556,7 +579,7 @@ function renderAiLoading(txt){root.innerHTML=`<div class="screen card qcard"><di
 
 function renderQById(id){
   document.body.classList.add('quiz');
-  const q=QBANK[id];const pct=Math.min(94,Math.round(asked.length/13*100));const sel=P[id];let bd='';
+  const q=QBANK[id];const pct=Math.min(94,Math.round(asked.length/17*100));const sel=P[id];let bd='';
   if(q.type==='body'){
     bd=`<div class="bodygrid"><div class="field"><label>Вес, кг</label><input id="w" inputmode="numeric" value="${P.weight||''}" placeholder="80"></div><div class="field"><label>Рост, см</label><input id="h" inputmode="numeric" value="${P.height||''}" placeholder="180"></div></div><div class="nav"><button class="btn btn-primary" onclick="saveBody()">Далее →</button></div>`;
   } else if(q.multi){
@@ -646,7 +669,7 @@ function insightText(){
 }
 
 const MS_IMG=["https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_215728_29dd834e-22f5-4410-a06e-48719cbf4506.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_113208_1b181c57-5819-4fde-b05e-a4d5712d658a.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_aec48859-4b42-4bcf-be44-33dab1a696bc.png"];
-const MS_AT={3:0,6:1,9:2};
+const MS_AT={3:0,7:1,12:2};
 let msShown={};
 let msUsed=[];
 function msLine(n){
@@ -667,7 +690,7 @@ function msLine(n){
 }
 function renderMilestone(n){
   document.body.classList.remove('quiz');
-  const pct=Math.min(92,Math.round(asked.length/13*100));
+  const pct=Math.min(92,Math.round(asked.length/17*100));
   const C=2*Math.PI*88;
   root.innerHTML=`<div class="screen milestone">
     <div class="shot" style="background-image:url('${MS_IMG[MS_AT[n]]||MS_IMG[0]}')"></div><div class="veil"></div>
@@ -700,10 +723,10 @@ function renderInsight(){
   </div>`;
 }
 function stepNext(skipInsight){
-  if(asked.length>=16)return ensureFinish();
+  if(asked.length>=20)return ensureFinish();
   const n=asked.length;
   if(!skipInsight){
-    if(n===6&&!insightShown){insightShown=true;return renderInsight();}
+    if(n===5&&!insightShown){insightShown=true;return renderInsight();}
     if(MS_AT[n]!==undefined&&!msShown[n]){msShown[n]=1;return renderMilestone(n);}
   }
   if(AI_ENDPOINT)return aiNext();return localNext();
@@ -728,10 +751,38 @@ function localNext(){
 }
 function ensureFinish(){if(!asked.includes('body'))return renderQById('body');if(!asked.includes('health'))return renderQById('health');finish();}
 function finish(){
-  P.health=P.health||[];let i=0;
-  root.innerHTML=`<div class="screen card qcard"><div class="loader"><div class="ring"></div><div class="loadtxt" id="lt">${loadMsgs[0]}</div></div></div>`;
-  const t=setInterval(()=>{i++;const el=document.getElementById('lt');if(el&&loadMsgs[i])el.textContent=loadMsgs[i];},600);
-  setTimeout(()=>{clearInterval(t);renderMath();},2100);
+  P.health=P.health||[];
+  const d=mathData(P)||{};
+  const nm=P.name?P.name+', ':'';
+  const msgs=[
+    ['Считаем вашу норму', d.kcal?('При весе '+P.weight+' кг и вашей нагрузке выходит '+d.kcal+' ккал в день'):'Разбираем ответы про вес, нагрузку и режим'],
+    ['Смотрим, сколько добираете едой', d.gap?('С обычной едой получается около '+d.food+' г белка — не хватает '+d.gap+' г'):'Сравниваем норму с тем, что даёт обычная еда'],
+    ['Подбираем продукты под задачу', 'Перебираем каталог Prime Kraft — 187 позиций, проверяем состав и сочетаемость'],
+    ['Учитываем ваши ограничения', (P.health||[]).length&&!(P.health||[]).includes('none')?'Исключаем то, что вам не подходит':'Проверяем, чтобы ничего не конфликтовало между собой'],
+    ['Составляем план приёма', 'Раскладываем по времени суток: утро, до и после тренировки, вечер']
+  ];
+  let i=0;
+  root.innerHTML=`<div class="screen loadscr">
+    <div class="shot" style="background-image:url('${MS_IMG[1]}')"></div><div class="veil"></div>
+    <div class="in">
+      <div class="lbar"><i id="lb"></i></div>
+      <div class="lpct" id="lp">0%</div>
+      <p class="lmsg" id="lm"><b>${msgs[0][0]}</b><br><span style="font-size:.62em;color:#c9ced5;font-weight:400;font-family:'Roboto',sans-serif;font-style:normal">${msgs[0][1]}</span></p>
+      <div class="lnote"><b>${nm}это не шаблон</b>Набор собирается под ваши ответы: цель, нагрузку, сон и режим питания. Поэтому занимает несколько секунд.</div>
+    </div>
+  </div>`;
+  const step=()=>{
+    i++;
+    const el=document.getElementById('lm'), lb=document.getElementById('lb'), lp=document.getElementById('lp');
+    const pct=Math.round(i/msgs.length*100);
+    if(lb)lb.style.width=pct+'%'; if(lp)lp.textContent=pct+'%';
+    if(i<msgs.length&&el){
+      el.style.opacity=0;
+      setTimeout(()=>{el.innerHTML=`<b>${msgs[i][0]}</b><br><span style="font-size:.62em;color:#c9ced5;font-weight:400;font-family:'Roboto',sans-serif;font-style:normal">${msgs[i][1]}</span>`;el.style.opacity=1;},300);
+    }
+  };
+  const t=setInterval(()=>{step();if(i>=msgs.length){clearInterval(t);setTimeout(renderMath,700);}},1500);
+  requestAnimationFrame(()=>{const lb=document.getElementById('lb');if(lb)lb.style.width='6%';});
 }
 
 function mathData(P){
@@ -826,7 +877,11 @@ function renderResult(){
   }).join('');
   root.innerHTML=`<div class="screen">
     <div class="card">
-      <div class="kicker">Ваш персональный комплекс</div><div style="height:12px"></div>
+      <div class="rsteps"><div class="rstep on">Ваш набор</div><div class="rstep">Корзина</div><div class="rstep">Оформление</div></div>
+      <div class="rhead">
+        <h1>${P.name?P.name+', ваш':'Ваш'} <em>персональный комплекс</em> готов</h1>
+        <p>Собран из ${picks.length} продуктов Prime Kraft под вашу цель, нагрузку и режим. Ниже — расчёт, план приёма и обоснование по каждому продукту.</p>
+      </div>
       <div class="analysis" id="analysisbox">${analysisText(P)}</div>
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
       <div class="captured">${tags}</div>
