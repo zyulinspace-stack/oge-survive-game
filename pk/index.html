@@ -199,6 +199,13 @@ h2{font-size:23px;line-height:1.05}
 
 
 /* ==== ЛЕНДИНГ ==== */
+.facts{display:grid;grid-template-columns:1fr;gap:1px;background:#dcdee1;border:1px solid #dcdee1;border-radius:8px;overflow:hidden}
+.fact{background:var(--bg);padding:14px 15px}
+.fact b{display:block;font-size:14.5px;margin-bottom:3px;color:var(--text)}
+.fact span{font-size:12.5px;line-height:1.4;color:var(--muted)}
+.fact::before{content:"";display:inline-block;width:6px;height:6px;background:var(--yellow);transform:rotate(45deg);margin-right:8px;vertical-align:middle}
+.fact b{display:inline-block}
+@media(min-width:600px){.facts{grid-template-columns:1fr 1fr}}
 .sec{position:relative;width:100%;overflow:hidden}
 .sec .in{width:100%;max-width:var(--maxw);margin:0 auto;padding:52px 20px}
 .sec.dark{background:#0d0d0d;color:#fff}
@@ -526,22 +533,20 @@ function renderIntro(){
 
   <div class="sec light">
     <div class="in">
-      <div class="kicker">Почему это точнее</div>
-      <h2>Как в магазине —<br>и как здесь</h2>
-      <div class="cmp">
-        <div class="ch">
-          <div class="col usual"><div class="ct">Как в магазине</div><ul>
-            <li>Выбираете по названию и упаковке</li>
-            <li>Составы сравниваете сами</li>
-            <li>Сколько нужно именно вам — вопрос без ответа</li>
-            <li>Когда и с чем принимать — тоже</li></ul></div>
-          <div class="col ours"><div class="ct">Как здесь</div><ul>
-            <li>Считаем вашу норму белка от веса и нагрузки</li>
-            <li>Подбираем состав под цель, сон и режим питания</li>
-            <li>Показываем, сколько не хватает и чем закрыть</li>
-            <li>Даём план: что и когда принимать</li></ul></div>
-        </div>
-        <div class="note">Банки те же. Разница в том, что вам не нужно разбираться самому.</div>
+      <div class="kicker">Что мы учитываем</div>
+      <h2>Тридцать факторов,<br>а не только цель</h2>
+      <p class="sub">Каждый ответ меняет состав: одни продукты добавляются, другие исчезают. Поэтому два человека с одной целью получают разные наборы.</p>
+      <div class="facts">
+        <div class="fact"><b>Цель и сроки</b><span>похудение, масса, сила или форма</span></div>
+        <div class="fact"><b>Вес, рост, возраст, пол</b><span>из этого считается норма и калории</span></div>
+        <div class="fact"><b>Тренировки</b><span>сколько раз в неделю и какой формат</span></div>
+        <div class="fact"><b>Восстановление</b><span>как быстро отходите после нагрузки</span></div>
+        <div class="fact"><b>Питание</b><span>сколько приёмов пищи и много ли белка</span></div>
+        <div class="fact"><b>Сон</b><span>засыпание, ночные пробуждения, кофе после обеда</span></div>
+        <div class="fact"><b>Стресс и тяга на сладкое</b><span>когда накрывает и как проявляется</span></div>
+        <div class="fact"><b>ЖКТ и ограничения</b><span>лактоза, растительное питание, тяжесть после еды</span></div>
+        <div class="fact"><b>Здоровье</b><span>давление, аллергии — что исключить из набора</span></div>
+        <div class="fact"><b>Бюджет и вкусы</b><span>чтобы набор реально купили и допили</span></div>
       </div>
     </div>
   </div>
