@@ -222,6 +222,54 @@ h2{font-size:23px;line-height:1.05}
 .cta2 .disc2{margin-top:16px;font-size:11.5px;color:#8f959d;line-height:1.45}
 @media(min-width:768px){.sec .in{padding:78px 20px}.sec h2{font-size:38px}.cta2 h2{font-size:46px}}
 
+
+/* ==== ТЁМНЫЙ ОПРОС НА ФОТО ==== */
+body.quiz{background:#0b0b0b}
+body.quiz::before{content:"";position:fixed;inset:0;background:url("https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_bb9c5a7f-de82-46b8-9a77-499780e0bfdc.png") center 40%/cover no-repeat;filter:blur(3px) brightness(.34) saturate(.9);transform:scale(1.06);z-index:0;animation:bgIn 1.2s ease both}
+body.quiz::after{content:"";position:fixed;inset:0;background:radial-gradient(120% 80% at 50% 0%,rgba(255,205,0,.10),transparent 60%),linear-gradient(to bottom,rgba(8,8,8,.5),rgba(8,8,8,.86));z-index:0}
+@keyframes bgIn{from{opacity:0;transform:scale(1.12)}to{opacity:1;transform:scale(1.06)}}
+body.quiz .topbar{position:relative;z-index:3;background:rgba(14,14,14,.86);backdrop-filter:blur(8px)}
+body.quiz .wrap{position:relative;z-index:2}
+.qcard{background:rgba(18,18,18,.72);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.11);box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.qcard h2,.qcard .big{color:#fff}
+.qcard .lead,.qcard .qnum{color:#a9aeb6}
+.qcard .opt{background:rgba(255,255,255,.05);border-color:rgba(255,255,255,.13);color:#f0f1f3}
+.qcard .opt:hover{border-color:rgba(255,205,0,.5);background:rgba(255,255,255,.08)}
+.qcard .opt.sel{background:rgba(255,205,0,.13);border-color:var(--yellow);box-shadow:inset 0 0 0 1px var(--yellow)}
+.qcard .mark{border-color:rgba(255,255,255,.3)}
+.qcard .field input{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff}
+.qcard .namebox input,.qcard input[type=text]{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.14);color:#fff}
+.qcard .skip{color:#8f959d}
+.qcard .loadtxt{color:#b9bec6}
+.qcard .ring{border-color:rgba(255,255,255,.14);border-top-color:var(--yellow)}
+/* кольцо прогресса */
+.prog{display:flex;align-items:center;gap:14px;margin-bottom:18px}
+.prog svg{width:58px;height:58px;flex:0 0 58px;transform:rotate(-90deg)}
+.prog circle{fill:none;stroke-width:5;stroke-linecap:round}
+.prog .bg{stroke:rgba(255,255,255,.13)}
+.prog .fg{stroke:var(--yellow);transition:stroke-dashoffset .7s cubic-bezier(.3,.9,.3,1)}
+.prog .pv{position:absolute;font-family:var(--disp);font-style:italic;font-weight:900;font-size:15px;color:#fff}
+.prog .pw{position:relative;display:grid;place-items:center}
+.prog .plabel{font-size:13px;line-height:1.35;color:#a9aeb6}
+.prog .plabel b{display:block;color:#fff;font-size:14px}
+/* почему спрашиваем */
+.whyq{margin:4px 0 16px}
+.whyq button{background:none;border:0;padding:0;color:#9aa0a8;font:inherit;font-size:12.5px;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.whyq .body{display:none;margin-top:9px;background:rgba(255,205,0,.07);border:1px solid rgba(255,205,0,.22);border-radius:8px;padding:11px 13px;color:#d6d8dc;font-size:13px;line-height:1.5;animation:fade .25s ease}
+.whyq.open .body{display:block}
+/* анимации переходов */
+.screen{animation:qin .42s cubic-bezier(.22,.9,.25,1) both}
+@keyframes qin{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.qcard .opts .opt{animation:optin .4s cubic-bezier(.22,.9,.25,1) both}
+.qcard .opts .opt:nth-child(1){animation-delay:.05s}
+.qcard .opts .opt:nth-child(2){animation-delay:.10s}
+.qcard .opts .opt:nth-child(3){animation-delay:.15s}
+.qcard .opts .opt:nth-child(4){animation-delay:.20s}
+.qcard .opts .opt:nth-child(5){animation-delay:.25s}
+@keyframes optin{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
+.opt{transition:transform .12s ease,border-color .15s ease,background .15s ease}
+.opt:active{transform:scale(.985)}
+
 </style>
 </head>
 <body>
@@ -391,10 +439,11 @@ const loadMsgs=['Анализируем ваши ответы…','Считае�
 
 function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;renderIntro();}
 function renderIntro(){
+  document.body.classList.remove('quiz');
   root.innerHTML=`<div class="screen hero">
-    <div class="shot"></div><div class="veil"></div><span class="rhomb"></span>
+    <div class="shot"></div><div class="veil"></div>
     <div class="inner">
-      <div class="kicker">Подбор за 2 минуты</div>
+      <div class="kicker">Персональный подбор</div>
       <h1>Комплекс<em>под вашу цель</em></h1>
       <p class="lead">Ответьте на несколько вопросов — и получите набор под вашу цель, режим и бюджет, с планом приёма по дням. Подбор на основе AI и каталога Prime Kraft.</p>
       <div class="pills"><span class="pill">2 минуты</span><span class="pill">План приёма по дням</span><span class="pill">Любой продукт можно заменить</span></div>
@@ -407,7 +456,7 @@ function renderIntro(){
     <div class="veil" style="background:linear-gradient(90deg,rgba(10,10,10,.96) 30%,rgba(10,10,10,.72) 70%,rgba(10,10,10,.6) 100%)"></div>
     <div class="in">
       <div class="kicker">Как это работает</div>
-      <h2>Три шага, две минуты</h2>
+      <h2>Три шага<br>до вашего набора</h2>
       <div class="step"><div class="no">01</div><div><b>Отвечаете на вопросы</b><p>Не анкета из тридцати пунктов: следующий вопрос зависит от предыдущего ответа. Про цель, тренировки, сон и еду — то, что реально влияет на подбор.</p></div></div>
       <div class="step"><div class="no">02</div><div><b>Считаем ваши цифры</b><p>Сколько белка нужно при вашем весе и нагрузке, сколько выходит с обычной едой и какая между этим разница. Всё на экране, с пояснением каждой цифры.</p></div></div>
       <div class="step"><div class="no">03</div><div><b>Собираем набор</b><p>Продукты из каталога Prime Kraft, которые закрывают эту разницу, с планом приёма по времени суток и объяснением, зачем здесь каждая банка.</p></div></div>
@@ -431,20 +480,21 @@ function renderIntro(){
   <div class="sec light">
     <div class="in">
       <div class="kicker">Почему это точнее</div>
-      <h2>Обычно берут —<br>и что соберём вам</h2>
+      <h2>Как в магазине —<br>и как здесь</h2>
       <div class="cmp">
         <div class="ch">
-          <div class="col usual"><div class="ct">Обычно берут</div><ul>
-            <li>Протеин — потому что его берут все</li>
-            <li>Что посоветовал знакомый</li>
-            <li>Что было со скидкой</li></ul></div>
-          <div class="col ours"><div class="ct">Соберём вам</div><ul>
-            <li><b style="color:#fff">Протеин</b> — чтобы добрать те граммы, которых не хватает именно вам</li>
-            <li><b style="color:#fff">Креатин</b> — если тренировки силовые и их больше трёх в неделю</li>
-            <li><b style="color:#fff">Магний</b> — если со сном непросто</li>
-            <li><b style="color:#fff">Витамины</b> — если часто простужаетесь</li></ul></div>
+          <div class="col usual"><div class="ct">Как в магазине</div><ul>
+            <li>Выбираете по названию и упаковке</li>
+            <li>Составы сравниваете сами</li>
+            <li>Сколько нужно именно вам — вопрос без ответа</li>
+            <li>Когда и с чем принимать — тоже</li></ul></div>
+          <div class="col ours"><div class="ct">Как здесь</div><ul>
+            <li>Считаем вашу норму белка от веса и нагрузки</li>
+            <li>Подбираем состав под цель, сон и режим питания</li>
+            <li>Показываем, сколько не хватает и чем закрыть</li>
+            <li>Даём план: что и когда принимать</li></ul></div>
         </div>
-        <div class="note">Разница не в количестве банок, а в том, что справа собрано из ваших ответов.</div>
+        <div class="note">Банки те же. Разница в том, что вам не нужно разбираться самому.</div>
       </div>
     </div>
   </div>
@@ -453,8 +503,8 @@ function renderIntro(){
     <div class="shot" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_aec48859-4b42-4bcf-be44-33dab1a696bc.png');background-position:50% 50%"></div>
     <div class="veil" style="background:linear-gradient(to top,rgba(8,8,8,.95) 12%,rgba(8,8,8,.8) 50%,rgba(8,8,8,.7) 100%)"></div>
     <div class="in">
-      <h2>Две минуты —<br>и у вас есть план</h2>
-      <p class="sub">Без регистрации. Результат можно сохранить или сразу оформить заказ.</p>
+      <h2>Соберём комплекс<br>под вас</h2>
+      <p class="sub">Несколько вопросов — и у вас есть набор, расчёт и план приёма. Без регистрации.</p>
       <button class="btn btn-accent" onclick="beginQuiz()">Подобрать комплекс →</button>
       <div class="disc2">Не является медицинским назначением. При заболеваниях проконсультируйтесь со специалистом.</div>
     </div>
@@ -464,7 +514,8 @@ function renderIntro(){
 }
 function beginQuiz(){renderName();}
 function renderName(){
-  root.innerHTML=`<div class="screen card namebox">
+  document.body.classList.add('quiz');
+  root.innerHTML=`<div class="screen card qcard namebox">
     <h2>Как к вам обращаться?</h2>
     <p class="lead" style="margin-bottom:16px">Чтобы дальше говорить по-человечески, а не «уважаемый пользователь».</p>
     <input id="nm" type="text" placeholder="Имя" value="${P.name||''}" autocomplete="given-name">
@@ -477,9 +528,10 @@ function saveName(){const v=(document.getElementById('nm')||{}).value||'';P.name
 function skipName(){P.name='';renderQById('goal');}
 function hi(){return P.name?P.name+', ':'';}
 function cap(t){return t.charAt(0).toUpperCase()+t.slice(1);}
-function renderAiLoading(txt){root.innerHTML=`<div class="screen card"><div class="loader"><div class="ring"></div><div class="loadtxt">${txt}</div></div></div>`;}
+function renderAiLoading(txt){root.innerHTML=`<div class="screen card qcard"><div class="loader"><div class="ring"></div><div class="loadtxt">${txt}</div></div></div>`;}
 
 function renderQById(id){
+  document.body.classList.add('quiz');
   const q=QBANK[id];const pct=Math.min(94,Math.round(asked.length/13*100));const sel=P[id];let bd='';
   if(q.type==='body'){
     bd=`<div class="bodygrid"><div class="field"><label>Вес, кг</label><input id="w" inputmode="numeric" value="${P.weight||''}" placeholder="80"></div><div class="field"><label>Рост, см</label><input id="h" inputmode="numeric" value="${P.height||''}" placeholder="180"></div></div><div class="nav"><button class="btn btn-primary" onclick="saveBody()">Далее →</button></div>`;
@@ -490,14 +542,39 @@ function renderQById(id){
     bd=`<div class="opts">`+q.opts.map(o=>`<button class="opt ${sel===o.v?'sel':''}" onclick="pick('${id}','${o.v}')"><span class="mark"></span><span>${o.l}</span></button>`).join('')+`</div>`;
   }
   const showSkip=asked.length>=8;
-  root.innerHTML=`<div class="screen card">
-    <div class="progress"><i style="width:${pct}%"></i></div>
-    <div class="deepnote">Вопросы подстраиваются под ответы · <b>чем подробнее, тем точнее</b></div>
+  const C=2*Math.PI*25, off=C*(1-pct/100);
+  root.innerHTML=`<div class="screen card qcard">
+    <div class="prog">
+      <div class="pw"><svg viewBox="0 0 58 58"><circle class="bg" cx="29" cy="29" r="25"></circle><circle class="fg" cx="29" cy="29" r="25" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}" id="pfg"></circle></svg><span class="pv">${pct}%</span></div>
+      <div class="plabel"><b>вашего подбора готово</b>вопросы подстраиваются под ответы</div>
+    </div>
     <h2>${q.q}</h2>
-    ${q.hint?`<div class="hint">${q.hint}</div>`:'<div style="height:8px"></div>'}
+    ${whyBlock(id,q)}
     ${bd}
     ${showSkip?`<span class="skip" onclick="ensureFinish()">Хватит вопросов — показать подбор →</span>`:''}
   </div>`;
+  requestAnimationFrame(()=>{const c=document.getElementById('pfg');if(c)c.setAttribute('stroke-dashoffset',off.toFixed(1));});
+}
+const WHY={
+  goal:'Цель задаёт основу набора: под похудение и под набор массы нужны разные продукты и разные порции.',
+  freq:'От числа тренировок зависит, сколько белка вам нужно в день и нужен ли креатин.',
+  body:'Вес — единственный способ посчитать вашу норму белка в граммах, а не «на глаз».',
+  meals:'Чем реже вы едите, тем труднее добрать белок обычной едой — и тем больше приходится закрывать порциями.',
+  sleep:'Мышцы восстанавливаются во сне. Если сна мало, набор без поддержки восстановления работает вполсилы.',
+  stress:'На фоне стресса организм тратит больше магния и витаминов группы B — это видно по самочувствию.',
+  sweet:'Тяга на сладкое — обычно нехватка энергии днём. Это лечится режимом, а не запретами.',
+  budget:'Чтобы не предлагать набор, который вам не подходит по деньгам.',
+  experience:'Новичку и человеку со стажем нужны разные наборы: не хочется усложнять там, где не нужно.',
+  what_taken:'Если что-то уже подходило, логично оставить это в наборе.',
+  restrictions:'Чтобы не предложить то, что вам нельзя или не подходит по составу.',
+  digestion:'При тяжести и вздутии часть продуктов стоит заменить на более щадящие.',
+  immunity:'Частые простуды — повод добавить витамины, а не увеличивать нагрузку.',
+  joints:'При нагрузке на суставы состав набора меняется.'
+};
+function whyBlock(id,q){
+  const t=WHY[id]||q.hint||'';
+  if(!t)return '<div style="height:10px"></div>';
+  return `<div class="whyq" id="why_${id}"><button onclick="document.getElementById('why_${id}').classList.toggle('open')">Почему мы спрашиваем?</button><div class="body">${t}</div></div>`;
 }
 function markAsked(id){if(!asked.includes(id))asked.push(id);}
 function pick(id,v){P[id]=v;markAsked(id);setTimeout(stepNext,140);}
@@ -526,6 +603,7 @@ function insightText(){
   return {facts, body};
 }
 function renderInsight(){
+  document.body.classList.remove('quiz');
   const d=insightText(); if(!d)return stepNext(true);
   root.innerHTML=`<div class="screen insight">
     <div class="shot"></div><div class="veil"></div><span class="rhomb" style="top:26px;right:-14px"></span>
@@ -563,7 +641,7 @@ function localNext(){
 function ensureFinish(){if(!asked.includes('body'))return renderQById('body');if(!asked.includes('health'))return renderQById('health');finish();}
 function finish(){
   P.health=P.health||[];let i=0;
-  root.innerHTML=`<div class="screen card"><div class="loader"><div class="ring"></div><div class="loadtxt" id="lt">${loadMsgs[0]}</div></div></div>`;
+  root.innerHTML=`<div class="screen card qcard"><div class="loader"><div class="ring"></div><div class="loadtxt" id="lt">${loadMsgs[0]}</div></div></div>`;
   const t=setInterval(()=>{i++;const el=document.getElementById('lt');if(el&&loadMsgs[i])el.textContent=loadMsgs[i];},600);
   setTimeout(()=>{clearInterval(t);renderMath();},2100);
 }
@@ -579,6 +657,7 @@ function mathData(P){
   return {norm,food,gap,port,water,meal};
 }
 function renderMath(){
+  document.body.classList.remove('quiz');
   const d=mathData(P); if(!d)return renderResult();
   root.innerHTML=`<div class="screen mathscr">
     <span class="glow"></span>
@@ -623,6 +702,7 @@ function cmpBlock(picks){
 /* ---------- РЕЗУЛЬТАТ ---------- */
 function currentPicks(){return recommend(P,tweaks).map(x=>({origId:x.id,id:swaps[x.id]||x.id,reason:swaps[x.id]?'swap':x.reason})).filter(x=>!removed[x.origId]);}
 function renderResult(){
+  document.body.classList.remove('quiz');
   const picks=currentPicks();const sum=picks.reduce((a,x)=>a+itemOf(x.id).price,0);
   const tags=capturedTags(P).map(t=>`<span class="tag">${t}</span>`).join('');
   const cards=picks.map(x=>{
