@@ -453,7 +453,7 @@ const root=document.getElementById('root');
 let P={},asked=[],tweaks={},removed={},swaps={},swapWhy={},replacing=null;
 const loadMsgs=['Анализируем ваши ответы…','Считаем норму белка…','Сопоставляем с каталогом Prime Kraft…','Составляем персональный комплекс и план…'];
 
-function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;msShown={};renderIntro();}
+function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;msShown={};msUsed=[];renderIntro();}
 function renderIntro(){
   document.body.classList.remove('quiz');
   root.innerHTML=`<div class="screen hero">
@@ -540,7 +540,7 @@ function renderName(){
   </div>`;
   const el=document.getElementById('nm'); if(el){el.focus();el.onkeydown=e=>{if(e.key==='Enter')saveName();};}
 }
-function saveName(){const v=(document.getElementById('nm')||{}).value||'';P.name=v.trim().slice(0,20);renderQById('goal');}
+function saveName(){let v=((document.getElementById('nm')||{}).value||'').trim().slice(0,20);if(v)v=v.charAt(0).toUpperCase()+v.slice(1);P.name=v;renderQById('goal');}
 function skipName(){P.name='';renderQById('goal');}
 function hi(){return P.name?P.name+', ':'';}
 function cap(t){return t.charAt(0).toUpperCase()+t.slice(1);}
@@ -640,13 +640,22 @@ function insightText(){
 const MS_IMG=["https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_215728_29dd834e-22f5-4410-a06e-48719cbf4506.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_113208_1b181c57-5819-4fde-b05e-a4d5712d658a.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_aec48859-4b42-4bcf-be44-33dab1a696bc.png"];
 const MS_AT={3:0,6:1,9:2};
 let msShown={};
-function msLine(){
+let msUsed=[];
+function msLine(n){
   const nm=P.name?P.name+', ':'';
-  if(!asked.includes('sleep')&&!asked.includes('stress'))
-    return nm?nm+'основа набора ясна. Дальше — про режим и восстановление':'Основа набора ясна. Дальше — про режим и восстановление';
-  if(!asked.includes('meals')&&!asked.includes('diet_protein'))
-    return nm?nm+'дальше пара вопросов про еду — от них зависит расчёт':'Дальше пара вопросов про еду — от них зависит расчёт';
-  return nm?nm+'осталось немного — уточним детали и посчитаем цифры':'Осталось немного — уточним детали и посчитаем цифры';
+  const G={mass:'набор массы',slim:'снижение веса',strength:'сила и выносливость',health:'форма'}[P.goal];
+  const opts={
+    3:[ G?nm+'цель ясна — '+G+'. Дальше уточним режим и восстановление':nm+'основа набора ясна. Дальше — про режим и восстановление',
+        nm+'первое понятно. Дальше пара вопросов про нагрузку' ],
+    6:[ (P.sleep==='hard'||P.sleep==='tired')?nm+'видим: со сном непросто — это меняет набор':null,
+        (P.freq==='5'||P.freq==='3_4')?nm+'нагрузка серьёзная — учтём её в расчёте':null,
+        (P.meals==='12')?nm+'едите редко — значит белок придётся добирать порциями':null,
+        nm+'половина позади. Дальше — про еду и самочувствие' ],
+    9:[ nm+'почти всё. Осталось уточнить детали и посчитать вашу норму',
+        nm+'финальные вопросы — дальше сразу цифры и набор' ]
+  }[n]||[nm+'идём дальше'];
+  for(const t of opts){ if(t&&!msUsed.includes(t)){ msUsed.push(t); return t; } }
+  return nm+'идём дальше — осталось немного';
 }
 function renderMilestone(n){
   document.body.classList.remove('quiz');
@@ -659,7 +668,7 @@ function renderMilestone(n){
         <svg viewBox="0 0 190 190"><circle class="bg" cx="95" cy="95" r="88"></circle><circle class="fg" id="msfg" cx="95" cy="95" r="88" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle></svg>
         <div class="msmid"><div class="msnum" id="msnum">0%</div><div class="mscap">вашего подбора готово</div></div>
       </div>
-      <p class="mstxt">${msLine()}</p>
+      <p class="mstxt">${msLine(n)}</p>
       <button class="btn btn-accent" onclick="stepNext(true)">Продолжить →</button>
     </div>
   </div>`;
