@@ -4,12 +4,12 @@
     { "src": "**/*", "use": "@vercel/static" }
   ],
   "routes": [
-    { "src": "/", "dest": "/it.html" },
-    { "src": "/it-kolledzhi", "dest": "/it-obzor.html" },
+    { "src": "/", "dest": "/p9.html" },
     { "src": "/p9", "dest": "/p9.html" },
     { "src": "/p9.html", "dest": "/p9.html" },
     { "src": "/p9/policy", "dest": "/p9-policy.html" },
     { "src": "/p9/terms", "dest": "/p9-terms.html" },
+    { "src": "/it-kolledzhi", "dest": "/it-obzor.html" },
     { "src": "/logo.png", "dest": "/logo.png" },
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
     { "src": "/demo", "dest": "/demo.html" },
