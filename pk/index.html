@@ -223,6 +223,22 @@ h2{font-size:23px;line-height:1.05}
 @media(min-width:768px){.sec .in{padding:78px 20px}.sec h2{font-size:38px}.cta2 h2{font-size:46px}}
 
 
+/* ==== ВЕХА С ПРОЦЕНТОМ ==== */
+.milestone{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;align-items:center;justify-content:center;background:#0b0b0b;overflow:hidden;isolation:isolate;text-align:center}
+.milestone .shot{position:absolute;inset:0;background-size:cover;background-position:center;z-index:-2;animation:msIn 6s ease-out both}
+@keyframes msIn{from{transform:scale(1.14)}to{transform:scale(1.02)}}
+.milestone .veil{position:absolute;inset:0;z-index:-1;background:radial-gradient(60% 50% at 50% 45%,rgba(8,8,8,.55),rgba(8,8,8,.9) 75%)}
+.milestone .in{padding:0 24px;max-width:520px}
+.msring{position:relative;width:190px;height:190px;margin:0 auto 22px}
+.msring svg{width:190px;height:190px;transform:rotate(-90deg)}
+.msring circle{fill:none;stroke-width:3}
+.msring .bg{stroke:rgba(255,255,255,.16)}
+.msring .fg{stroke:var(--yellow);stroke-linecap:round;transition:stroke-dashoffset 1.5s cubic-bezier(.2,.8,.2,1)}
+.msnum{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--disp);font-style:italic;font-weight:900;font-size:56px;color:#fff;letter-spacing:-1px}
+.mstxt{color:#d6d8dc;font-size:15px;line-height:1.5;margin:0 0 6px}
+.mstxt b{color:#fff}
+.mssub{color:#9aa0a8;font-size:13.5px;line-height:1.5;margin:0 0 22px}
+@media(min-width:768px){.msring,.msring svg{width:230px;height:230px}.msnum{font-size:68px}}
 /* ==== ТЁМНЫЙ ОПРОС НА ФОТО ==== */
 body.quiz{background:#0b0b0b}
 body.quiz::before{content:"";position:fixed;inset:0;background:url("https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_bb9c5a7f-de82-46b8-9a77-499780e0bfdc.png") center 40%/cover no-repeat;filter:blur(3px) brightness(.34) saturate(.9);transform:scale(1.06);z-index:0;animation:bgIn 1.2s ease both}
@@ -437,7 +453,7 @@ const root=document.getElementById('root');
 let P={},asked=[],tweaks={},removed={},swaps={},swapWhy={},replacing=null;
 const loadMsgs=['Анализируем ваши ответы…','Считаем норму белка…','Сопоставляем с каталогом Prime Kraft…','Составляем персональный комплекс и план…'];
 
-function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;renderIntro();}
+function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;msShown={};renderIntro();}
 function renderIntro(){
   document.body.classList.remove('quiz');
   root.innerHTML=`<div class="screen hero">
@@ -556,20 +572,38 @@ function renderQById(id){
   requestAnimationFrame(()=>{const c=document.getElementById('pfg');if(c)c.setAttribute('stroke-dashoffset',off.toFixed(1));});
 }
 const WHY={
-  goal:'Цель задаёт основу набора: под похудение и под набор массы нужны разные продукты и разные порции.',
-  freq:'От числа тренировок зависит, сколько белка вам нужно в день и нужен ли креатин.',
-  body:'Вес — единственный способ посчитать вашу норму белка в граммах, а не «на глаз».',
-  meals:'Чем реже вы едите, тем труднее добрать белок обычной едой — и тем больше приходится закрывать порциями.',
-  sleep:'Мышцы восстанавливаются во сне. Если сна мало, набор без поддержки восстановления работает вполсилы.',
-  stress:'На фоне стресса организм тратит больше магния и витаминов группы B — это видно по самочувствию.',
-  sweet:'Тяга на сладкое — обычно нехватка энергии днём. Это лечится режимом, а не запретами.',
-  budget:'Чтобы не предлагать набор, который вам не подходит по деньгам.',
-  experience:'Новичку и человеку со стажем нужны разные наборы: не хочется усложнять там, где не нужно.',
-  what_taken:'Если что-то уже подходило, логично оставить это в наборе.',
-  restrictions:'Чтобы не предложить то, что вам нельзя или не подходит по составу.',
-  digestion:'При тяжести и вздутии часть продуктов стоит заменить на более щадящие.',
-  immunity:'Частые простуды — повод добавить витамины, а не увеличивать нагрузку.',
-  joints:'При нагрузке на суставы состав набора меняется.'
+  goal:'От цели зависит вся основа набора: на похудении нужен один состав и порции, на наборе массы — совсем другие.',
+  slim_amount:'Чем больше цель, тем дольше курс — от этого зависит объём упаковок, чтобы не покупать лишнее.',
+  slim_tried:'Если раньше срывались на еде или упирались в плато, набор нужно собирать иначе — с поддержкой в слабом месте.',
+  mass_appetite:'Если вес набирается тяжело, обычного протеина мало — нужен гейнер с калориями. Если легко, наоборот, лишние калории ни к чему.',
+  strength_focus:'Под силу и под выносливость работают разные продукты: креатин или аминокислоты.',
+  health_focus:'Чтобы добавить в набор то, что вы сами хотите подтянуть, а не то, что мы решили за вас.',
+  sex:'Норма белка и потребность в железе, магнии и витаминах у мужчин и женщин отличаются.',
+  age:'С возрастом меняется потребность в белке, витамине D и поддержке суставов.',
+  body:'Вес — единственный способ посчитать вашу норму белка в граммах, а не прикинуть на глаз.',
+  freq:'Чем чаще тренировки, тем выше расход белка и тем нужнее восстановление между ними.',
+  ttype:'Силовая работа и кардио изнашивают организм по-разному: под них нужны разные добавки.',
+  workout_energy:'Если сил не хватает уже на разминке, дело чаще в питании и сне, а не в мотивации. Это лечится другим составом.',
+  recovery_speed:'Если мышцы болят по три дня, набор должен закрывать восстановление, иначе следующая тренировка проходит вполсилы.',
+  experience:'Новичку не нужен сложный набор из пяти банок. Опытному, наоборот, нет смысла предлагать базу.',
+  what_taken:'Если что-то уже подходило вам раньше, логично оставить это в наборе, а не менять на новое.',
+  diet_protein:'Мясо, рыба, яйца и творог дают основную часть белка. Чем их меньше в рационе, тем больше приходится добирать порциями.',
+  meals:'Чем реже вы едите, тем труднее набрать норму белка обычной едой — организм просто не усваивает всё за один присест.',
+  water:'При нехватке воды хуже усваивается почти всё, включая добавки. Заодно посчитаем вашу норму.',
+  sleep:'Мышцы растут во сне, а не в зале. Если сна мало, набор без поддержки восстановления работает вполсилы.',
+  caffeine_pm:'Кофе после четырёх часов дня мешает заснуть, даже если вы этого не замечаете. Тогда упор в наборе смещается.',
+  sleep_wake:'Ночные пробуждения часто связаны с нехваткой магния — это видно по составу набора.',
+  stress:'На стрессе организм тратит больше магния и витаминов группы B, и обычной еды перестаёт хватать.',
+  stress_symptom:'По тому, как именно проявляется стресс, понятно, чего не хватает: сна, магния или энергии днём.',
+  sweet:'Тяга на сладкое — почти всегда нехватка энергии днём, а не слабая воля. Это решается режимом питания.',
+  sweet_when:'Вечерняя тяга и дневная лечатся по-разному, поэтому уточняем время.',
+  digestion:'При тяжести и вздутии часть продуктов стоит заменить на более щадящие — например, изолят вместо концентрата.',
+  restrictions:'Чтобы не предложить то, что вам нельзя: например, молочный протеин при непереносимости лактозы.',
+  health:'Чтобы исключить продукты, которые вам не подходят, и не навредить.',
+  immunity:'Частые простуды — повод добавить витамины и не увеличивать нагрузку, пока организм не восстановится.',
+  joints:'Если суставы дают о себе знать под нагрузкой, в набор идут омега-3 и коллаген.',
+  flavor:'Чтобы вы допили банку до конца, а не бросили на третий день из-за вкуса.',
+  budget:'Чтобы собрать набор, который вам по деньгам, а не отправлять вас закрывать вкладку.'
 };
 function whyBlock(id,q){
   const t=WHY[id]||q.hint||'';
@@ -602,6 +636,39 @@ function insightText(){
     body='Это уже меняет набор: под такую нагрузку нужен <b>не только протеин</b>, но и то, что помогает держать темп.';
   return {facts, body};
 }
+
+const MS_IMG=["https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_215728_29dd834e-22f5-4410-a06e-48719cbf4506.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_113208_1b181c57-5819-4fde-b05e-a4d5712d658a.png", "https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_aec48859-4b42-4bcf-be44-33dab1a696bc.png"];
+const MS_AT={3:0,6:1,9:2};
+let msShown={};
+function msLine(){
+  if(P.goal==='mass')return 'Уже видно: цель — масса. Значит основа набора будет калорийнее обычной.';
+  if(P.goal==='slim')return 'Уже видно: цель — снижение веса. Значит белок важнее калорий.';
+  if(P.sleep==='hard'||P.sleep==='tired')return 'Уже видно: со сном непросто — учтём это в наборе.';
+  if(P.freq==='5')return 'Уже видно: нагрузка серьёзная — набор будет под неё.';
+  return 'Ответы записаны, набор постепенно складывается.';
+}
+function renderMilestone(n){
+  document.body.classList.remove('quiz');
+  const pct=Math.min(92,Math.round(asked.length/13*100));
+  const C=2*Math.PI*88;
+  root.innerHTML=`<div class="screen milestone">
+    <div class="shot" style="background-image:url('${MS_IMG[MS_AT[n]]||MS_IMG[0]}')"></div><div class="veil"></div>
+    <div class="in">
+      <div class="msring">
+        <svg viewBox="0 0 190 190"><circle class="bg" cx="95" cy="95" r="88"></circle><circle class="fg" id="msfg" cx="95" cy="95" r="88" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${C.toFixed(1)}"></circle></svg>
+        <div class="msnum" id="msnum">0%</div>
+      </div>
+      <p class="mstxt"><b>${hi()?hi():''}${msLine()}</b></p>
+      <p class="mssub">${pct}% вашего подбора готово</p>
+      <button class="btn btn-accent" onclick="stepNext(true)">Продолжить →</button>
+    </div>
+  </div>`;
+  requestAnimationFrame(()=>{
+    const c=document.getElementById('msfg'); if(c)c.setAttribute('stroke-dashoffset',(C*(1-pct/100)).toFixed(1));
+    const el=document.getElementById('msnum'); let v=0;
+    const t=setInterval(()=>{v+=Math.max(1,Math.round(pct/22));if(v>=pct){v=pct;clearInterval(t);}if(el)el.textContent=v+'%';},40);
+  });
+}
 function renderInsight(){
   document.body.classList.remove('quiz');
   const d=insightText(); if(!d)return stepNext(true);
@@ -617,7 +684,11 @@ function renderInsight(){
 }
 function stepNext(skipInsight){
   if(asked.length>=16)return ensureFinish();
-  if(!skipInsight&&!insightShown&&asked.length===6){insightShown=true;return renderInsight();}
+  const n=asked.length;
+  if(!skipInsight){
+    if(n===6&&!insightShown){insightShown=true;return renderInsight();}
+    if(MS_AT[n]!==undefined&&!msShown[n]){msShown[n]=1;return renderMilestone(n);}
+  }
   if(AI_ENDPOINT)return aiNext();return localNext();
 }
 async function aiNext(){
