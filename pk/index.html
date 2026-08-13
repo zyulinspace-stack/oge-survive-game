@@ -190,6 +190,38 @@ h2{font-size:23px;line-height:1.05}
 .cmp ul{margin:0;padding:0}
 .cmp .note{padding:13px 15px;border-top:1px solid rgba(255,255,255,.1);color:#b9bec6;font-size:12.5px;line-height:1.45}
 
+
+/* ==== ЛЕНДИНГ ==== */
+.sec{position:relative;width:100%;overflow:hidden}
+.sec .in{width:100%;max-width:var(--maxw);margin:0 auto;padding:52px 20px}
+.sec.dark{background:#0d0d0d;color:#fff}
+.sec.light{background:#f1f1f1;color:var(--text)}
+.sec .shot{position:absolute;inset:0;background-size:cover;z-index:0}
+.sec .veil{position:absolute;inset:0;z-index:1}
+.sec .in{position:relative;z-index:2}
+.sec h2{font-size:28px;line-height:1.06;margin:0 0 8px}
+.sec.dark h2{color:#fff}
+.sec .sub{font-size:14.5px;line-height:1.5;margin:0 0 26px}
+.sec.dark .sub{color:#b9bec6}
+.sec.light .sub{color:var(--muted)}
+.step{display:flex;gap:15px;padding:16px 0;border-top:1px solid rgba(255,255,255,.12)}
+.sec.light .step{border-color:#dcdee1}
+.step:first-of-type{border-top:0}
+.step .no{font-family:var(--disp);font-style:italic;font-weight:900;font-size:26px;line-height:1;color:var(--yellow);flex:0 0 42px}
+.step b{display:block;font-size:16px;margin-bottom:5px}
+.step p{margin:0;font-size:13.5px;line-height:1.5;color:#b9bec6}
+.sec.light .step p{color:#5b6470}
+.ben{padding:15px 0;border-top:1px solid rgba(255,255,255,.12)}
+.ben:first-of-type{border-top:0}
+.ben b{display:block;font-size:16px;margin-bottom:4px;color:#fff}
+.ben p{margin:0;font-size:13.5px;line-height:1.5;color:#b9bec6}
+.trust{margin-top:22px;font-size:12.5px;color:#8f959d}
+.cta2{text-align:center}
+.cta2 h2{font-size:32px;margin-bottom:12px}
+.cta2 .sub{margin-bottom:22px}
+.cta2 .disc2{margin-top:16px;font-size:11.5px;color:#8f959d;line-height:1.45}
+@media(min-width:768px){.sec .in{padding:78px 20px}.sec h2{font-size:38px}.cta2 h2{font-size:46px}}
+
 </style>
 </head>
 <body>
@@ -368,7 +400,67 @@ function renderIntro(){
       <div class="pills"><span class="pill">2 минуты</span><span class="pill">План приёма по дням</span><span class="pill">Любой продукт можно заменить</span></div>
       <button class="btn btn-accent" onclick="beginQuiz()">Начать подбор →</button>
     </div>
-  </div>`;
+  </div>
+
+  <div class="sec dark">
+    <div class="shot" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_bb9c5a7f-de82-46b8-9a77-499780e0bfdc.png');background-position:60% 50%"></div>
+    <div class="veil" style="background:linear-gradient(90deg,rgba(10,10,10,.96) 30%,rgba(10,10,10,.72) 70%,rgba(10,10,10,.6) 100%)"></div>
+    <div class="in">
+      <div class="kicker">Как это работает</div>
+      <h2>Три шага, две минуты</h2>
+      <div class="step"><div class="no">01</div><div><b>Отвечаете на вопросы</b><p>Не анкета из тридцати пунктов: следующий вопрос зависит от предыдущего ответа. Про цель, тренировки, сон и еду — то, что реально влияет на подбор.</p></div></div>
+      <div class="step"><div class="no">02</div><div><b>Считаем ваши цифры</b><p>Сколько белка нужно при вашем весе и нагрузке, сколько выходит с обычной едой и какая между этим разница. Всё на экране, с пояснением каждой цифры.</p></div></div>
+      <div class="step"><div class="no">03</div><div><b>Собираем набор</b><p>Продукты из каталога Prime Kraft, которые закрывают эту разницу, с планом приёма по времени суток и объяснением, зачем здесь каждая банка.</p></div></div>
+    </div>
+  </div>
+
+  <div class="sec dark">
+    <div class="shot" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_215728_29dd834e-22f5-4410-a06e-48719cbf4506.png');background-position:75% 45%"></div>
+    <div class="veil" style="background:linear-gradient(90deg,rgba(10,10,10,.97) 34%,rgba(10,10,10,.7) 72%,rgba(10,10,10,.55) 100%)"></div>
+    <div class="in">
+      <div class="kicker">Что вы получите</div>
+      <h2>Не список товаров,<br>а решение</h2>
+      <div class="ben"><b>Набор под вашу задачу</b><p>От трёх до пяти продуктов, без лишнего. Если бюджет ограничен, соберём в него.</p></div>
+      <div class="ben"><b>План приёма по дням</b><p>Что и когда пить: утром, до тренировки, после, на ночь.</p></div>
+      <div class="ben"><b>Объяснение по каждому продукту</b><p>Почему он здесь именно у вас, со ссылкой на ваши ответы.</p></div>
+      <div class="ben"><b>Любой продукт можно заменить</b><p>Предложим альтернативу из каталога и объясним разницу.</p></div>
+      <div class="trust">187 позиций каталога Prime Kraft, цены и наличие подтягиваются с сайта.</div>
+    </div>
+  </div>
+
+  <div class="sec light">
+    <div class="in">
+      <div class="kicker">Почему это точнее</div>
+      <h2>Обычно берут —<br>и что соберём вам</h2>
+      <div class="cmp">
+        <div class="ch">
+          <div class="col usual"><div class="ct">Обычно берут</div><ul>
+            <li>Протеин — потому что его берут все</li>
+            <li>Что посоветовал знакомый</li>
+            <li>Что было со скидкой</li></ul></div>
+          <div class="col ours"><div class="ct">Соберём вам</div><ul>
+            <li><b style="color:#fff">Протеин</b> — чтобы добрать те граммы, которых не хватает именно вам</li>
+            <li><b style="color:#fff">Креатин</b> — если тренировки силовые и их больше трёх в неделю</li>
+            <li><b style="color:#fff">Магний</b> — если со сном непросто</li>
+            <li><b style="color:#fff">Витамины</b> — если часто простужаетесь</li></ul></div>
+        </div>
+        <div class="note">Разница не в количестве банок, а в том, что справа собрано из ваших ответов.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec dark cta2">
+    <div class="shot" style="background-image:url('https://d8j0ntlcm91z4.cloudfront.net/user_3F3KgyDYeiOSAVn7f4h8z7MUJVu/hf_20260811_212648_aec48859-4b42-4bcf-be44-33dab1a696bc.png');background-position:50% 50%"></div>
+    <div class="veil" style="background:linear-gradient(to top,rgba(8,8,8,.95) 12%,rgba(8,8,8,.8) 50%,rgba(8,8,8,.7) 100%)"></div>
+    <div class="in">
+      <h2>Две минуты —<br>и у вас есть план</h2>
+      <p class="sub">Без регистрации. Результат можно сохранить или сразу оформить заказ.</p>
+      <button class="btn btn-accent" onclick="beginQuiz()">Подобрать комплекс →</button>
+      <div class="disc2">Не является медицинским назначением. При заболеваниях проконсультируйтесь со специалистом.</div>
+    </div>
+  </div>
+`;
+  window.scrollTo(0,0);
 }
 function beginQuiz(){renderName();}
 function renderName(){
