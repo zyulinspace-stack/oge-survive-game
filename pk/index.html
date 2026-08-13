@@ -167,6 +167,12 @@ h2{font-size:23px;line-height:1.05}
 .mathscr .glow{position:absolute;left:-20%;top:-10%;width:70%;height:70%;background:radial-gradient(circle,rgba(255,205,0,.13),transparent 65%);pointer-events:none;z-index:0}
 .mathscr .inner{position:relative;z-index:1;width:100%;max-width:var(--maxw);margin:0 auto;padding:28px 20px calc(env(safe-area-inset-bottom) + 28px)}
 .mathscr h2{color:#fff;font-size:30px;line-height:1.06;margin:0 0 18px}
+.kbju{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:0 0 18px;padding-bottom:16px;border-bottom:1px solid rgba(255,255,255,.12)}
+.kb{display:flex;flex-direction:column;gap:3px}
+.kbv{font-family:var(--disp);font-style:italic;font-weight:900;font-size:22px;color:#fff;line-height:1}
+.kb:first-child .kbv{color:var(--yellow)}
+.kbl{font-size:11px;color:#9aa0a8;letter-spacing:.2px}
+@media(min-width:768px){.kbv{font-size:28px}.kbl{font-size:12px}}
 .calcrow{border-top:1px solid rgba(255,255,255,.12);padding:14px 0}
 .calcrow:first-of-type{border-top:0}
 .calcrow .big{font-family:var(--disp);font-style:italic;font-weight:900;font-size:38px;line-height:1;color:#fff;letter-spacing:-.5px}
@@ -308,6 +314,7 @@ const CAT={
   gainer:{n:'Гейнер Mass Gainer',c:'gainer',price:1700,url:'/catalog/geyner-mass-gainer/',img:'/upload/delight.webpconverter/upload/iblock/ab2/9lr5dfk7cmm2u46ffq2dtvplwm0y9d0o.png.webp',flav:1},
   creatine:{n:'Креатин моногидрат',c:'creatine',price:2432,url:'/catalog/creatine-monohydrate/',img:'/upload/delight.webpconverter/upload/iblock/88c/01hv02sflroz56g0tiwajfpee3s98nmw.png.webp'},
   lcarnitine:{n:'L-carnitine, порошок',c:'carnitine',price:2390,url:'/catalog/aminokisloty/zhiroszhigatel-l-carnitine-l-tartrate/',img:'/upload/delight.webpconverter/upload/iblock/527/527bb509f3618f4525dfe048703edbed.png.webp'},
+  chrome:{n:'Хром хелат',c:'vitamins2',price:590,url:'/catalog/vitaminy-i-dobavki/',img:''},
   magnesium:{n:'Магний B6',c:'magnesium',price:550,url:'/catalog/vitaminy-i-dobavki/magniy-b6/',img:'/upload/delight.webpconverter/upload/iblock/a7b/w6a9pmqvdr4tvmfzd67qlj51b4nfbl5t.png.webp'},
   ltheanine:{n:'Л-теанин, 90 капс',c:'vitamins',price:1350,url:'/catalog/vitaminy-i-dobavki/aminokisloty-kapsuly/l-teanin/',img:'/upload/delight.webpconverter/upload/iblock/431/wpo3eu8t5rfbwavqosbhn33y9ma6vhnv.png.webp'},
   omega3:{n:'Омега-3 1000 мг',c:'omega',price:1150,url:'/catalog/vitaminy-i-dobavki/zhyry-omega-3/',img:'/upload/delight.webpconverter/upload/iblock/aea/safcgmjdxx6cos0ipenyw1j86fd2l8fd.png.webp'},
@@ -332,7 +339,7 @@ const QBANK={
   age:{q:'Сколько вам лет?',opts:[{v:'u25',l:'До 25',em:'🙂'},{v:'25_35',l:'25–35',em:'😎'},{v:'35_45',l:'35–45',em:'💼'},{v:'o45',l:'45+',em:'🧭'}]},
   body:{q:'Вес и рост?',hint:'Посчитаем вашу дневную норму белка.',type:'body'},
   freq:{q:'Сколько тренировок в неделю?',opts:[{v:'0',l:'Пока не тренируюсь',em:'🛋️'},{v:'1_2',l:'1–2',em:'🚶'},{v:'3_4',l:'3–4',em:'🏋️'},{v:'5',l:'5 и больше',em:'🔥'}]},
-  ttype:{q:'Какой формат нагрузки?',opts:[{v:'strength',l:'Силовые',em:'🏋️'},{v:'cardio',l:'Кардио',em:'🏃'},{v:'mixed',l:'Смешанное',em:'🤸'}]},
+  ttype:{q:'Какой формат нагрузки вам ближе?',hint:'Если пока не тренируетесь — выберите то, к чему тянет: подберём набор с запасом на старт.',opts:[{v:'strength',l:'Силовые — железо, тренажёры',em:'🏋️'},{v:'cardio',l:'Кардио — бег, ходьба, велосипед',em:'🏃'},{v:'mixed',l:'Смешанное — и то, и другое',em:'🤸'},{v:'none_yet',l:'Пока не тренируюсь',em:'🛋️'}]},
   workout_energy:{q:'Хватает энергии на тренировке?',opts:[{v:'low',l:'Часто вялость, нет драйва',em:'🪫'},{v:'ok',l:'В целом норм',em:'🔋'}]},
   recovery_speed:{q:'Как восстанавливаетесь?',hint:'Долго ли болят мышцы после нагрузки.',opts:[{v:'slow',l:'Долго болят, тяжело',em:'🐌'},{v:'ok',l:'Нормально',em:'👍'}]},
   experience:{q:'Опыт приёма спортпита?',opts:[{v:'novice',l:'Новичок',em:'🌱'},{v:'exp',l:'Есть опыт',em:'🎓'}]},
@@ -349,7 +356,7 @@ const QBANK={
   sweet_when:{q:'Когда сильнее тянет?',opts:[{v:'evening',l:'Вечером',em:'🌆'},{v:'afternoon',l:'Днём',em:'🏙️'},{v:'allday',l:'Весь день',em:'🔁'}]},
   digestion:{q:'Как с ЖКТ?',hint:'Вздутие, тяжесть после еды.',opts:[{v:'ok',l:'Всё ок',em:'✅'},{v:'issues',l:'Бывает тяжесть / вздутие',em:'🎈'}]},
   restrictions:{q:'Пищевые ограничения?',opts:[{v:'none',l:'Нет',em:'✅'},{v:'vegan',l:'Веган / растительное',em:'🌱'},{v:'no_lactose',l:'Без лактозы',em:'🥛'}]},
-  health:{q:'Что-то из этого есть?',hint:'Нужно, чтобы исключить лишние стимуляторы. Безопасность важнее.',multi:true,opts:[{v:'hyper',l:'Повышенное давление / сердце',em:'❤️'},{v:'preg',l:'Беременность / ГВ',em:'🤰'},{v:'none',l:'Ничего из этого',em:'👍'}]},
+  health:{q:'Что-то из этого есть?',hint:'Нужно, чтобы исключить лишние стимуляторы. Безопасность важнее.',multi:true,opts:[{v:'hyper',l:'Повышенное давление / сердце',em:'❤️'},{v:'preg',l:'Беременность / ГВ',em:'🤰'},{v:'allergy',l:'Аллергия или непереносимость',em:'🌾'},{v:'none',l:'Ничего из этого',em:'👍'}]},
   immunity:{q:'Часто простужаетесь?',opts:[{v:'often',l:'Да, цепляю всё',em:'🤧'},{v:'rare',l:'Редко',em:'💪'}]},
   joints:{q:'Суставы и связки под нагрузкой?',opts:[{v:'yes',l:'Похрустывают / побаливают',em:'🦴'},{v:'no',l:'Не беспокоят',em:'👌'}]},
   flavor:{q:'Вкусовые предпочтения?',hint:'Подберём вкус протеина и батончиков.',opts:[{v:'choco',l:'Шоколад / кофе',em:'🍫'},{v:'vanilla',l:'Ваниль / карамель',em:'🍦'},{v:'berry',l:'Ягоды / фрукты',em:'🍓'},{v:'neutral',l:'Нейтральный',em:'🤍'}]},
@@ -370,7 +377,7 @@ function recommend(P,tweaks){
   const proteinReason=P.restrictions==='vegan'?'vegan':null;
   const picks=[];const seenCat={};
   const add=(id,reason)=>{if(picks.find(x=>x.id===id))return;const c=CAT[id].c;if(seenCat[c])return;seenCat[c]=1;picks.push({id,reason});};
-  if(P.goal==='slim'){add(proteinId,proteinReason||'anchor_slim');if(trains&&strengthTraining&&!stimBlocked)add('lcarnitine','lcarn');}
+  if(P.goal==='slim'){add(proteinId,proteinReason||'anchor_slim');if(!stimBlocked)add('lcarnitine','lcarn');if(P.sweet==='yes'||P.slim_tried==='sryv'||P.meals==='12')add('chrome','appetite');if((P.freq==='0'||P.freq==='1_2'))add('omega3','slim_omega');}
   else if(P.goal==='mass'){add('gainer','anchor_mass');add('creatine','creatine');add(proteinId,proteinReason||'protein_support');}
   else if(P.goal==='strength'){add('creatine','anchor_strength');if(!stimBlocked&&(P.workout_energy==='low'||P.freq==='5'))add('preworkout','energy');else add('citrulline','energy');add(proteinId,proteinReason||'recovery');}
   else{add('omega3','joints');add('vitc','immunity');add(proteinId,proteinReason||'protein_support');}
@@ -429,7 +436,8 @@ function whyText(id,P){
     case 'casein': return 'Медленный белок на ночь — работает, пока вы спите.';
     case 'gainer': return (P.mass_appetite==='hard'?'Вам тяжело набирать вес — ':'')+'концентрат калорий и белка, когда едой норму не добрать.';
     case 'creatine': return P.strength_focus==='endur'?'Плюс к выносливости и восстановлению. Без стимуляторов.':'Плюс к силе и рабочим весам — самая доказанная добавка, без стимуляторов.';
-    case 'lcarnitine': return 'Похудение + силовые — поддержит жиросжигание, без стимуляторов, сон не тронет.';
+    case 'lcarnitine': return 'Помогает организму использовать жир как топливо'+((P.freq==='0'||P.freq==='1_2')?', даже когда тренировок немного':' на тренировках')+'. Без стимуляторов, сон не тронет.';
+    case 'chrome': return (P.sweet==='yes'?'Тянет на сладкое — ':'')+'хром помогает ровнее держать аппетит, а значит легче не срываться.';
     case 'magnesium': if(P.stress==='high'&&P.sleep!=='good')return 'Стресс и проблемы со сном — магний B6 помогает нервной системе и засыпанию.'; if(P.sleep==='tired')return 'Просыпаетесь разбитым — магний улучшает глубину сна.'; return 'Поддержка сна, нервной системы и восстановления.';
     case 'ltheanine': return 'Тревожность на стрессе — L-теанин мягко успокаивает без сонливости.';
     case 'bar': return 'Замена вечерним срывам на сладкое'+(P.sweet_when==='evening'?' — как раз под ваши вечера':'')+': вкус есть, диета не страдает.';
@@ -727,14 +735,22 @@ function finish(){
 }
 
 function mathData(P){
-  const norm=proteinNorm(P); if(!norm)return null;
+  const norm=proteinNorm(P); if(!norm||!P.weight)return null;
   const f={'12':0.48,'3':0.62,'45':0.72}[P.meals]||0.6;
   const food=Math.round(norm*f/5)*5;
   const gap=Math.max(0,norm-food);
   const port=Math.max(1,Math.round(gap/25));
   const water=(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0)).toFixed(1).replace('.',',');
   const meal={'12':'один-два раза в день','3':'три раза в день','45':'четыре-пять раз в день'}[P.meals]||'как получается';
-  return {norm,food,gap,port,water,meal};
+  const age={u25:22,'25_35':30,'35_45':40,o45:50}[P.age]||30;
+  const h=P.height||(P.sex==='f'?165:178);
+  const bmr=10*P.weight+6.25*h-5*age+(P.sex==='f'?-161:5);
+  const act={'0':1.3,'1_2':1.4,'3_4':1.55,'5':1.7}[P.freq]||1.4;
+  const gk={slim:0.82,mass:1.12,strength:1.05,health:1}[P.goal]||1;
+  const kcal=Math.round(bmr*act*gk/10)*10;
+  const fat=Math.round(P.weight*(P.goal==='slim'?0.9:1.0));
+  const carb=Math.max(60,Math.round((kcal-norm*4-fat*9)/4));
+  return {norm,food,gap,port,water,meal,kcal,fat,carb};
 }
 function renderMath(){
   document.body.classList.remove('quiz');
@@ -745,10 +761,15 @@ function renderMath(){
     <div class="inner">
       <div class="kicker">Считаем по вашим ответам</div>
       <h2>${hi()?cap(hi())+'вот':'Вот'} ваши цифры</h2>
-      <div class="calcrow"><div class="big">${d.norm} г</div><div class="cap">Столько белка в день нужно при весе ${P.weight} кг и вашей нагрузке.</div></div>
-      <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Примерно столько получается с обычной едой, если есть ${d.meal}.</div></div>
+      <div class="kbju">
+        <div class="kb"><span class="kbv">${d.kcal}</span><span class="kbl">ккал в день</span></div>
+        <div class="kb"><span class="kbv">${d.norm} г</span><span class="kbl">белки</span></div>
+        <div class="kb"><span class="kbv">${d.fat} г</span><span class="kbl">жиры</span></div>
+        <div class="kb"><span class="kbv">${d.carb} г</span><span class="kbl">углеводы</span></div>
+      </div>
+      <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Столько белка получается с обычной едой, если есть ${d.meal}.</div></div>
       <div class="calcrow gap"><div class="big">${d.gap} г</div><div class="cap">Не хватает каждый день. Это ${d.port} ${d.port===1?'порция':d.port<5?'порции':'порций'} протеина — или недобор, который тормозит результат.</div></div>
-      <div class="foot2">Ещё ориентир: ${d.water} л воды в день. Дальше собрали набор, который закрывает эту разницу.</div>
+      <div class="foot2">${P.goal==='slim'?'Продукты в наборе почти без жиров и сахара — белок добираете, а в калории укладываетесь. ':''}Ещё ориентир: ${d.water} л воды в день.</div>
       <button class="btn btn-accent" onclick="renderResult()">Показать набор →</button>
     </div>
   </div>`;
@@ -757,7 +778,7 @@ function renderMath(){
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
-  const m={sleep:'потому что со сном непросто',stress:'потому что стресса хватает',energy:'потому что энергии на тренировке не хватает',
+  const m={appetite:'чтобы держать аппетит под контролем',lcarn:'для поддержки при снижении веса',slim_omega:'чтобы закрыть базу при небольшой нагрузке',sleep:'потому что со сном непросто',stress:'потому что стресса хватает',energy:'потому что энергии на тренировке не хватает',
     recovery:'потому что восстановление идёт медленно',immunity:'потому что часто простужаетесь',joints:'потому что суставы дают о себе знать',
     swap:'ваша замена',sweet:'вместо вечернего сладкого',mass:'потому что вес набирается тяжело'};
   return m[x.reason]||'под вашу цель и режим';
@@ -895,7 +916,7 @@ function itemOf(id){
   if(!v)return c;
   return Object.assign({},c,{
     n:v.name||c.n, price:v.price||c.price, old:v.oldprice||c.old,
-    img:v.img||c.img, url:v.url||c.url, available:v.available,
+    img:v.img||c.img, url:c.url, available:v.available,
     flavName:v.flavName||'', size:v.size||'', tags:v.tags||[], variants:c.variants
   });
 }
