@@ -567,8 +567,7 @@ function beginQuiz(){renderName();}
 function renderName(){
   document.body.classList.add('quiz');
   root.innerHTML=`<div class="screen card qcard namebox">
-    <h2>Как к вам обращаться?</h2>
-    <p class="lead" style="margin-bottom:16px">Чтобы дальше говорить по-человечески, а не «уважаемый пользователь».</p>
+    <h2 style="margin-bottom:16px">Как к вам обращаться?</h2>
     <input id="nm" type="text" placeholder="Имя" value="${P.name||''}" autocomplete="given-name">
     <div class="nav"><button class="btn btn-primary" onclick="saveName()">Дальше →</button></div>
     <span class="skip" onclick="skipName()">Пропустить</span>
