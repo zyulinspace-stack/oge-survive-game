@@ -204,7 +204,7 @@ h2{font-size:23px;line-height:1.05}
 .fact::before{content:"";position:absolute;left:15px;top:19px;width:6px;height:6px;background:var(--yellow);transform:rotate(45deg)}
 .fact b{display:block;font-size:14.5px;line-height:1.25;margin-bottom:4px;color:var(--text)}
 .fact span{display:block;font-size:12.5px;line-height:1.4;color:var(--muted)}
-@media(min-width:600px){.facts{grid-template-columns:1fr 1fr}}}
+@media(min-width:600px){.facts{grid-template-columns:1fr 1fr}}
 .sec{position:relative;width:100%;overflow:hidden}
 .sec .in{width:100%;max-width:var(--maxw);margin:0 auto;padding:52px 20px}
 .sec.dark{background:#0d0d0d;color:#fff}
@@ -320,6 +320,22 @@ body.quiz .wrap{position:relative;z-index:2}
 .rsteps{display:flex;gap:6px;margin-bottom:16px}
 .rstep{flex:1;text-align:center;font-size:11px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);padding-top:9px;border-top:3px solid #dcdee1}
 .rstep.on{color:var(--text);border-top-color:var(--yellow)}
+
+
+.match{background:var(--surface);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:16px 0}
+.match .mh{background:var(--surface2);padding:12px 15px;font-family:var(--disp);font-style:italic;font-weight:900;text-transform:uppercase;font-size:13px;letter-spacing:.4px;border-bottom:1px solid var(--border)}
+.mrow{display:grid;grid-template-columns:1fr;gap:2px;padding:12px 15px;border-top:1px solid var(--border)}
+.mrow:first-of-type{border-top:0}
+.mrow .ans{font-size:13px;color:var(--muted)}
+.mrow .ans b{color:var(--text);font-weight:700}
+.mrow .did{font-size:13.5px;line-height:1.4;color:var(--text)}
+.mrow .did::before{content:"→ ";color:var(--accent-dk);font-weight:900}
+@media(min-width:600px){.mrow{grid-template-columns:0.9fr 1.1fr;gap:14px;align-items:baseline}}
+.econ{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0}
+.ec{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 13px}
+.ec b{display:block;font-family:var(--disp);font-style:italic;font-weight:900;font-size:20px;line-height:1;margin-bottom:4px}
+.ec span{font-size:11.5px;color:var(--muted);line-height:1.3;display:block}
+.prod .dose{font-size:12px;color:#a8790a;margin-top:3px;font-weight:600}
 
 </style>
 </head>
@@ -790,11 +806,13 @@ function finish(){
 
 function mathData(P){
   const norm=proteinNorm(P); if(!norm||!P.weight)return null;
-  const f={'12':0.48,'3':0.62,'45':0.72}[P.meals]||0.6;
-  const food=Math.round(norm*f/5)*5;
+  const perMeal={'12':2,'3':3,'45':4.5}[P.meals]||3;
+  const q={high:32,mid:26,low:18}[P.diet_protein]||24;
+  let food=Math.round(perMeal*q/5)*5;
+  food=Math.min(food,Math.round(norm*0.85/5)*5);
   const gap=Math.max(0,norm-food);
-  const port=Math.max(1,Math.round(gap/25));
-  const water=(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0)).toFixed(1).replace('.',',');
+  const port=Math.max(1,Math.min(4,Math.round(gap/25)));
+  const water=Math.min(4,(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0))).toFixed(1).replace('.',',');
   const meal={'12':'один-два раза в день','3':'три раза в день','45':'четыре-пять раз в день'}[P.meals]||'как получается';
   const age={u25:22,'25_35':30,'35_45':40,o45:50}[P.age]||30;
   const h=P.height||(P.sex==='f'?165:178);
@@ -829,6 +847,50 @@ function renderMath(){
   </div>`;
 }
 
+
+function doseOf(id,it){
+  const g=parseInt(String(it.size||'').replace(/\s/g,''))||0;
+  const caps=/капс|таб|шт/i.test(it.size||it.n||'')?g:0;
+  const M={whey:30,plant:30,casein:30,gainer:100,creatine:5,bcaa:10,citrulline:6,preworkout:12,bar:60,cookie:40,isotonic:20};
+  if(M[id]&&g&&!caps)return {perDay:M[id],days:Math.floor(g/M[id]),unit:'г'};
+  if(caps)return {perDay:2,days:Math.floor(caps/2),unit:'капс'};
+  return null;
+}
+function econBlock(picks,sum){
+  let minDays=99, ok=0;
+  picks.forEach(x=>{const d=doseOf(x.id,itemOf(x.id)); if(d&&d.days){ok++; if(d.days<minDays)minDays=d.days;}});
+  if(!ok)return '';
+  const days=Math.max(15,Math.min(60,minDays));
+  const perDay=Math.round(sum/days);
+  return `<div class="econ">
+    <div class="ec"><b>${days} дн.</b><span>на столько хватит набора</span></div>
+    <div class="ec"><b>${perDay} ₽</b><span>в день на всём наборе</span></div>
+    <div class="ec"><b>${picks.length}</b><span>продукта под вашу задачу</span></div>
+  </div>`;
+}
+function matchBlock(P){
+  const d=mathData(P)||{};
+  const R=[];
+  const G={slim:'снижение веса',mass:'набор массы',strength:'сила и выносливость',health:'поддержание формы'}[P.goal];
+  if(G)R.push([`Цель: <b>${G}</b>`, P.goal==='mass'?'Основой сделали гейнер — он калорийнее протеина':P.goal==='slim'?'Основа — протеин без лишних калорий, плюс поддержка жиросжигания':'Основа подобрана под нагрузку, а не «на всякий случай»']);
+  if(P.weight)R.push([`Вес: <b>${P.weight} кг</b>${P.freq?', тренировки: <b>'+({'0':'нет','1_2':'1–2 в неделю','3_4':'3–4 в неделю','5':'5 и больше'}[P.freq])+'</b>':''}`, `Норма белка — ${d.norm} г в день, отсюда и объём порций`]);
+  if(P.meals)R.push([`Приёмов пищи: <b>${({'12':'1–2','3':'3','45':'4–5'}[P.meals])}</b>`, `С едой выходит около ${d.food} г — не хватает ${d.gap} г, это ${d.port} ${d.port===1?'порция':'порции'} в день`]);
+  if(P.sleep==='hard'||P.sleep==='tired')R.push(['Со сном <b>непросто</b>','Добавили магний B6 на вечер — он работает на восстановление']);
+  if(P.stress==='high')R.push(['Стресс <b>высокий</b>','Усилили поддержку нервной системы, стимуляторы не ставим']);
+  if(P.sweet==='yes')R.push(['Тянет <b>на сладкое</b>','Положили замену вместо срыва и добавку для контроля аппетита']);
+  if(P.restrictions==='vegan')R.push(['Питание <b>растительное</b>','Молочный протеин заменён на растительный']);
+  if(P.restrictions==='no_lactose')R.push(['<b>Без лактозы</b>','Подобрали то, что не даст тяжести']);
+  if(P.digestion==='issues')R.push(['Бывает <b>тяжесть после еды</b>','Выбрали более щадящие формы']);
+  if((P.health||[]).includes('hyper')||(P.health||[]).includes('preg'))R.push(['Есть <b>ограничения по здоровью</b>','Исключили всё со стимуляторами']);
+  if((P.health||[]).includes('allergy'))R.push(['<b>Аллергия</b>','Оставили простые составы без лишних компонентов']);
+  if(P.immunity==='often')R.push(['<b>Часто простужаетесь</b>','Добавили витамины для иммунитета']);
+  if(P.joints==='yes')R.push(['<b>Суставы</b> дают о себе знать','Добавили омега-3']);
+  if(P.budget==='econom')R.push(['Бюджет <b>ограничен</b>','Оставили только необходимое, без дополнений']);
+  if(P.flavor)R.push([`Вкус: <b>${P.flavor}</b>`,'Подобрали вариант с этим вкусом, если он есть в наличии']);
+  if(!R.length)return '';
+  return `<div class="match"><div class="mh">Что мы услышали и что сделали</div>`+
+    R.map(r=>`<div class="mrow"><div class="ans">${r[0]}</div><div class="did">${r[1]}</div></div>`).join('')+`</div>`;
+}
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
@@ -871,6 +933,7 @@ function renderResult(){
         <h3>${it.n}</h3>
         <div class="why">${loading?'<span class="mini">Подбираем замену…</span>':why}</div>
         ${flavorLine(x.id,P)}
+        ${(()=>{const d=doseOf(x.id,it);return d?`<div class="dose">${d.perDay} ${d.unit} в день · упаковки хватит примерно на ${d.days} дн.</div>`:'';})()}
         ${it.available===false?'<div class="flav" style="color:#c0392b">Сейчас нет на сайте — берите на Ozon/WB</div>':''}<div class="price">${it.price} ₽</div>
         <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
         <button class="repl" onclick="replaceItem('${x.origId}')">Заменить продукт</button>
@@ -886,6 +949,8 @@ function renderResult(){
         <p>Собран из ${picks.length} продуктов Prime Kraft под вашу цель, нагрузку и режим. Ниже — расчёт, план приёма и обоснование по каждому продукту.</p>
       </div>
       <div class="analysis" id="analysisbox">${analysisText(P)}</div>
+      ${matchBlock(P)}
+      ${econBlock(picks,sum)}
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
       <div class="captured">${tags}</div>
       ${cards}
@@ -898,8 +963,8 @@ function renderResult(){
     ${(()=>{try{return cmpBlock(picks)}catch(e){return ''}})()}
     <div class="save" id="savebox">
       <h2 style="font-size:16px">Сохранить подбор</h2>
-      <p class="lead" style="font-size:13px;margin-bottom:12px">Пришлём набор и напомним, когда курс закончится.</p>
-      <input type="text" id="contact" placeholder="Email или @telegram">
+      <p class="lead" style="font-size:13px;margin-bottom:12px">Пришлём набор, расчёт и план приёма на почту — чтобы не потерять.</p>
+      <input type="email" id="contact" inputmode="email" placeholder="Ваш e-mail">
       <label class="consent"><input type="checkbox" id="cons"><span>Согласен на обработку данных для персональных предложений Prime Kraft</span></label>
       <button class="btn btn-primary" onclick="saveLead()">Сохранить →</button>
     </div>
@@ -950,12 +1015,27 @@ function chat(kind){
   removed={};swaps={};swapWhy={};renderResult();
   const log=document.getElementById('chatlog');if(log)log.innerHTML=`<div class="msg me">${me}</div><div class="msg bot">${bot}</div>`;
 }
-function saveLead(){
-  const c=document.getElementById('contact').value.trim(),ok=document.getElementById('cons').checked;
-  if(!c){document.getElementById('contact').style.borderColor='var(--cta)';return;}
+async function saveLead(){
+  const el=document.getElementById('contact'), c=el.value.trim(), ok=document.getElementById('cons').checked;
+  if(!/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(c)){el.style.borderColor='#c0392b';el.placeholder='Укажите e-mail';return;}
   if(!ok){document.querySelector('.consent').style.color='#c0392b';return;}
-  console.log('LEAD',{contact:c,profile:P,picks:currentPicks().map(x=>x.id)});
-  document.getElementById('savebox').innerHTML=`<div class="saved">✓ Подбор сохранён. Мы на связи!</div>`;
+  const box=document.getElementById('savebox');
+  box.innerHTML='<div class="saved">Отправляем набор на почту…</div>';
+  const d=mathData(P)||null;
+  const items=currentPicks().map(x=>{const it=itemOf(x.id);const dz=doseOf(x.id,it);
+    return {name:it.n,price:it.price,why:String(whyText(x.id,P)||'').replace(/<[^>]+>/g,''),dose:dz?`${dz.perDay} ${dz.unit} в день, упаковки хватит примерно на ${dz.days} дн.`:''};});
+  const analysis=(document.getElementById('analysisbox')||{}).innerText||'';
+  const plan=[...document.querySelectorAll('#planbox .plan-row')].map(r=>({when:r.dataset.when||'',items:r.innerText}));
+  try{
+    const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email:c,name:P.name||'',profile:P,items,plan,analysis,math:d})});
+    const j=await r.json();
+    if(!r.ok||j.error)throw new Error(j.error||'ошибка');
+    box.innerHTML=`<div class="saved">✓ Готово! Набор ушёл на ${c} — проверьте почту${j.sent?'':' (письмо придёт чуть позже)'}.</div>`;
+  }catch(e){
+    box.innerHTML=`<div class="saved">✓ Подбор сохранён. Письмо отправим чуть позже.</div>`;
+    console.warn('lead:',e.message);
+  }
 }
 function pickVariant(list){
   if(!Array.isArray(list)||!list.length)return null;
