@@ -358,6 +358,42 @@ body.quiz .wrap{position:relative;z-index:2}
 .sent p{margin:0;font-size:13.5px;line-height:1.5;color:var(--muted)}
 .sent .again{background:none;border:0;padding:0;margin-top:8px;color:#a8790a;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 
+
+/* ==== КОНСУЛЬТАНТ ==== */
+.consult-open{width:100%;margin:6px 0 0;background:var(--surface);border:1.5px solid var(--ink);border-radius:8px;padding:15px 16px;text-align:left;cursor:pointer;font-family:inherit;display:flex;gap:13px;align-items:center;transition:.15s}
+.consult-open:hover{background:var(--surface2)}
+.consult-open .rh{flex:0 0 34px;height:34px;background:var(--yellow);transform:rotate(45deg);display:grid;place-items:center}
+.consult-open .rh i{transform:rotate(-45deg);font-family:var(--disp);font-style:italic;font-weight:900;color:#141414;font-size:17px}
+.consult-open b{display:block;font-size:15px;margin-bottom:2px}
+.consult-open span{font-size:12.5px;color:var(--muted);line-height:1.4}
+.cmodal{position:fixed;inset:0;z-index:200;display:none}
+.cmodal.on{display:block}
+.cmodal .back{position:absolute;inset:0;background:rgba(8,8,8,.6);backdrop-filter:blur(3px)}
+.cwin{position:absolute;left:0;right:0;bottom:0;max-height:88dvh;background:var(--bg);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:up .28s cubic-bezier(.22,.9,.25,1)}
+@keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
+@media(min-width:700px){.cwin{left:50%;transform:translateX(-50%);width:640px;bottom:0;max-height:86dvh;border-radius:14px 14px 0 0}
+@keyframes up{from{transform:translateX(-50%) translateY(30px);opacity:0}to{transform:translateX(-50%);opacity:1}}}
+.chead{background:var(--ink);color:#fff;padding:15px 18px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:10px}
+.chead b{font-size:15px}
+.chead small{display:block;color:#9aa0a8;font-size:11.5px;margin-top:2px;font-weight:400}
+.chead .x{margin-left:auto;background:none;border:0;color:#9aa0a8;font:inherit;font-size:13px;cursor:pointer;padding:4px 6px}
+.cbody{flex:1;overflow-y:auto;padding:16px 18px;-webkit-overflow-scrolling:touch}
+.msg2{margin-bottom:14px;font-size:14px;line-height:1.55;max-width:88%}
+.msg2.me{margin-left:auto;background:var(--ink);color:#fff;padding:11px 14px;border-radius:12px 12px 4px 12px}
+.msg2.ai{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:12px 12px 12px 4px}
+.msg2.ai.wait{color:var(--muted);font-style:italic}
+.cprod{display:flex;gap:10px;align-items:center;background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:9px 11px;margin-top:8px;text-decoration:none;color:var(--text)}
+.cprod b{font-size:13px;display:block;line-height:1.3}
+.cprod span{font-size:12px;color:var(--muted)}
+.cprod .go{margin-left:auto;font-size:12px;font-weight:700;color:#a8790a;white-space:nowrap}
+.cpresets{display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 12px}
+.cpresets button{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:#4b5563}
+.cfoot{padding:12px 18px calc(env(safe-area-inset-bottom) + 14px);border-top:1px solid var(--border);display:flex;gap:9px;background:var(--bg)}
+.cfoot input{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;font:inherit;font-size:15px}
+.cfoot input:focus{outline:none;border-color:var(--yellow)}
+.cfoot button{background:var(--yellow);border:0;border-radius:10px;padding:0 18px;font:inherit;font-weight:900;cursor:pointer;font-family:var(--disp);font-style:italic;text-transform:uppercase;font-size:13px}
+.cnote{padding:0 18px 10px;color:var(--muted);font-size:11.5px;line-height:1.4}
+
 </style>
 </head>
 <body>
@@ -534,6 +570,7 @@ function artHtml(it){const ltr=String(it.n||'?').trim().charAt(0).toUpperCase();
 const root=document.getElementById('root');
 let P={},asked=[],tweaks={},removed={},swaps={},swapWhy={},replacing=null;
 let leadSent=false, leadEmail='';
+let FEED=[], chatHist=[];
 const loadMsgs=['Анализируем ваши ответы…','Считаем норму белка…','Сопоставляем с каталогом Prime Kraft…','Составляем персональный комплекс и план…'];
 
 function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;gateShown=false;msShown={};msUsed=[];leadEmail='';leadSent=false;renderIntro();}
@@ -975,6 +1012,65 @@ function sentInner(){
     <p>${leadSent?'Письмо с составом, расчётом и планом приёма уже в почте. Если не видите — проверьте папку «Промоакции» или «Спам».':'Это займёт пару секунд.'}</p>
     ${leadSent?'<button class="again" onclick="sendLead(leadEmail)">Отправить ещё раз</button>':''}</div>`;
 }
+
+function openConsult(){
+  document.getElementById('cmodal').classList.add('on');
+  document.body.style.overflow='hidden';
+  const inp=document.getElementById('cinp'); if(inp)setTimeout(()=>inp.focus(),250);
+}
+function closeConsult(){
+  document.getElementById('cmodal').classList.remove('on');
+  document.body.style.overflow='';
+}
+function consultHtml(){
+  const nm=P.name?P.name+', ':'';
+  return `<div class="cmodal" id="cmodal">
+    <div class="back" onclick="closeConsult()"></div>
+    <div class="cwin">
+      <div class="chead"><div><b>Консультант Prime Kraft</b><small>отвечает только по каталогу Prime Kraft</small></div><button class="x" onclick="closeConsult()">Закрыть</button></div>
+      <div class="cbody" id="cbody">
+        <div class="msg2 ai">${nm}спрашивайте про набор: чем заменить продукт, как принимать, что добавить под вашу задачу. Советую только то, что есть в каталоге — если чего-то нет, так и скажу.</div>
+      </div>
+      <div class="cpresets">
+        <button onclick="askConsult('Чем заменить протеин, если не подходит?')">Чем заменить протеин</button>
+        <button onclick="askConsult('Как принимать всё из набора в течение дня?')">Как принимать</button>
+        <button onclick="askConsult('Что добавить, если бюджет позволяет?')">Что добавить</button>
+        <button onclick="askConsult('Что убрать, если хочу сэкономить?')">Что убрать</button>
+      </div>
+      <div class="cnote">Не является медицинским назначением. При заболеваниях проконсультируйтесь со специалистом.</div>
+      <div class="cfoot">
+        <input id="cinp" placeholder="Ваш вопрос" onkeydown="if(event.key==='Enter')askConsult()">
+        <button onclick="askConsult()">Спросить</button>
+      </div>
+    </div></div>`;
+}
+async function askConsult(preset){
+  const inp=document.getElementById('cinp');
+  const q=(preset||inp.value||'').trim();
+  if(!q)return;
+  if(!preset)inp.value='';
+  const body=document.getElementById('cbody');
+  body.insertAdjacentHTML('beforeend',`<div class="msg2 me">${q.replace(/[<>]/g,'')}</div>`);
+  body.insertAdjacentHTML('beforeend',`<div class="msg2 ai wait" id="cwait">Смотрю каталог…</div>`);
+  body.scrollTop=body.scrollHeight;
+  try{
+    const set=currentPicks().map(x=>{const it=itemOf(x.id);return {id:String(it.id||x.id),name:it.n};});
+    const r=await fetch('/api/consult',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q,profile:P,currentSet:set,catalog:FEED.filter(x=>x.available),history:chatHist})});
+    const d=await r.json();
+    document.getElementById('cwait').remove();
+    if(d.error)throw new Error(d.error);
+    chatHist.push({role:'user',content:q},{role:'assistant',content:d.answer||''});
+    const prods=(d.items||[]).map(id=>{const it=FEED.find(f=>String(f.id)===String(id));if(!it)return '';
+      const href=/^https?:/.test(it.url||'')?it.url:'https://primekraft.ru'+(it.url||'/catalog/');
+      return `<a class="cprod" href="${href}" target="_blank" rel="noopener"><div><b>${it.name}</b><span>${it.price?it.price+' ₽':''}</span></div><span class="go">Открыть →</span></a>`;}).join('');
+    body.insertAdjacentHTML('beforeend',`<div class="msg2 ai">${(d.answer||'').replace(/[<>]/g,'')}${prods}</div>`);
+  }catch(e){
+    const w=document.getElementById('cwait'); if(w)w.remove();
+    body.insertAdjacentHTML('beforeend',`<div class="msg2 ai">Не получилось получить ответ. Попробуйте ещё раз через минуту.</div>`);
+  }
+  body.scrollTop=body.scrollHeight;
+}
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
@@ -1046,7 +1142,12 @@ function renderResult(){
         <div class="chat-presets"><button class="chip" onclick="chat('cheap')">Дешевле</button><button class="chip" onclick="chat('noStim')">Без стимуляторов</button><button class="chip" onclick="chat('recovery')">Больше на восстановление</button></div></div>
     </div>
     ${(()=>{try{return cmpBlock(picks)}catch(e){return ''}})()}
+    <button class="consult-open" onclick="openConsult()">
+      <span class="rh"><i>?</i></span>
+      <span><b>Получить дополнительную консультацию</b><span>Спросите про набор — ответим по каталогу Prime Kraft</span></span>
+    </button>
     <div class="sent" id="sentbox">${sentInner()}</div>
+    ${consultHtml()}
     <div class="disc">Не является медицинским назначением. Подбор продуктов под вашу цель. При заболеваниях проконсультируйтесь со специалистом.</div>
     <button class="btn btn-ghost" style="margin-top:12px" onclick="start()">Пройти заново</button>
   </div>`;
@@ -1119,6 +1220,7 @@ async function loadCatalog(){
   try{
     const r=await fetch('/api/catalog');if(!r.ok)return;
     const d=await r.json();const bt=(d&&d.byType)||{};
+    FEED=[];for(const t in bt){(Array.isArray(bt[t])?bt[t]:[bt[t]]).forEach(x=>{if(x&&x.name)FEED.push({id:String(x.id||x.name),name:x.name,price:x.price,type:t,url:x.url,available:x.available!==false});});}
     for(const k in bt){
       if(!CAT[k])continue;
       const list=Array.isArray(bt[k])?bt[k]:[bt[k]];   // совместимость со старым форматом
