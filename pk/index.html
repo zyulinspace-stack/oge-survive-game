@@ -59,7 +59,13 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .ring{width:56px;height:56px;border-radius:50%;border:5px solid #e6e8eb;border-top-color:var(--accent-dk);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loadtxt{color:var(--muted);font-size:14px;text-align:center;min-height:20px}
-.analysis{background:var(--ink);color:#f3f4f6;border-radius:12px;padding:17px 18px;margin-bottom:14px;font-size:14.5px;line-height:1.6;white-space:pre-line}
+.analysis{background:var(--ink);color:#f3f4f6;border-radius:8px;padding:4px 18px 6px;margin-bottom:14px;font-size:14.5px;line-height:1.6}
+.asec{padding:15px 0;border-top:1px solid rgba(255,255,255,.12)}
+.asec:first-child{border-top:0}
+.asec h4{margin:0 0 7px;font-family:var(--disp);font-style:italic;font-weight:900;text-transform:uppercase;font-size:12.5px;letter-spacing:.6px;color:var(--yellow);display:flex;align-items:center;gap:8px}
+.asec h4::before{content:"";width:6px;height:6px;background:var(--yellow);transform:rotate(45deg);flex:0 0 auto}
+.asec p{margin:0;color:#dfe2e6;font-size:14px;line-height:1.6}
+@media(min-width:768px){.asec p{font-size:14.5px}}
 .analysis b{color:var(--accent)}
 .captured{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .tag{background:var(--surface2);border:1px solid var(--border);color:#4b5563;font-size:11px;padding:5px 10px;border-radius:100px;font-weight:500}
@@ -996,7 +1002,7 @@ async function sendLead(email){
     const items=currentPicks().map(x=>{const it=itemOf(x.id);const dz=doseOf(x.id,it);
       return {name:it.n,price:it.price,why:String(whyText(x.id,P)||'').replace(/<[^>]+>/g,''),
         dose:dz?`${dz.perDay} ${dz.unit} в день, упаковки хватит примерно на ${dz.days} дн.`:''};});
-    const analysis=((document.getElementById('analysisbox')||{}).innerText||'').trim();
+    const analysis=(window.__analysisPlain||((document.getElementById('analysisbox')||{}).innerText||'')).trim();
     const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({email,name:P.name||'',profile:P,items,math:d,analysis})});
     const j=await r.json();
@@ -1129,7 +1135,7 @@ function renderResult(){
         <h1>${P.name?P.name+', ваш':'Ваш'} <em>персональный комплекс</em> готов</h1>
         <p>Собран из ${picks.length} продуктов Prime Kraft под вашу цель, нагрузку и режим. Ниже — расчёт, план приёма и обоснование по каждому продукту.</p>
       </div>
-      <div class="analysis" id="analysisbox">${analysisText(P)}</div>
+      <div class="analysis" id="analysisbox"><div class="asec"><h4>Что мы поняли</h4><p>${analysisText(P).replace(/<[^>]+>/g,'')}</p></div></div>
       ${matchBlock(P)}
       ${econBlock(picks,sum)}
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
@@ -1161,7 +1167,11 @@ async function enrichWithAI(profile,picks){
     const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'enrich',profile,items})});
     if(!r.ok){if(pb)pb.innerHTML='';return;}
     const d=await r.json();
-    const ab=document.getElementById('analysisbox');if(d.analysis&&ab)ab.innerHTML=d.analysis;
+    const ab=document.getElementById('analysisbox');
+    if(ab&&Array.isArray(d.sections)&&d.sections.length){
+      ab.innerHTML=d.sections.filter(x=>x&&x.text).map(x=>`<div class="asec"><h4>${String(x.title||'').replace(/[<>]/g,'')}</h4><p>${String(x.text||'').replace(/[<>]/g,'')}</p></div>`).join('');
+      window.__analysisPlain=d.sections.map(x=>`${x.title}: ${x.text}`).join('\n\n');
+    } else if(d.analysis&&ab){ ab.innerHTML=`<div class="asec"><p>${String(d.analysis).replace(/[<>]/g,'')}</p></div>`; window.__analysisPlain=d.analysis; }
     if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[itemOf(x.id).n];if(ws[i]&&w)ws[i].textContent=w;});}
     if(pb){if(Array.isArray(d.plan)&&d.plan.length){pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row"><b>${p.when||''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
   }catch(e){if(pb)pb.innerHTML='';}
