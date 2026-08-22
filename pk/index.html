@@ -59,7 +59,7 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .ring{width:56px;height:56px;border-radius:50%;border:5px solid #e6e8eb;border-top-color:var(--accent-dk);animation:spin 1s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loadtxt{color:var(--muted);font-size:14px;text-align:center;min-height:20px}
-.analysis{background:var(--ink);color:#f3f4f6;border-radius:12px;padding:15px 16px;margin-bottom:14px;font-size:14px;line-height:1.55}
+.analysis{background:var(--ink);color:#f3f4f6;border-radius:12px;padding:17px 18px;margin-bottom:14px;font-size:14.5px;line-height:1.6;white-space:pre-line}
 .analysis b{color:var(--accent)}
 .captured{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
 .tag{background:var(--surface2);border:1px solid var(--border);color:#4b5563;font-size:11px;padding:5px 10px;border-radius:100px;font-weight:500}
@@ -533,9 +533,10 @@ function artHtml(it){const ltr=String(it.n||'?').trim().charAt(0).toUpperCase();
 /* ---------- FLOW ---------- */
 const root=document.getElementById('root');
 let P={},asked=[],tweaks={},removed={},swaps={},swapWhy={},replacing=null;
+let leadSent=false, leadEmail='';
 const loadMsgs=['Анализируем ваши ответы…','Считаем норму белка…','Сопоставляем с каталогом Prime Kraft…','Составляем персональный комплекс и план…'];
 
-function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;msShown={};msUsed=[];renderIntro();}
+function start(){P={};asked=[];tweaks={};removed={};swaps={};swapWhy={};replacing=null;insightShown=false;gateShown=false;msShown={};msUsed=[];leadEmail='';leadSent=false;renderIntro();}
 function renderIntro(){
   document.body.classList.remove('quiz');
   root.innerHTML=`<div class="screen hero">
@@ -770,11 +771,13 @@ function renderInsight(){
     </div>
   </div>`;
 }
+let gateShown=false;
 function stepNext(skipInsight){
   if(asked.length>=20)return ensureFinish();
   const n=asked.length;
   if(!skipInsight){
     if(n===5&&!insightShown){insightShown=true;return renderInsight();}
+    if(n===9&&!gateShown&&!leadEmail){gateShown=true;return renderGate();}
     if(MS_AT[n]!==undefined&&!msShown[n]){msShown[n]=1;return renderMilestone(n);}
   }
   if(AI_ENDPOINT)return aiNext();return localNext();
@@ -871,7 +874,7 @@ function renderMath(){
       <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Столько белка получается с обычной едой, если есть ${d.meal}.</div></div>
       <div class="calcrow gap"><div class="big">${d.gap} г</div><div class="cap">Не хватает каждый день. Это ${d.port} ${d.port===1?'порция':d.port<5?'порции':'порций'} протеина — или недобор, который тормозит результат.</div></div>
       <div class="foot2">${P.goal==='slim'?'Продукты в наборе почти без жиров и сахара — белок добираете, а в калории укладываетесь. ':''}Ещё ориентир: ${d.water} л воды в день.</div>
-      <button class="btn btn-accent" onclick="renderGate()">Показать набор →</button>
+      <button class="btn btn-accent" onclick="renderResult()">Показать набор →</button>
     </div>
   </div>`;
 }
@@ -921,20 +924,19 @@ function matchBlock(P){
     R.map(r=>`<div class="mrow"><div class="ans">${r[0]}</div><div class="did">${r[1]}</div></div>`).join('')+`</div>`;
 }
 
-let leadSent=false, leadEmail='';
 function renderGate(){
   document.body.classList.remove('quiz');
   const nm=P.name?P.name+', ':'';
   root.innerHTML=`<div class="screen gate">
     <div class="shot" style="background-image:url('${MS_IMG[2]}')"></div><div class="veil"></div>
     <div class="in">
-      <div class="kicker">Последний шаг</div>
-      <h2>${nm?cap(nm)+'куда':'Куда'} прислать ваш набор?</h2>
-      <p class="sub">Отправим состав, расчёт и план приёма на почту — чтобы не потерять и можно было вернуться к нему в любой момент.</p>
-      <div class="whyq" id="why_mail" style="margin-top:10px"><button onclick="document.getElementById('why_mail').classList.toggle('open')">Почему мы спрашиваем?</button><div class="body">Подбор занял у вас несколько минут, а страница закроется — и всё пропадёт. На почте набор останется навсегда: с ценами, дозировками и планом приёма. Рекламу без вашего согласия не шлём.</div></div>
+      <div class="kicker">Осталось меньше половины</div>
+      <h2>${nm?cap(nm)+'куда':'Куда'} прислать готовый подбор?</h2>
+      <p class="sub">Когда закончим, пришлём на почту состав, расчёт и план приёма — чтобы не потерять и можно было вернуться в любой момент.</p>
+      <div class="whyq" id="why_mail" style="margin-top:10px"><button onclick="document.getElementById('why_mail').classList.toggle('open')">Почему мы спрашиваем?</button><div class="body">Вы уже ответили на девять вопросов. Страница закроется — и подбор пропадёт, а на почте он останется навсегда: с ценами, дозировками и планом приёма. Рекламу без вашего согласия не шлём.</div></div>
       <input class="mailfield" id="gmail" type="email" inputmode="email" autocomplete="email" placeholder="name@mail.ru">
       <div class="err" id="gerr">Проверьте адрес — кажется, в нём опечатка</div>
-      <button class="btn btn-accent" onclick="submitGate()">Получить набор →</button>
+      <button class="btn btn-accent" onclick="submitGate()">Продолжить →</button>
       <label class="consent2"><input type="checkbox" id="gcons" checked><span>Согласен на обработку данных и получение письма с подбором. Отписаться можно в один клик.</span></label>
     </div>
   </div>`;
@@ -949,8 +951,7 @@ function submitGate(){
   if(!cons){err.textContent='Нужно согласие, чтобы отправить письмо';err.classList.add('on');return;}
   err.classList.remove('on');
   leadEmail=v;
-  renderResult();
-  sendLead(v);
+  stepNext(true);
 }
 async function sendLead(email){
   try{
@@ -968,6 +969,7 @@ async function sendLead(email){
   if(box)box.innerHTML=sentInner();
 }
 function sentInner(){
+  if(!leadEmail)return `<div class="mark2">·</div><div><b>Сохранить подбор</b><p>Оставьте почту — пришлём состав, расчёт и план приёма.</p><button class="again" onclick="renderGate()">Указать почту</button></div>`;
   return `<div class="mark2">${leadSent?'!':'·'}</div><div>
     <b>${leadSent?'Набор отправлен на '+leadEmail:'Отправляем набор на '+leadEmail}</b>
     <p>${leadSent?'Письмо с составом, расчётом и планом приёма уже в почте. Если не видите — проверьте папку «Промоакции» или «Спам».':'Это займёт пару секунд.'}</p>
@@ -1002,6 +1004,7 @@ function cmpBlock(picks){
 function currentPicks(){return recommend(P,tweaks).map(x=>({origId:x.id,id:swaps[x.id]||x.id,reason:swaps[x.id]?'swap':x.reason})).filter(x=>!removed[x.origId]);}
 function renderResult(){
   document.body.classList.remove('quiz');
+  if(leadEmail&&!leadSent&&!window.__leadFired){window.__leadFired=1;setTimeout(()=>sendLead(leadEmail),1200);}
   const picks=currentPicks();const sum=picks.reduce((a,x)=>a+itemOf(x.id).price,0);
   const tags=capturedTags(P).map(t=>`<span class="tag">${t}</span>`).join('');
   const cards=picks.map(x=>{
