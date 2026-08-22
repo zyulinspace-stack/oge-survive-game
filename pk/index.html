@@ -66,7 +66,7 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .prod{display:flex;gap:13px;background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:12px;margin-bottom:11px;position:relative}
 .prod .art{flex:0 0 74px;height:74px;border-radius:10px;background:#f4f5f6;display:grid;place-items:center;overflow:hidden}
 .prod .art img{width:100%;height:100%;object-fit:contain;mix-blend-mode:multiply}
-.prod .art.ph{font-size:30px;background:#eef0f2}
+.prod .art.ph{font-family:var(--disp);font-style:italic;font-weight:900;color:#a8790a;background:#f6f7f8;font-size:30px;background:#eef0f2}
 .prod .info{flex:1;min-width:0}
 .prod .rolebadge{font-size:10px;font-weight:900;letter-spacing:.6px;text-transform:uppercase;color:#a8790a;margin-bottom:3px}
 .prod .rolebadge.sup{color:var(--muted)}
@@ -87,7 +87,7 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .plan-row:nth-of-type(2){border-top:0}
 .plan-row b{flex:0 0 118px;color:#111}
 .plan-row span{color:#4b5563}
-.rm{position:absolute;top:9px;right:10px;background:none;border:0;color:#b6bcc4;font-size:17px;cursor:pointer;line-height:1}
+.rm{font-size:11px;font-weight:700;letter-spacing:.2px;position:absolute;top:9px;right:10px;background:none;border:0;color:#b6bcc4;font-size:17px;cursor:pointer;line-height:1}
 .total{display:flex;align-items:center;justify-content:space-between;background:var(--surface2);border:1px dashed #cfd3d8;border-radius:12px;padding:15px 16px;margin:4px 0 14px}
 .total .sum{font-size:22px;font-weight:900}
 .chat-presets{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
@@ -337,6 +337,27 @@ body.quiz .wrap{position:relative;z-index:2}
 .ec span{font-size:11.5px;color:var(--muted);line-height:1.3;display:block}
 .prod .dose{font-size:12px;color:#a8790a;margin-top:3px;font-weight:600}
 
+
+.gate{position:relative;width:100%;min-height:calc(100vh - var(--head));min-height:calc(100dvh - var(--head));display:flex;align-items:center;background:#0b0b0b;overflow:hidden;isolation:isolate}
+.gate .shot{position:absolute;inset:0;background-size:cover;background-position:center 35%;z-index:-2;filter:brightness(.45)}
+.gate .veil{position:absolute;inset:0;z-index:-1;background:linear-gradient(to top,rgba(8,8,8,.96) 12%,rgba(8,8,8,.75) 55%,rgba(8,8,8,.6) 100%)}
+.gate .in{width:100%;max-width:var(--maxw);margin:0 auto;padding:28px 20px calc(env(safe-area-inset-bottom) + 30px)}
+.gate h2{color:#fff;font-size:clamp(24px,5.4vw,36px);line-height:1.08;margin:0 0 12px}
+.gate .sub{color:#c9ced5;font-size:15px;line-height:1.5;margin:0 0 6px}
+.gate .mailfield{width:100%;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-size:16px;font-weight:600;padding:16px;font-family:inherit;margin:18px 0 12px}
+.gate .mailfield::placeholder{color:#8f959d;font-weight:400}
+.gate .mailfield:focus{outline:none;border-color:var(--yellow);background:rgba(255,255,255,.12)}
+.gate .err{color:#ff8080;font-size:13px;margin:-6px 0 12px;display:none}
+.gate .err.on{display:block}
+.gate .consent2{display:flex;gap:9px;align-items:flex-start;color:#9aa0a8;font-size:12px;line-height:1.45;margin:14px 0 0;cursor:pointer}
+.gate .consent2 input{margin-top:2px;accent-color:var(--yellow);flex:0 0 auto}
+/* итоговая карточка отправки */
+.sent{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px;margin:18px 0;display:flex;gap:14px;align-items:flex-start}
+.sent .mark2{flex:0 0 34px;height:34px;border-radius:50%;background:var(--yellow);display:grid;place-items:center;font-family:var(--disp);font-style:italic;font-weight:900;color:#141414;font-size:17px}
+.sent b{display:block;font-size:15px;margin-bottom:3px}
+.sent p{margin:0;font-size:13.5px;line-height:1.5;color:var(--muted)}
+.sent .again{background:none;border:0;padding:0;margin-top:8px;color:#a8790a;font:inherit;font-size:13px;font-weight:700;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+
 </style>
 </head>
 <body>
@@ -351,7 +372,7 @@ body.quiz .wrap{position:relative;z-index:2}
 <script>
 const IMG='https://primekraft.ru';
 const AI_ENDPOINT='/api/podbor-ai';
-const ART={protein:'🥛',gainer:'🍫',creatine:'💪',carnitine:'🔥',magnesium:'😴',omega:'🐟',vitamins:'🍊',amino:'🧬',pre:'⚡',snack:'🍪',isotonic:'💧'};
+const ART={};
 const CAT={
   whey:{n:'Сывороточный протеин Whey',c:'protein',price:2840,url:'/catalog/protein/syvorotochnyy-protein-whey/',img:'/upload/delight.webpconverter/upload/iblock/626/ntvjjn7gp7dt1nfu9pbunld1xas0kwro.png.webp',flav:1},
   plant:{n:'Растительный протеин',c:'protein',price:1590,url:'/catalog/protein/rastitelnyy-protein/',img:'',flav:1},
@@ -374,38 +395,38 @@ const CAT={
 const FLAV={choco:'Шоколад',vanilla:'Ваниль',berry:'Ягодный',neutral:'Нейтральный'};
 
 const QBANK={
-  goal:{q:'Какая у вас цель?',hint:'От неё зависит вся основа набора.',opts:[{v:'slim',l:'Похудение',em:'🔥'},{v:'mass',l:'Набор массы',em:'💪'},{v:'strength',l:'Сила и выносливость',em:'⚡'},{v:'health',l:'Поддержание формы',em:'🌿'}]},
-  slim_amount:{q:'Сколько хотите сбросить?',opts:[{v:'s',l:'До 5 кг',em:'🎯'},{v:'m',l:'5–10 кг',em:'📉'},{v:'l',l:'Больше 10 кг',em:'🏔️'}]},
-  slim_tried:{q:'Пробовали худеть раньше?',hint:'Поймём, на чём обычно спотыкаетесь.',opts:[{v:'sryv',l:'Да, срывался на еде',em:'🍩'},{v:'plateau',l:'Да, вставал на плато',em:'🧱'},{v:'no',l:'Первый заход',em:'🆕'}]},
-  mass_appetite:{q:'Легко набираете вес?',opts:[{v:'hard',l:'Тяжело, ем и не растёт',em:'🌾'},{v:'ok',l:'Нормально',em:'⚖️'},{v:'easy',l:'Легко набираю',em:'🐻'}]},
-  strength_focus:{q:'Что важнее?',opts:[{v:'power',l:'Сила / рабочие веса',em:'🏋️'},{v:'endur',l:'Выносливость',em:'🏃'},{v:'both',l:'И то, и другое',em:'🔀'}]},
-  health_focus:{q:'Что хотите подтянуть?',hint:'Можно выбрать несколько.',multi:true,opts:[{v:'energy',l:'Энергия / бодрость',em:'🔋'},{v:'immunity',l:'Иммунитет',em:'🛡️'},{v:'sleep',l:'Сон',em:'😴'},{v:'joints',l:'Суставы / связки',em:'🦴'}]},
-  sex:{q:'Ваш пол?',opts:[{v:'m',l:'Мужской',em:'♂️'},{v:'f',l:'Женский',em:'♀️'}]},
-  age:{q:'Сколько вам лет?',opts:[{v:'u25',l:'До 25',em:'🙂'},{v:'25_35',l:'25–35',em:'😎'},{v:'35_45',l:'35–45',em:'💼'},{v:'o45',l:'45+',em:'🧭'}]},
+  goal:{q:'Какая у вас цель?',hint:'От неё зависит вся основа набора.',opts:[{v:'slim',l:'Похудение'},{v:'mass',l:'Набор массы'},{v:'strength',l:'Сила и выносливость'},{v:'health',l:'Поддержание формы'}]},
+  slim_amount:{q:'Сколько хотите сбросить?',opts:[{v:'s',l:'До 5 кг'},{v:'m',l:'5–10 кг'},{v:'l',l:'Больше 10 кг'}]},
+  slim_tried:{q:'Пробовали худеть раньше?',hint:'Поймём, на чём обычно спотыкаетесь.',opts:[{v:'sryv',l:'Да, срывался на еде'},{v:'plateau',l:'Да, вставал на плато'},{v:'no',l:'Первый заход'}]},
+  mass_appetite:{q:'Легко набираете вес?',opts:[{v:'hard',l:'Тяжело, ем и не растёт'},{v:'ok',l:'Нормально'},{v:'easy',l:'Легко набираю'}]},
+  strength_focus:{q:'Что важнее?',opts:[{v:'power',l:'Сила / рабочие веса'},{v:'endur',l:'Выносливость'},{v:'both',l:'И то, и другое'}]},
+  health_focus:{q:'Что хотите подтянуть?',hint:'Можно выбрать несколько.',multi:true,opts:[{v:'energy',l:'Энергия / бодрость'},{v:'immunity',l:'Иммунитет'},{v:'sleep',l:'Сон'},{v:'joints',l:'Суставы / связки'}]},
+  sex:{q:'Ваш пол?',opts:[{v:'m',l:'Мужской'},{v:'f',l:'Женский'}]},
+  age:{q:'Сколько вам лет?',opts:[{v:'u25',l:'До 25'},{v:'25_35',l:'25–35'},{v:'35_45',l:'35–45'},{v:'o45',l:'45+'}]},
   body:{q:'Вес и рост?',hint:'Посчитаем вашу дневную норму белка.',type:'body'},
-  freq:{q:'Сколько тренировок в неделю?',opts:[{v:'0',l:'Пока не тренируюсь',em:'🛋️'},{v:'1_2',l:'1–2',em:'🚶'},{v:'3_4',l:'3–4',em:'🏋️'},{v:'5',l:'5 и больше',em:'🔥'}]},
-  ttype:{q:'Какой формат нагрузки вам ближе?',hint:'Если пока не тренируетесь — выберите то, к чему тянет: подберём набор с запасом на старт.',opts:[{v:'strength',l:'Силовые — железо, тренажёры',em:'🏋️'},{v:'cardio',l:'Кардио — бег, ходьба, велосипед',em:'🏃'},{v:'mixed',l:'Смешанное — и то, и другое',em:'🤸'},{v:'none_yet',l:'Пока не тренируюсь',em:'🛋️'}]},
-  workout_energy:{q:'Хватает энергии на тренировке?',opts:[{v:'low',l:'Часто вялость, нет драйва',em:'🪫'},{v:'ok',l:'В целом норм',em:'🔋'}]},
-  recovery_speed:{q:'Как восстанавливаетесь?',hint:'Долго ли болят мышцы после нагрузки.',opts:[{v:'slow',l:'Долго болят, тяжело',em:'🐌'},{v:'ok',l:'Нормально',em:'👍'}]},
-  experience:{q:'Опыт приёма спортпита?',opts:[{v:'novice',l:'Новичок',em:'🌱'},{v:'exp',l:'Есть опыт',em:'🎓'}]},
-  what_taken:{q:'Что уже принимали?',hint:'Отметьте, что подходило — учтём.',multi:true,opts:[{v:'protein',l:'Протеин',em:'🥛'},{v:'creatine',l:'Креатин',em:'💪'},{v:'preworkout',l:'Предтрен',em:'⚡'},{v:'vitamins',l:'Витамины',em:'🍊'},{v:'none',l:'Ничего особо',em:'🤷'}]},
-  diet_protein:{q:'Много ли белковой еды в день?',hint:'Мясо, рыба, яйца, творог.',opts:[{v:'low',l:'Мало, редко',em:'🥬'},{v:'mid',l:'Средне',em:'🍗'},{v:'high',l:'Много, каждый приём',em:'🥩'}]},
-  meals:{q:'Сколько приёмов пищи в день?',opts:[{v:'12',l:'1–2',em:'🍽️'},{v:'3',l:'3',em:'🍱'},{v:'45',l:'4–5 и дробно',em:'🥗'}]},
-  water:{q:'Сколько воды в день?',opts:[{v:'low',l:'Меньше литра',em:'🏜️'},{v:'mid',l:'1–2 литра',em:'💧'},{v:'high',l:'Больше 2 л',em:'🌊'}]},
-  sleep:{q:'Как со сном?',hint:'От сна напрямую зависит восстановление и жиросжигание.',opts:[{v:'good',l:'Высыпаюсь',em:'😴'},{v:'hard',l:'Тяжело засыпаю',em:'🌙'},{v:'tired',l:'Просыпаюсь разбитым',em:'🥱'}]},
-  caffeine_pm:{q:'Кофе или энергетики после 16:00?',opts:[{v:'yes',l:'Да, часто',em:'☕'},{v:'no',l:'Нет',em:'🚫'}]},
-  sleep_wake:{q:'Просыпаетесь среди ночи?',opts:[{v:'yes',l:'Да, бывает',em:'🌃'},{v:'no',l:'Нет, сплю до утра',em:'🛌'}]},
-  stress:{q:'Уровень стресса / загруженности?',opts:[{v:'low',l:'Спокойно',em:'🧘'},{v:'mid',l:'Средне',em:'🙂'},{v:'high',l:'Высокий, на нервах',em:'🤯'}]},
-  stress_symptom:{q:'Как проявляется?',opts:[{v:'anx',l:'Тревога / раздражительность',em:'😬'},{v:'tired',l:'Упадок сил',em:'😮‍💨'},{v:'eat',l:'Заедаю стресс',em:'🍫'}]},
-  sweet:{q:'Тянет на сладкое?',opts:[{v:'yes',l:'Да, срываюсь',em:'🍫'},{v:'no',l:'Нет',em:'🙅'}]},
-  sweet_when:{q:'Когда сильнее тянет?',opts:[{v:'evening',l:'Вечером',em:'🌆'},{v:'afternoon',l:'Днём',em:'🏙️'},{v:'allday',l:'Весь день',em:'🔁'}]},
-  digestion:{q:'Как с ЖКТ?',hint:'Вздутие, тяжесть после еды.',opts:[{v:'ok',l:'Всё ок',em:'✅'},{v:'issues',l:'Бывает тяжесть / вздутие',em:'🎈'}]},
-  restrictions:{q:'Пищевые ограничения?',opts:[{v:'none',l:'Нет',em:'✅'},{v:'vegan',l:'Веган / растительное',em:'🌱'},{v:'no_lactose',l:'Без лактозы',em:'🥛'}]},
-  health:{q:'Что-то из этого есть?',hint:'Нужно, чтобы исключить лишние стимуляторы. Безопасность важнее.',multi:true,opts:[{v:'hyper',l:'Повышенное давление / сердце',em:'❤️'},{v:'preg',l:'Беременность / ГВ',em:'🤰'},{v:'allergy',l:'Аллергия или непереносимость',em:'🌾'},{v:'none',l:'Ничего из этого',em:'👍'}]},
-  immunity:{q:'Часто простужаетесь?',opts:[{v:'often',l:'Да, цепляю всё',em:'🤧'},{v:'rare',l:'Редко',em:'💪'}]},
-  joints:{q:'Суставы и связки под нагрузкой?',opts:[{v:'yes',l:'Похрустывают / побаливают',em:'🦴'},{v:'no',l:'Не беспокоят',em:'👌'}]},
-  flavor:{q:'Вкусовые предпочтения?',hint:'Подберём вкус протеина и батончиков.',opts:[{v:'choco',l:'Шоколад / кофе',em:'🍫'},{v:'vanilla',l:'Ваниль / карамель',em:'🍦'},{v:'berry',l:'Ягоды / фрукты',em:'🍓'},{v:'neutral',l:'Нейтральный',em:'🤍'}]},
-  budget:{q:'На какой бюджет ориентируемся?',hint:'Подстроим состав набора.',opts:[{v:'econom',l:'Эконом — только необходимое',em:'💸'},{v:'optimal',l:'Оптимально',em:'⚖️'},{v:'any',l:'Без ограничений',em:'💎'}]}
+  freq:{q:'Сколько тренировок в неделю?',opts:[{v:'0',l:'Пока не тренируюсь'},{v:'1_2',l:'1–2'},{v:'3_4',l:'3–4'},{v:'5',l:'5 и больше'}]},
+  ttype:{q:'Какой формат нагрузки вам ближе?',hint:'Если пока не тренируетесь — выберите то, к чему тянет: подберём набор с запасом на старт.',opts:[{v:'strength',l:'Силовые — железо, тренажёры'},{v:'cardio',l:'Кардио — бег, ходьба, велосипед'},{v:'mixed',l:'Смешанное — и то, и другое'},{v:'none_yet',l:'Пока не тренируюсь'}]},
+  workout_energy:{q:'Хватает энергии на тренировке?',opts:[{v:'low',l:'Часто вялость, нет драйва'},{v:'ok',l:'В целом норм'}]},
+  recovery_speed:{q:'Как восстанавливаетесь?',hint:'Долго ли болят мышцы после нагрузки.',opts:[{v:'slow',l:'Долго болят, тяжело'},{v:'ok',l:'Нормально'}]},
+  experience:{q:'Опыт приёма спортпита?',opts:[{v:'novice',l:'Новичок'},{v:'exp',l:'Есть опыт'}]},
+  what_taken:{q:'Что уже принимали?',hint:'Отметьте, что подходило — учтём.',multi:true,opts:[{v:'protein',l:'Протеин'},{v:'creatine',l:'Креатин'},{v:'preworkout',l:'Предтрен'},{v:'vitamins',l:'Витамины'},{v:'none',l:'Ничего особо'}]},
+  diet_protein:{q:'Много ли белковой еды в день?',hint:'Мясо, рыба, яйца, творог.',opts:[{v:'low',l:'Мало, редко'},{v:'mid',l:'Средне'},{v:'high',l:'Много, каждый приём'}]},
+  meals:{q:'Сколько приёмов пищи в день?',opts:[{v:'12',l:'1–2'},{v:'3',l:'3'},{v:'45',l:'4–5 и дробно'}]},
+  water:{q:'Сколько воды в день?',opts:[{v:'low',l:'Меньше литра'},{v:'mid',l:'1–2 литра'},{v:'high',l:'Больше 2 л'}]},
+  sleep:{q:'Как со сном?',hint:'От сна напрямую зависит восстановление и жиросжигание.',opts:[{v:'good',l:'Высыпаюсь'},{v:'hard',l:'Тяжело засыпаю'},{v:'tired',l:'Просыпаюсь разбитым'}]},
+  caffeine_pm:{q:'Кофе или энергетики после 16:00?',opts:[{v:'yes',l:'Да, часто'},{v:'no',l:'Нет'}]},
+  sleep_wake:{q:'Просыпаетесь среди ночи?',opts:[{v:'yes',l:'Да, бывает'},{v:'no',l:'Нет, сплю до утра'}]},
+  stress:{q:'Уровень стресса / загруженности?',opts:[{v:'low',l:'Спокойно'},{v:'mid',l:'Средне'},{v:'high',l:'Высокий, на нервах'}]},
+  stress_symptom:{q:'Как проявляется?',opts:[{v:'anx',l:'Тревога / раздражительность'},{v:'tired',l:'Упадок сил'},{v:'eat',l:'Заедаю стресс'}]},
+  sweet:{q:'Тянет на сладкое?',opts:[{v:'yes',l:'Да, срываюсь'},{v:'no',l:'Нет'}]},
+  sweet_when:{q:'Когда сильнее тянет?',opts:[{v:'evening',l:'Вечером'},{v:'afternoon',l:'Днём'},{v:'allday',l:'Весь день'}]},
+  digestion:{q:'Как с ЖКТ?',hint:'Вздутие, тяжесть после еды.',opts:[{v:'ok',l:'Всё ок'},{v:'issues',l:'Бывает тяжесть / вздутие'}]},
+  restrictions:{q:'Пищевые ограничения?',opts:[{v:'none',l:'Нет'},{v:'vegan',l:'Веган / растительное'},{v:'no_lactose',l:'Без лактозы'}]},
+  health:{q:'Что-то из этого есть?',hint:'Нужно, чтобы исключить лишние стимуляторы. Безопасность важнее.',multi:true,opts:[{v:'hyper',l:'Повышенное давление / сердце'},{v:'preg',l:'Беременность / ГВ'},{v:'allergy',l:'Аллергия или непереносимость'},{v:'none',l:'Ничего из этого'}]},
+  immunity:{q:'Часто простужаетесь?',opts:[{v:'often',l:'Да, цепляю всё'},{v:'rare',l:'Редко'}]},
+  joints:{q:'Суставы и связки под нагрузкой?',opts:[{v:'yes',l:'Похрустывают / побаливают'},{v:'no',l:'Не беспокоят'}]},
+  flavor:{q:'Вкусовые предпочтения?',hint:'Подберём вкус протеина и батончиков.',opts:[{v:'choco',l:'Шоколад / кофе'},{v:'vanilla',l:'Ваниль / карамель'},{v:'berry',l:'Ягоды / фрукты'},{v:'neutral',l:'Нейтральный'}]},
+  budget:{q:'На какой бюджет ориентируемся?',hint:'Подстроим состав набора.',opts:[{v:'econom',l:'Эконом — только необходимое'},{v:'optimal',l:'Оптимально'},{v:'any',l:'Без ограничений'}]}
 };
 const DESC={goal:'цель (похудение/масса/сила/поддержание)',sex:'пол',age:'возраст',body:'вес и рост (для нормы белка)',freq:'тренировок в неделю',ttype:'формат нагрузки (силовые/кардио/микс)',workout_energy:'хватает ли энергии на тренировке',recovery_speed:'как восстанавливается, долго ли болят мышцы',experience:'опыт приёма спортпита',what_taken:'что уже принимал',diet_protein:'сколько белковой еды в день',meals:'сколько приёмов пищи',water:'сколько воды в день',sleep:'как со сном',caffeine_pm:'кофеин после 16:00',sleep_wake:'просыпается ли ночью',stress:'уровень стресса',stress_symptom:'как проявляется стресс',sweet:'тянет ли на сладкое',sweet_when:'когда тянет на сладкое',digestion:'как ЖКТ',restrictions:'пищевые ограничения (веган/лактоза)',health:'ВАЖНО: противопоказания — давление/сердце, беременность/ГВ',immunity:'часто ли простужается',joints:'беспокоят ли суставы',flavor:'вкусовые предпочтения',budget:'бюджет',slim_amount:'сколько хочет сбросить',slim_tried:'пробовал ли худеть раньше',mass_appetite:'легко ли набирает вес',strength_focus:'сила или выносливость важнее',health_focus:'что подтянуть (энергия/иммунитет/сон/суставы)'};
 const BASE=['goal','sex','age','body','freq','experience','diet_protein','meals','water','sleep','stress','sweet','digestion','restrictions','health','immunity','joints','flavor','budget'];
@@ -459,20 +480,26 @@ function analysisText(P){
   return s.join(' ');
 }
 function capturedTags(P){
-  const t=[];const g={slim:'Похудение',mass:'Набор массы',strength:'Сила/выносливость',health:'Поддержание'}[P.goal];if(g)t.push(g);
-  if(P.freq&&P.freq!=='0')t.push('🏋️ '+{'1_2':'1–2','3_4':'3–4','5':'5+'}[P.freq]+'/нед'+(P.ttype?' '+{strength:'силовые',cardio:'кардио',mixed:'микс'}[P.ttype]:''));
-  if(P.diet_protein)t.push('🍗 белок: '+{low:'мало',mid:'средне',high:'много'}[P.diet_protein]);
-  if(P.sleep&&P.sleep!=='good')t.push('😴 сон: '+{hard:'засыпание',tired:'разбитость'}[P.sleep]);
-  if(P.stress==='high')t.push('🤯 стресс');
-  if(P.sweet==='yes')t.push('🍫 срывы на сладкое');
-  if(P.recovery_speed==='slow')t.push('🐌 долгое восстановление');
-  if(P.workout_energy==='low')t.push('🪫 мало энергии');
-  if(P.immunity==='often')t.push('🤧 иммунитет');
-  if(P.joints==='yes')t.push('🦴 суставы');
-  if(P.water==='low')t.push('💧 мало воды');
-  if(P.restrictions&&P.restrictions!=='none')t.push('🌱 '+{vegan:'веган',no_lactose:'без лактозы'}[P.restrictions]);
-  if(P.flavor)t.push('👅 '+FLAV[P.flavor]);
-  return t;
+  const t=[];
+  const g={slim:'Похудение',mass:'Набор массы',strength:'Сила/выносливость',health:'Поддержание'}[P.goal];
+  if(g)t.push(g);
+  if(P.freq&&P.freq!=='0'){
+    const f={'1_2':'1–2','3_4':'3–4','5':'5+'}[P.freq]||'';
+    const tt={strength:'силовые',cardio:'кардио',mixed:'микс'}[P.ttype];
+    t.push(f+'/нед'+(tt?' '+tt:''));
+  }
+  if(P.diet_protein)t.push('белок в еде: '+({low:'мало',mid:'средне',high:'много'}[P.diet_protein]||''));
+  if(P.sleep&&P.sleep!=='good')t.push('сон: '+({hard:'засыпание',tired:'разбитость'}[P.sleep]||''));
+  if(P.stress==='high')t.push('стресс');
+  if(P.sweet==='yes')t.push('срывы на сладкое');
+  if(P.recovery_speed==='slow')t.push('долгое восстановление');
+  if(P.workout_energy==='low')t.push('мало энергии');
+  if(P.immunity==='often')t.push('иммунитет');
+  if(P.joints==='yes')t.push('суставы');
+  if(P.water==='low')t.push('мало воды');
+  if(P.restrictions&&P.restrictions!=='none')t.push({vegan:'веган',no_lactose:'без лактозы'}[P.restrictions]||'');
+  if(P.flavor&&typeof FLAV!=='undefined'&&FLAV[P.flavor])t.push(FLAV[P.flavor]);
+  return t.filter(Boolean);
 }
 function whyText(id,P){
   const norm=proteinNorm(P);
@@ -499,7 +526,9 @@ function whyText(id,P){
 function flavorLine(id,P){const it=itemOf(id);if(!P.flavor&&!it.flavName)return '';
   if(it.flavName)return `<div class="flav">Вкус: <b>${it.flavName}</b>${it.size?' · '+it.size:''}${it.variants&&it.variants.length>1?` · ещё ${it.variants.length-1} вариант(ов) на сайте`:''}</div>`;
   if(!CAT[id].flav)return '';return `<div class="flav">Вкус под вас: <b>${FLAV[P.flavor]}</b></div>`;}
-function artHtml(it,em){if(it.img)return `<div class="art"><img src="${/^https?:/.test(it.img)?it.img:IMG+it.img}" alt="" loading="lazy" onerror="this.remove();this.parentElement.classList.add('ph');this.parentElement.textContent='${em}'"></div>`;return `<div class="art ph">${em}</div>`;}
+function artHtml(it){const ltr=String(it.n||'?').trim().charAt(0).toUpperCase();
+  if(it.img)return `<div class="art"><img src="${/^https?:/.test(it.img)?it.img:IMG+it.img}" alt="" loading="lazy" onerror="this.remove();this.parentElement.classList.add('ph');this.parentElement.textContent='${ltr}'"></div>`;
+  return `<div class="art ph">${ltr}</div>`;}
 
 /* ---------- FLOW ---------- */
 const root=document.getElementById('root');
@@ -842,7 +871,7 @@ function renderMath(){
       <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Столько белка получается с обычной едой, если есть ${d.meal}.</div></div>
       <div class="calcrow gap"><div class="big">${d.gap} г</div><div class="cap">Не хватает каждый день. Это ${d.port} ${d.port===1?'порция':d.port<5?'порции':'порций'} протеина — или недобор, который тормозит результат.</div></div>
       <div class="foot2">${P.goal==='slim'?'Продукты в наборе почти без жиров и сахара — белок добираете, а в калории укладываетесь. ':''}Ещё ориентир: ${d.water} л воды в день.</div>
-      <button class="btn btn-accent" onclick="renderResult()">Показать набор →</button>
+      <button class="btn btn-accent" onclick="renderGate()">Показать набор →</button>
     </div>
   </div>`;
 }
@@ -891,6 +920,59 @@ function matchBlock(P){
   return `<div class="match"><div class="mh">Что мы услышали и что сделали</div>`+
     R.map(r=>`<div class="mrow"><div class="ans">${r[0]}</div><div class="did">${r[1]}</div></div>`).join('')+`</div>`;
 }
+
+let leadSent=false, leadEmail='';
+function renderGate(){
+  document.body.classList.remove('quiz');
+  const nm=P.name?P.name+', ':'';
+  root.innerHTML=`<div class="screen gate">
+    <div class="shot" style="background-image:url('${MS_IMG[2]}')"></div><div class="veil"></div>
+    <div class="in">
+      <div class="kicker">Последний шаг</div>
+      <h2>${nm?cap(nm)+'куда':'Куда'} прислать ваш набор?</h2>
+      <p class="sub">Отправим состав, расчёт и план приёма на почту — чтобы не потерять и можно было вернуться к нему в любой момент.</p>
+      <div class="whyq" id="why_mail" style="margin-top:10px"><button onclick="document.getElementById('why_mail').classList.toggle('open')">Почему мы спрашиваем?</button><div class="body">Подбор занял у вас несколько минут, а страница закроется — и всё пропадёт. На почте набор останется навсегда: с ценами, дозировками и планом приёма. Рекламу без вашего согласия не шлём.</div></div>
+      <input class="mailfield" id="gmail" type="email" inputmode="email" autocomplete="email" placeholder="name@mail.ru">
+      <div class="err" id="gerr">Проверьте адрес — кажется, в нём опечатка</div>
+      <button class="btn btn-accent" onclick="submitGate()">Получить набор →</button>
+      <label class="consent2"><input type="checkbox" id="gcons" checked><span>Согласен на обработку данных и получение письма с подбором. Отписаться можно в один клик.</span></label>
+    </div>
+  </div>`;
+  const el=document.getElementById('gmail');
+  if(el){el.focus();el.onkeydown=e=>{if(e.key==='Enter')submitGate();};}
+}
+function submitGate(){
+  const el=document.getElementById('gmail'), v=(el.value||'').trim();
+  const cons=document.getElementById('gcons').checked;
+  const err=document.getElementById('gerr');
+  if(!/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(v)){err.classList.add('on');el.focus();return;}
+  if(!cons){err.textContent='Нужно согласие, чтобы отправить письмо';err.classList.add('on');return;}
+  err.classList.remove('on');
+  leadEmail=v;
+  renderResult();
+  sendLead(v);
+}
+async function sendLead(email){
+  try{
+    const d=mathData(P)||null;
+    const items=currentPicks().map(x=>{const it=itemOf(x.id);const dz=doseOf(x.id,it);
+      return {name:it.n,price:it.price,why:String(whyText(x.id,P)||'').replace(/<[^>]+>/g,''),
+        dose:dz?`${dz.perDay} ${dz.unit} в день, упаковки хватит примерно на ${dz.days} дн.`:''};});
+    const analysis=((document.getElementById('analysisbox')||{}).innerText||'').trim();
+    const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,name:P.name||'',profile:P,items,math:d,analysis})});
+    const j=await r.json();
+    leadSent=!!(j&&j.ok);
+  }catch(e){leadSent=false;}
+  const box=document.getElementById('sentbox');
+  if(box)box.innerHTML=sentInner();
+}
+function sentInner(){
+  return `<div class="mark2">${leadSent?'!':'·'}</div><div>
+    <b>${leadSent?'Набор отправлен на '+leadEmail:'Отправляем набор на '+leadEmail}</b>
+    <p>${leadSent?'Письмо с составом, расчётом и планом приёма уже в почте. Если не видите — проверьте папку «Промоакции» или «Спам».':'Это займёт пару секунд.'}</p>
+    ${leadSent?'<button class="again" onclick="sendLead(leadEmail)">Отправить ещё раз</button>':''}</div>`;
+}
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
@@ -923,11 +1005,11 @@ function renderResult(){
   const picks=currentPicks();const sum=picks.reduce((a,x)=>a+itemOf(x.id).price,0);
   const tags=capturedTags(P).map(t=>`<span class="tag">${t}</span>`).join('');
   const cards=picks.map(x=>{
-    const it=itemOf(x.id),em=ART[it.c],anchor=(x.reason||'').startsWith('anchor');
+    const it=itemOf(x.id),anchor=(x.reason||'').startsWith('anchor');
     const why=(x.reason==='swap'&&swapWhy[x.id])?swapWhy[x.id]:whyText(x.id,P);
     const loading=replacing===x.origId;
     return `<div class="prod">
-      ${artHtml(it,em)}
+      ${artHtml(it)}
       <div class="info">
         <div class="rolebadge ${anchor?'':'sup'}">${x.reason==='swap'?'Замена':anchor?'Основа набора':'Дополнение'}</div>
         <h3>${it.n}</h3>
@@ -938,7 +1020,7 @@ function renderResult(){
         <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
         <button class="repl" onclick="replaceItem('${x.origId}')">Заменить продукт</button>
       </div>
-      <button class="rm" title="Убрать" onclick="removeItem('${x.origId}')">✕</button>
+      <button class="rm" title="Убрать из набора" onclick="removeItem('${x.origId}')">Убрать</button>
     </div>`;
   }).join('');
   root.innerHTML=`<div class="screen">
@@ -961,13 +1043,7 @@ function renderResult(){
         <div class="chat-presets"><button class="chip" onclick="chat('cheap')">Дешевле</button><button class="chip" onclick="chat('noStim')">Без стимуляторов</button><button class="chip" onclick="chat('recovery')">Больше на восстановление</button></div></div>
     </div>
     ${(()=>{try{return cmpBlock(picks)}catch(e){return ''}})()}
-    <div class="save" id="savebox">
-      <h2 style="font-size:16px">Сохранить подбор</h2>
-      <p class="lead" style="font-size:13px;margin-bottom:12px">Пришлём набор, расчёт и план приёма на почту — чтобы не потерять.</p>
-      <input type="email" id="contact" inputmode="email" placeholder="Ваш e-mail">
-      <label class="consent"><input type="checkbox" id="cons"><span>Согласен на обработку данных для персональных предложений Prime Kraft</span></label>
-      <button class="btn btn-primary" onclick="saveLead()">Сохранить →</button>
-    </div>
+    <div class="sent" id="sentbox">${sentInner()}</div>
     <div class="disc">Не является медицинским назначением. Подбор продуктов под вашу цель. При заболеваниях проконсультируйтесь со специалистом.</div>
     <button class="btn btn-ghost" style="margin-top:12px" onclick="start()">Пройти заново</button>
   </div>`;
@@ -1014,28 +1090,6 @@ function chat(kind){
   if(kind==='cheap')tweaks.cheap=1;if(kind==='noStim')tweaks.noStim=1;if(kind==='recovery')tweaks.recovery=1;
   removed={};swaps={};swapWhy={};renderResult();
   const log=document.getElementById('chatlog');if(log)log.innerHTML=`<div class="msg me">${me}</div><div class="msg bot">${bot}</div>`;
-}
-async function saveLead(){
-  const el=document.getElementById('contact'), c=el.value.trim(), ok=document.getElementById('cons').checked;
-  if(!/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(c)){el.style.borderColor='#c0392b';el.placeholder='Укажите e-mail';return;}
-  if(!ok){document.querySelector('.consent').style.color='#c0392b';return;}
-  const box=document.getElementById('savebox');
-  box.innerHTML='<div class="saved">Отправляем набор на почту…</div>';
-  const d=mathData(P)||null;
-  const items=currentPicks().map(x=>{const it=itemOf(x.id);const dz=doseOf(x.id,it);
-    return {name:it.n,price:it.price,why:String(whyText(x.id,P)||'').replace(/<[^>]+>/g,''),dose:dz?`${dz.perDay} ${dz.unit} в день, упаковки хватит примерно на ${dz.days} дн.`:''};});
-  const analysis=(document.getElementById('analysisbox')||{}).innerText||'';
-  const plan=[...document.querySelectorAll('#planbox .plan-row')].map(r=>({when:r.dataset.when||'',items:r.innerText}));
-  try{
-    const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email:c,name:P.name||'',profile:P,items,plan,analysis,math:d})});
-    const j=await r.json();
-    if(!r.ok||j.error)throw new Error(j.error||'ошибка');
-    box.innerHTML=`<div class="saved">✓ Готово! Набор ушёл на ${c} — проверьте почту${j.sent?'':' (письмо придёт чуть позже)'}.</div>`;
-  }catch(e){
-    box.innerHTML=`<div class="saved">✓ Подбор сохранён. Письмо отправим чуть позже.</div>`;
-    console.warn('lead:',e.message);
-  }
 }
 function pickVariant(list){
   if(!Array.isArray(list)||!list.length)return null;
