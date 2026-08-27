@@ -1118,13 +1118,13 @@ const MP={}; // заполняется из marketplace.json: {"<id товара
 async function loadMP(){try{const r=await fetch('marketplace.json');if(!r.ok)return;const j=await r.json();for(const k in j){if(k.charAt(0)!=='_')MP[k]=j[k];}}catch(e){}}
 let MPLIVE={};              // проверенные ссылки: только товары в наличии
 function mpLinks(it){
-  const l=MPLIVE[String(it.id||'')];
-  if(!l)return '';
-  return (l.ozon?`<a href="${l.ozon}" target="_blank" rel="noopener">Ozon</a>`:'')+(l.wb?`<a href="${l.wb}" target="_blank" rel="noopener">WB</a>`:'');
+  const l=MPLIVE[String(it.id||'')]||{};
+  const ozon=l.ozon||('https://www.ozon.ru/search/?text='+encodeURIComponent('Prime Kraft '+String(it.n||'').replace(/со\s+вкусом[^,]*/gi,'')));
+  return `<a href="${ozon}" target="_blank" rel="noopener">Ozon</a>`+(l.wb?`<a href="${l.wb}" target="_blank" rel="noopener">WB</a>`:'');
 }
 async function checkMarketplaces(picks){
-  const items=picks.map(x=>{const it=itemOf(x.id);const m=MP[String(it.id||'')]||MP[String(it.n||'')];
-    return m?Object.assign({id:String(it.id||'')},m):null;}).filter(Boolean);
+  const items=picks.map(x=>{const it=itemOf(x.id);const m=MP[String(it.id||'')]||MP[String(it.n||'')]||{};
+    return Object.assign({id:String(it.id||x.id),name:it.n},m);});
   if(!items.length)return;
   try{
     const r=await fetch('/api/mp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});

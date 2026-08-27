@@ -1,37 +1,63 @@
-// Проверка наличия товаров на маркетплейсах.
-// Ссылка на карточку отдаётся ТОЛЬКО если товар реально в наличии.
-// WB — публичный API карточек. Ozon — Seller API (нужны OZON_CLIENT_ID и OZON_API_KEY).
+// Ссылки на маркетплейсы. Правило одно: ссылка отдаётся ТОЛЬКО если товар нашего бренда
+// найден и реально в наличии. Не уверены — ссылки нет.
+//
+// WB: полностью автоматически. Ищем в публичном поиске по названию, фильтруем по бренду
+// Prime Kraft, проверяем остатки. Артикулы от клиента не нужны.
+// OZON: без ключей продавца достоверно проверить наличие нельзя, поэтому кнопки нет.
 
-const cache = new Map();           // key -> {t, v}
-const TTL = 10 * 60 * 1000;        // 10 минут
+const cache = new Map();
+const TTL = 30 * 60 * 1000;
 
-function cached(key) {
-  const c = cache.get(key);
-  if (c && Date.now() - c.t < TTL) return c.v;
-  return null;
+const cached = k => { const c = cache.get(k); return c && Date.now() - c.t < TTL ? c.v : null; };
+const put = (k, v) => { cache.set(k, { t: Date.now(), v }); return v; };
+
+const BRAND = /prime\s*kraft|праймкрафт|прайм\s*крафт/i;
+
+// «Сывороточный протеин WHEY со вкусом "Молочный шоколад", 500 г» -> «сывороточный протеин whey 500»
+function keyWords(name) {
+  return String(name || '')
+    .toLowerCase()
+    .replace(/["«»""]/g, ' ')
+    .replace(/со\s+вкусом[^,]*/g, ' ')
+    .replace(/[^a-zа-я0-9\s]/gi, ' ')
+    .split(/\s+/)
+    .filter(w => w.length > 2 && !['для', 'без', 'при', 'grams', 'гр'].includes(w))
+    .slice(0, 6);
 }
-function put(key, v) { cache.set(key, { t: Date.now(), v }); return v; }
 
-// --- WILDBERRIES: есть ли остатки хотя бы на одном складе ---
-async function checkWb(nm) {
-  const key = 'wb:' + nm;
+function score(query, candidate) {
+  const a = new Set(keyWords(query)), b = keyWords(candidate);
+  let hit = 0; b.forEach(w => { if (a.has(w)) hit++; });
+  return a.size ? hit / a.size : 0;
+}
+
+async function findOnWb(name) {
+  const key = 'wbq:' + name;
   const hit = cached(key); if (hit !== null) return hit;
   try {
-    const url = `https://card.wb.ru/cards/v2/detail?appType=1&curr=rub&dest=-1257786&spp=30&nm=${encodeURIComponent(nm)}`;
-    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0' } });
-    if (!r.ok) return put(key, false);
+    const q = encodeURIComponent('Prime Kraft ' + String(name).replace(/со\s+вкусом[^,]*/gi, '').slice(0, 60));
+    const url = `https://search.wb.ru/exactmatch/ru/common/v13/search?appType=1&curr=rub&dest=-1257786&query=${q}&resultset=catalog&limit=20`;
+    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
+    if (!r.ok) return put(key, null);
     const j = await r.json();
-    const p = j && j.data && Array.isArray(j.data.products) ? j.data.products[0] : null;
-    if (!p) return put(key, false);
-    const stock = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
-    return put(key, stock > 0);
-  } catch (e) { return put(key, false); }
+    const products = (j && j.data && j.data.products) || j.products || [];
+
+    const ours = products
+      .filter(p => BRAND.test(p.brand || ''))
+      .map(p => {
+        const stock = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
+        return { id: p.id, name: p.name, stock, sc: score(name, p.name) };
+      })
+      .filter(p => p.stock > 0 && p.sc >= 0.5)         // наш бренд, в наличии, похож по названию
+      .sort((a, b) => b.sc - a.sc || b.stock - a.stock);
+
+    if (!ours.length) return put(key, null);
+    return put(key, `https://www.wildberries.ru/catalog/${ours[0].id}/detail.aspx`);
+  } catch (e) { return put(key, null); }
 }
 
-// --- OZON ---
-// 1) Seller API, если есть ключи. 2) ручная отметка в marketplace.json. 3) осторожный парсинг.
-// Во всех случаях действует правило fail-closed: не уверены — ссылку не отдаём.
-async function checkOzonApi(offerId) {
+// Ozon: только при наличии ключей Seller API
+async function findOnOzon(offerId) {
   const id = process.env.OZON_CLIENT_ID, key = process.env.OZON_API_KEY;
   if (!id || !key || !offerId) return null;
   const ck = 'oz:' + offerId;
@@ -42,80 +68,37 @@ async function checkOzonApi(offerId) {
       headers: { 'Client-Id': id, 'Api-Key': key, 'Content-Type': 'application/json' },
       body: JSON.stringify({ filter: { offer_id: [String(offerId)], visibility: 'ALL' }, limit: 10 })
     });
-    if (!r.ok) return put(ck, false);
+    if (!r.ok) return put(ck, null);
     const j = await r.json();
     const items = (j && j.result && j.result.items) || [];
     const free = items.reduce((a, it) => a + ((it.stocks || []).reduce((b, s) => b + (s.present || 0) - (s.reserved || 0), 0)), 0);
-    return put(ck, free > 0);
-  } catch (e) { return put(ck, false); }
-}
-
-// ручная отметка: {"ozonInStock": true, "ozonCheckedAt": "2026-08-27"} — живёт 14 дней
-function checkOzonManual(it) {
-  if (it.ozonInStock !== true) return null;
-  const d = Date.parse(it.ozonCheckedAt || '');
-  if (!d) return null;
-  const days = (Date.now() - d) / 86400000;
-  return days <= 14 ? true : null;   // протухла — считаем, что не знаем
-}
-
-// осторожный парсинг карточки: капча/ошибка -> null (не показываем)
-async function checkOzonPage(url) {
-  if (!url) return null;
-  const ck = 'ozp:' + url;
-  const hit = cached(ck); if (hit !== null) return hit;
-  try {
-    const r = await fetch(url, {
-      redirect: 'follow',
-      headers: {
-        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
-        'Accept-Language': 'ru-RU,ru;q=0.9'
-      }
-    });
-    if (!r.ok) return put(ck, null);
-    const html = (await r.text()).toLowerCase();
-    if (html.includes('доступ ограничен') || html.includes('challenge') || html.includes('captcha') || html.length < 5000) return put(ck, null);
-    const gone = ['этот товар закончился', 'товар закончился', 'нет в наличии', 'товар распродан'].some(m => html.includes(m));
-    if (gone) return put(ck, false);
-    const alive = html.includes('добавить в корзину') || html.includes('в корзину');
-    return put(ck, alive ? true : null);
+    if (free <= 0) return put(ck, null);
+    const sku = items[0] && (items[0].product_id || items[0].sku);
+    return put(ck, sku ? `https://www.ozon.ru/product/${sku}/` : null);
   } catch (e) { return put(ck, null); }
-}
-
-async function checkOzon(it) {
-  const api = await checkOzonApi(it.ozonOffer);
-  if (api !== null) return api;
-  const man = checkOzonManual(it);
-  if (man !== null) return man;
-  return await checkOzonPage(it.ozonUrl);
 }
 
 export default async function handler(req, res) {
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
-  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=1800');
+  res.setHeader('Cache-Control', 's-maxage=1800, stale-while-revalidate=3600');
   if (req.method !== 'POST') return res.status(405).json({ error: 'method not allowed' });
 
   try {
     const b = typeof req.body === 'string' ? JSON.parse(req.body) : (req.body || {});
-    const items = (Array.isArray(b.items) ? b.items : []).slice(0, 12);
-    const out = {};
+    const items = (Array.isArray(b.items) ? b.items : []).slice(0, 8);
+    const links = {};
 
     await Promise.all(items.map(async it => {
-      const id = String(it.id || '');
-      if (!id) return;
+      const id = String(it.id || ''); if (!id) return;
       const r = {};
-      if (it.wb) {
-        const ok = await checkWb(it.wb);
-        if (ok) r.wb = `https://www.wildberries.ru/catalog/${encodeURIComponent(it.wb)}/detail.aspx`;
-      }
-      if (it.ozonUrl) {
-        const ok = await checkOzon(it);      // null = не уверены -> ссылку не показываем
-        if (ok === true) r.ozon = it.ozonUrl;
-      }
-      if (Object.keys(r).length) out[id] = r;
+      const wb = await findOnWb(it.name || '');
+      if (wb) r.wb = wb;
+      const oz = await findOnOzon(it.ozonOffer);
+      if (oz) r.ozon = oz;
+      if (Object.keys(r).length) links[id] = r;
     }));
 
-    return res.status(200).json({ ok: true, links: out, checkedOzon: !!(process.env.OZON_CLIENT_ID && process.env.OZON_API_KEY) });
+    return res.status(200).json({ ok: true, links, ozonReady: !!(process.env.OZON_CLIENT_ID && process.env.OZON_API_KEY) });
   } catch (e) {
     return res.status(500).json({ error: String(e.message || e) });
   }
