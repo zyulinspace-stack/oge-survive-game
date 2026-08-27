@@ -90,7 +90,9 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .plan{background:#fffdf0;border:1px solid #f2e6a8;border-radius:12px;padding:14px 16px;margin:6px 0 14px}
 .plan-h{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px;color:#7a5c00}
 .plan-row{display:flex;gap:10px;font-size:13px;padding:6px 0;border-top:1px solid #f0e5a0;line-height:1.4}
-.plan-row:nth-of-type(2){border-top:0}
+.plan-row.first{border-top:0}
+.plan-sub{font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:#a8790a;margin:10px 0 2px}
+.plan-sub:first-of-type{margin-top:2px}
 .plan-row b{flex:0 0 118px;color:#111}
 .plan-row span{color:#4b5563}
 .rm{font-size:11px;font-weight:700;letter-spacing:.2px;position:absolute;top:9px;right:10px;background:none;border:0;color:#b6bcc4;font-size:17px;cursor:pointer;line-height:1}
@@ -665,7 +667,7 @@ function renderIntro(){
         <div class="fact"><b>Восстановление</b><span>как быстро отходите после нагрузки</span></div>
         <div class="fact"><b>Питание</b><span>сколько приёмов пищи и много ли белка</span></div>
         <div class="fact"><b>Сон</b><span>засыпание, ночные пробуждения, кофе после обеда</span></div>
-        <div class="fact"><b>Стресс и тяга на сладкое</b><span>когда накрывает и как проявляется</span></div>
+        <div class="fact"><b>Стресс и тяга к сладкому</b><span>когда накрывает и как проявляется</span></div>
         <div class="fact"><b>ЖКТ и ограничения</b><span>лактоза, растительное питание, тяжесть после еды</span></div>
         <div class="fact"><b>Здоровье</b><span>давление, аллергии — что исключить из набора</span></div>
         <div class="fact"><b>Бюджет и вкусы</b><span>чтобы набор реально купили и допили</span></div>
@@ -752,7 +754,7 @@ const WHY={
   sleep_wake:'Ночные пробуждения часто связаны с нехваткой магния — это видно по составу набора.',
   stress:'На стрессе организм тратит больше магния и витаминов группы B, и обычной еды перестаёт хватать.',
   stress_symptom:'По тому, как именно проявляется стресс, понятно, чего не хватает: сна, магния или энергии днём.',
-  sweet:'Тяга на сладкое — почти всегда нехватка энергии днём, а не слабая воля. Это решается режимом питания.',
+  sweet:'Тяга к сладкому — почти всегда нехватка энергии днём, а не слабая воля. Это решается режимом питания.',
   sweet_when:'Вечерняя тяга и дневная лечатся по-разному, поэтому уточняем время.',
   digestion:'При тяжести и вздутии часть продуктов стоит заменить на более щадящие — например, изолят вместо концентрата.',
   restrictions:'Чтобы не предложить то, что вам нельзя: например, молочный протеин при непереносимости лактозы.',
@@ -916,11 +918,13 @@ function mathData(P){
   const norm=proteinNorm(P); if(!norm||!P.weight)return null;
   const perMeal={'12':2,'3':3,'45':4.5}[P.meals]||3;
   const q={high:32,mid:26,low:18}[P.diet_protein]||24;
+  const floorShare={low:0.6,mid:0.72,high:0.82}[P.diet_protein]||0.7;
   let food=Math.round(perMeal*q/5)*5;
   food=Math.min(food,Math.round(norm*0.85/5)*5);
+  food=Math.max(food,Math.round(norm*floorShare/5)*5);
   const gap=Math.max(0,norm-food);
   const share=Math.round(food/norm*100);
-  const port=Math.max(1,Math.min(4,Math.round(gap/25)));
+  const port=Math.max(1,Math.min(4,Math.round(gap/30)));
   const water=Math.min(4,(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0))).toFixed(1).replace('.',',');
   const meal={'12':'один-два раза в день','3':'три раза в день','45':'четыре-пять раз в день'}[P.meals]||'как получается';
   const dietWord={high:'много белковой еды',mid:'белковая еда есть, но не в каждый приём',low:'белковой еды мало'}[P.diet_protein]||'обычный рацион';
@@ -1221,6 +1225,28 @@ function renderResult(){
   </div>`;
   if(AI_ENDPOINT&&!replacing)enrichWithAI(P,picks);
 }
+function planHtml(plan,P){
+  if(!Array.isArray(plan)||!plan.length)return '';
+  const esc=v=>String(v==null?'':v).replace(/[<>]/g,'');
+  const trains=P&&P.freq&&P.freq!=='0';
+  let rows=plan.filter(p=>p&&(p.when||p.items));
+  if(!trains){
+    rows=rows.filter(p=>!/трениров/i.test(String(p.when||''))).map(p=>Object.assign({},p,{day:'any'}));
+  }
+  if(!rows.length)return '';
+  const grp={any:[],train:[],rest:[]};
+  rows.forEach(p=>{const k=(p.day==='train'||p.day==='rest')?p.day:'any';grp[k].push(p);});
+  const row=(p,i)=>`<div class="plan-row${i===0?' first':''}"><b>${esc(p.when)}</b><span>${esc(p.items)}</span></div>`;
+  let h='<div class="plan"><div class="plan-h">Как принимать</div>';
+  if(!grp.train.length&&!grp.rest.length){
+    h+=grp.any.map(row).join('');
+  }else{
+    if(grp.any.length)h+='<div class="plan-sub">Каждый день</div>'+grp.any.map(row).join('');
+    if(grp.train.length)h+='<div class="plan-sub">В день тренировки</div>'+grp.train.map(row).join('');
+    if(grp.rest.length)h+='<div class="plan-sub">В день отдыха</div>'+grp.rest.map(row).join('');
+  }
+  return h+'</div>';
+}
 async function enrichWithAI(profile,picks){
   const pb=document.getElementById('planbox');
   if(pb)pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div><div class="mini">Составляем план приёма…</div></div>';
@@ -1235,8 +1261,7 @@ async function enrichWithAI(profile,picks){
       window.__analysisPlain=d.sections.map(x=>`${x.title}: ${x.text}`).join('\n\n');
     } else if(d.analysis&&ab){ ab.innerHTML=`<div class="asec"><p>${String(d.analysis).replace(/[<>]/g,'')}</p></div>`; window.__analysisPlain=d.analysis; }
     if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[itemOf(x.id).n];if(ws[i]&&w)ws[i].textContent=w;});}
-    if(pb){if(Array.isArray(d.plan)&&d.plan.length){const dayLab={train:'в день тренировки',rest:'в день отдыха'};
-      pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row" data-when="${p.when||''}"><b>${p.when||''}${p.day&&dayLab[p.day]?`<i style="display:block;font-weight:400;font-style:normal;font-size:11px;color:#a8790a;margin-top:2px">${dayLab[p.day]}</i>`:''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
+    if(pb){pb.innerHTML=planHtml(d.plan,profile);}
   }catch(e){if(pb)pb.innerHTML='';}
 }
 function removeItem(origId){removed[origId]=1;renderResult();}
@@ -1244,8 +1269,10 @@ async function replaceItem(origId){
   if(replacing)return;
   const picks=currentPicks();const setIds=picks.map(p=>p.id);const curId=swaps[origId]||origId;
   const stimBlocked=(P.health||[]).includes('hyper')||(P.health||[]).includes('preg');
-  let cand=Object.keys(CAT).filter(c=>!setIds.includes(c)&&(c!=='plant'||P.restrictions==='vegan'));
+  const dairyBlocked=P.restrictions==='vegan'||P.restrictions==='no_lactose'||(P.health||[]).includes('allergy')||P.digestion==='issues';
+  let cand=Object.keys(CAT).filter(c=>!setIds.includes(c)&&(c!=='plant'||dairyBlocked));
   if(stimBlocked)cand=cand.filter(c=>!['preworkout'].includes(c));
+  if(dairyBlocked)cand=cand.filter(c=>!['whey','casein','gainer'].includes(c));
   const candidates=cand.map(c=>({id:c,name:itemOf(c).n,cat:CAT[c].c}));
   if(!candidates.length)return;
   replacing=origId;renderResult();
