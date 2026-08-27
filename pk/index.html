@@ -375,16 +375,16 @@ body.quiz .wrap{position:relative;z-index:2}
 .cmodal{position:fixed;inset:0;z-index:200;display:none}
 .cmodal.on{display:block}
 .cmodal .back{position:absolute;inset:0;background:rgba(8,8,8,.6);backdrop-filter:blur(3px)}
-.cwin{position:absolute;left:0;right:0;bottom:0;max-height:88dvh;background:var(--bg);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:up .28s cubic-bezier(.22,.9,.25,1)}
+.cwin{position:absolute;left:0;right:0;bottom:0;top:6dvh;background:var(--bg);border-radius:14px 14px 0 0;display:flex;flex-direction:column;animation:up .28s cubic-bezier(.22,.9,.25,1)}
 @keyframes up{from{transform:translateY(30px);opacity:0}to{transform:none;opacity:1}}
-@media(min-width:700px){.cwin{left:50%;transform:translateX(-50%);width:640px;bottom:0;max-height:86dvh;border-radius:14px 14px 0 0}
+@media(min-width:700px){.cwin{left:50%;right:auto;transform:translateX(-50%);width:min(820px,92vw);top:5dvh;bottom:0;border-radius:16px 16px 0 0}
 @keyframes up{from{transform:translateX(-50%) translateY(30px);opacity:0}to{transform:translateX(-50%);opacity:1}}}
-.chead{background:var(--ink);color:#fff;padding:15px 18px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:10px}
-.chead b{font-size:15px}
+.chead{background:var(--ink);color:#fff;padding:17px 20px;border-radius:14px 14px 0 0;display:flex;align-items:center;gap:10px}
+.chead b{font-size:16px}
 .chead small{display:block;color:#9aa0a8;font-size:11.5px;margin-top:2px;font-weight:400}
 .chead .x{margin-left:auto;background:none;border:0;color:#9aa0a8;font:inherit;font-size:13px;cursor:pointer;padding:4px 6px}
-.cbody{flex:1;overflow-y:auto;padding:16px 18px;-webkit-overflow-scrolling:touch}
-.msg2{margin-bottom:14px;font-size:14px;line-height:1.55;max-width:88%}
+.cbody{flex:1;min-height:0;overflow-y:auto;padding:18px 20px;-webkit-overflow-scrolling:touch}
+.msg2{margin-bottom:14px;font-size:14.5px;line-height:1.6;max-width:86%}
 .msg2.me{margin-left:auto;background:var(--ink);color:#fff;padding:11px 14px;border-radius:12px 12px 4px 12px}
 .msg2.ai{background:var(--surface);border:1px solid var(--border);padding:12px 14px;border-radius:12px 12px 12px 4px}
 .msg2.ai.wait{color:var(--muted);font-style:italic}
@@ -395,7 +395,7 @@ body.quiz .wrap{position:relative;z-index:2}
 .cpresets{display:flex;gap:7px;flex-wrap:wrap;padding:0 18px 12px}
 .cpresets button{background:var(--surface);border:1px solid var(--border);border-radius:100px;padding:7px 12px;font:inherit;font-size:12.5px;cursor:pointer;color:#4b5563}
 .cfoot{padding:12px 18px calc(env(safe-area-inset-bottom) + 14px);border-top:1px solid var(--border);display:flex;gap:9px;background:var(--bg)}
-.cfoot input{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:13px 14px;font:inherit;font-size:15px}
+.cfoot input{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:15px 16px;font:inherit;font-size:15.5px}
 .cfoot input:focus{outline:none;border-color:var(--yellow)}
 .cfoot button{background:var(--yellow);border:0;border-radius:10px;padding:0 18px;font:inherit;font-weight:900;cursor:pointer;font-family:var(--disp);font-style:italic;text-transform:uppercase;font-size:13px}
 .cnote{padding:0 18px 10px;color:var(--muted);font-size:11.5px;line-height:1.4}
