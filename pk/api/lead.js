@@ -45,9 +45,9 @@ function buildLetter({ name, items, plan, analysis, math }) {
 
   return `<!doctype html><html><body style="margin:0;background:#f1f1f1;padding:24px 12px">
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#fff;border-radius:10px;overflow:hidden">
-      <tr><td style="background:#141414;padding:20px 24px">
-        <div style="font:900 18px Arial,sans-serif;color:#fff;letter-spacing:1px">PRIMEKRAFT</div>
-        <div style="font:400 12px Arial,sans-serif;color:#ffcd00;margin-top:3px">Персональный подбор</div>
+      <tr><td style="background:#141414;padding:22px 24px;border-bottom:3px solid #ffcd00">
+        <img src="https://primekraft.ru/images/Logo_primekraft-01.svg" alt="PRIME KRAFT" width="150" style="display:block;max-width:150px;height:auto;filter:brightness(0) invert(1)">
+        <div style="font:400 11px Arial,sans-serif;color:#ffcd00;margin-top:6px;letter-spacing:1.5px;text-transform:uppercase">Персональный подбор</div>
       </td></tr>
       <tr><td style="padding:24px">
         <h1 style="font:900 22px/1.2 Arial,sans-serif;color:#141414;margin:0 0 14px">${hi} комплекс</h1>

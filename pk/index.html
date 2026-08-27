@@ -449,9 +449,9 @@ const QBANK={
   freq:{q:'Сколько тренировок в неделю?',opts:[{v:'0',l:'Пока не тренируюсь'},{v:'1_2',l:'1–2'},{v:'3_4',l:'3–4'},{v:'5',l:'5 и больше'}]},
   ttype:{q:'Какой формат нагрузки вам ближе?',hint:'Если пока не тренируетесь — выберите то, к чему тянет: подберём набор с запасом на старт.',opts:[{v:'strength',l:'Силовые — железо, тренажёры'},{v:'cardio',l:'Кардио — бег, ходьба, велосипед'},{v:'mixed',l:'Смешанное — и то, и другое'},{v:'none_yet',l:'Пока не тренируюсь'}]},
   workout_energy:{q:'Хватает энергии на тренировке?',opts:[{v:'low',l:'Часто вялость, нет драйва'},{v:'ok',l:'В целом норм'}]},
-  recovery_speed:{q:'Как восстанавливаетесь?',hint:'Долго ли болят мышцы после нагрузки.',opts:[{v:'slow',l:'Долго болят, тяжело'},{v:'ok',l:'Нормально'}]},
-  experience:{q:'Опыт приёма спортпита?',opts:[{v:'novice',l:'Новичок'},{v:'exp',l:'Есть опыт'}]},
-  what_taken:{q:'Что уже принимали?',hint:'Отметьте, что подходило — учтём.',multi:true,opts:[{v:'protein',l:'Протеин'},{v:'creatine',l:'Креатин'},{v:'preworkout',l:'Предтрен'},{v:'vitamins',l:'Витамины'},{v:'none',l:'Ничего особо'}]},
+  recovery_speed:{q:'Как восстанавливаетесь после тренировки?',hint:'Речь про мышечную боль на следующий день.',opts:[{v:'slow',l:'Мышцы болят по два-три дня'},{v:'ok',l:'К следующей тренировке уже норм'}]},
+  experience:{q:'Принимали спортпит раньше?',opts:[{v:'novice',l:'Новичок'},{v:'exp',l:'Есть опыт'}]},
+  what_taken:{q:'Что уже принимаете сейчас?',hint:'То, что уже есть, в набор добавлять не будем.',multi:true,opts:[{v:'protein',l:'Протеин'},{v:'creatine',l:'Креатин'},{v:'preworkout',l:'Предтрен'},{v:'vitamins',l:'Витамины'},{v:'none',l:'Ничего особо'}]},
   diet_protein:{q:'Много ли белковой еды в день?',hint:'Мясо, рыба, яйца, творог.',opts:[{v:'low',l:'Мало, редко'},{v:'mid',l:'Средне'},{v:'high',l:'Много, каждый приём'}]},
   meals:{q:'Сколько приёмов пищи в день?',opts:[{v:'12',l:'1–2'},{v:'3',l:'3'},{v:'45',l:'4–5 и дробно'}]},
   water:{q:'Сколько воды в день?',opts:[{v:'low',l:'Меньше литра'},{v:'mid',l:'1–2 литра'},{v:'high',l:'Больше 2 л'}]},
@@ -460,7 +460,7 @@ const QBANK={
   sleep_wake:{q:'Просыпаетесь среди ночи?',opts:[{v:'yes',l:'Да, бывает'},{v:'no',l:'Нет, сплю до утра'}]},
   stress:{q:'Уровень стресса / загруженности?',opts:[{v:'low',l:'Спокойно'},{v:'mid',l:'Средне'},{v:'high',l:'Высокий, на нервах'}]},
   stress_symptom:{q:'Как проявляется?',opts:[{v:'anx',l:'Тревога / раздражительность'},{v:'tired',l:'Упадок сил'},{v:'eat',l:'Заедаю стресс'}]},
-  sweet:{q:'Тянет на сладкое?',opts:[{v:'yes',l:'Да, срываюсь'},{v:'no',l:'Нет'}]},
+  sweet:{q:'Тянет к сладкому?',hint:'Бывает, что вечером рука сама тянется к шоколадке.',opts:[{v:'yes',l:'Да, бывает'},{v:'no',l:'Нет, спокойно обхожусь'}]},
   sweet_when:{q:'Когда сильнее тянет?',opts:[{v:'evening',l:'Вечером'},{v:'afternoon',l:'Днём'},{v:'allday',l:'Весь день'}]},
   digestion:{q:'Как с ЖКТ?',hint:'Вздутие, тяжесть после еды.',opts:[{v:'ok',l:'Всё ок'},{v:'issues',l:'Бывает тяжесть / вздутие'}]},
   restrictions:{q:'Пищевые ограничения?',opts:[{v:'none',l:'Нет'},{v:'vegan',l:'Веган / растительное'},{v:'no_lactose',l:'Без лактозы'}]},
@@ -472,6 +472,23 @@ const QBANK={
 };
 const DESC={goal:'цель (похудение/масса/сила/поддержание)',sex:'пол',age:'возраст',body:'вес и рост (для нормы белка)',freq:'тренировок в неделю',ttype:'формат нагрузки (силовые/кардио/микс)',workout_energy:'хватает ли энергии на тренировке',recovery_speed:'как восстанавливается, долго ли болят мышцы',experience:'опыт приёма спортпита',what_taken:'что уже принимал',diet_protein:'сколько белковой еды в день',meals:'сколько приёмов пищи',water:'сколько воды в день',sleep:'как со сном',caffeine_pm:'кофеин после 16:00',sleep_wake:'просыпается ли ночью',stress:'уровень стресса',stress_symptom:'как проявляется стресс',sweet:'тянет ли на сладкое',sweet_when:'когда тянет на сладкое',digestion:'как ЖКТ',restrictions:'пищевые ограничения (веган/лактоза)',health:'ВАЖНО: противопоказания — давление/сердце, беременность/ГВ',immunity:'часто ли простужается',joints:'беспокоят ли суставы',flavor:'вкусовые предпочтения',budget:'бюджет',slim_amount:'сколько хочет сбросить',slim_tried:'пробовал ли худеть раньше',mass_appetite:'легко ли набирает вес',strength_focus:'сила или выносливость важнее',health_focus:'что подтянуть (энергия/иммунитет/сон/суставы)'};
 const BASE=['goal','sex','age','body','freq','experience','diet_protein','meals','water','sleep','stress','sweet','digestion','restrictions','health','immunity','joints','flavor','budget'];
+
+function isRelevant(id,P){
+  const trains=P.freq&&P.freq!=='0';
+  switch(id){
+    case 'slim_amount': case 'slim_tried': return P.goal==='slim';
+    case 'mass_appetite': return P.goal==='mass';
+    case 'strength_focus': return P.goal==='strength';
+    case 'health_focus': return P.goal==='health';
+    case 'ttype': return trains;
+    case 'workout_energy': case 'recovery_speed': return trains&&P.ttype&&P.ttype!=='none_yet';
+    case 'what_taken': return P.experience==='exp';
+    case 'caffeine_pm': case 'sleep_wake': return P.sleep==='hard'||P.sleep==='tired';
+    case 'stress_symptom': return P.stress==='high';
+    case 'sweet_when': return P.sweet==='yes';
+    default: return true;
+  }
+}
 function followups(id,v){const F=[];if(id==='goal'){if(v==='slim')F.push('slim_amount','slim_tried');if(v==='mass')F.push('mass_appetite');if(v==='strength')F.push('strength_focus');if(v==='health')F.push('health_focus');}if(id==='freq'&&v!=='0')F.push('ttype');if(id==='ttype'&&(v==='strength'||v==='mixed'))F.push('workout_energy','recovery_speed');if(id==='experience'&&v==='exp')F.push('what_taken');if(id==='sleep'&&(v==='hard'||v==='tired'))F.push('caffeine_pm','sleep_wake');if(id==='stress'&&v==='high')F.push('stress_symptom');if(id==='sweet'&&v==='yes')F.push('sweet_when');return F;}
 
 /* ---------- ДВИЖОК ПОДБОРА (правила) ---------- */
@@ -481,12 +498,14 @@ function recommend(P,tweaks){
   const stimBlocked=flags.includes('hyper')||flags.includes('preg')||tweaks.noStim;
   const strengthTraining=P.ttype==='strength'||P.ttype==='mixed';
   const trains=P.freq&&P.freq!=='0';
-  const proteinId=P.restrictions==='vegan'?'plant':'whey';
-  const proteinReason=P.restrictions==='vegan'?'vegan':null;
+  const flags2=P.health||[];
+  const dairyBlocked=P.restrictions==='vegan'||P.restrictions==='no_lactose'||flags2.includes('allergy')||P.digestion==='issues';
+  const proteinId=dairyBlocked?'plant':'whey';
+  const proteinReason=P.restrictions==='vegan'?'vegan':dairyBlocked?'nodairy':null;
   const picks=[];const seenCat={};
   const add=(id,reason)=>{if(picks.find(x=>x.id===id))return;const c=CAT[id].c;if(seenCat[c])return;seenCat[c]=1;picks.push({id,reason});};
   if(P.goal==='slim'){add(proteinId,proteinReason||'anchor_slim');if(!stimBlocked)add('lcarnitine','lcarn');if(P.sweet==='yes'||P.slim_tried==='sryv'||P.meals==='12')add('chrome','appetite');if((P.freq==='0'||P.freq==='1_2'))add('omega3','slim_omega');}
-  else if(P.goal==='mass'){add('gainer','anchor_mass');add('creatine','creatine');add(proteinId,proteinReason||'protein_support');}
+  else if(P.goal==='mass'){if(!dairyBlocked)add('gainer','anchor_mass');add(proteinId,proteinReason||'anchor_mass_protein');add('creatine','creatine');}
   else if(P.goal==='strength'){add('creatine','anchor_strength');if(!stimBlocked&&(P.workout_energy==='low'||P.freq==='5'))add('preworkout','energy');else add('citrulline','energy');add(proteinId,proteinReason||'recovery');}
   else{add('omega3','joints');add('vitc','immunity');add(proteinId,proteinReason||'protein_support');}
   if((P.sleep==='hard'||P.sleep==='tired')||P.stress==='high'||(P.health_focus||[]).includes('sleep'))add('magnesium','sleep');
@@ -496,7 +515,14 @@ function recommend(P,tweaks){
   if(P.recovery_speed==='slow')add('bcaa','recovery');
   if(P.immunity==='often'||(P.health_focus||[]).includes('immunity'))add('vitc','immunity');
   if(P.joints==='yes'||(P.health_focus||[]).includes('joints'))add('omega3','joints');
+  const have=(P.what_taken||[]).filter(x=>x&&x!=='none');
+  const haveMap={protein:['whey','plant','casein'],creatine:['creatine'],preworkout:['preworkout'],vitamins:['vitc','omega3','chrome']};
   let out=picks.slice();
+  if(have.length){
+    const drop=new Set();have.forEach(h=>(haveMap[h]||[]).forEach(id=>drop.add(id)));
+    const kept=out.filter(x=>!drop.has(x.id)||(x.reason||'').startsWith('anchor'));
+    if(kept.length)out=kept;
+  }
   if(stimBlocked)out=out.filter(x=>!['preworkout'].includes(x.id));
   const filler=['omega3','vitc','magnesium'];
   for(const f of filler){if(out.length>=3)break;if(!out.find(x=>x.id===f)&&!seenCat[CAT[f].c]){seenCat[CAT[f].c]=1;out.push({id:f,reason:f==='omega3'?'joints':f==='vitc'?'immunity':'sleep'});}}
@@ -546,7 +572,8 @@ function capturedTags(P){
 function whyText(id,P){
   const norm=proteinNorm(P);
   switch(id){
-    case 'whey': case 'plant': return (P.diet_protein==='low'?'Белка из еды мало — ':'')+`порция закрывает ~30 г из вашей нормы ${norm||''} г, без лишних калорий.`+(P.goal==='slim'?' На дефиците защищает мышцы.':'');
+    case 'plant': if(P.restrictions==='no_lactose'||(P.health||[]).includes('allergy'))return 'Вы отметили непереносимость — взяли растительный протеин без молочного белка и лактозы.';
+    case 'whey': return (P.diet_protein==='low'?'Белка из еды мало — ':'')+`порция закрывает ~30 г из вашей нормы ${norm||''} г, без лишних калорий.`+(P.goal==='slim'?' На дефиците защищает мышцы.':'');
     case 'casein': return 'Медленный белок на ночь — работает, пока вы спите.';
     case 'gainer': return (P.mass_appetite==='hard'?'Вам тяжело набирать вес — ':'')+'концентрат калорий и белка, когда едой норму не добрать.';
     case 'creatine': return P.strength_focus==='endur'?'Плюс к выносливости и восстановлению. Без стимуляторов.':'Плюс к силе и рабочим весам — самая доказанная добавка, без стимуляторов.';
@@ -599,7 +626,7 @@ function renderIntro(){
     <div class="in">
       <div class="kicker">Как это работает</div>
       <h2>Три шага<br>до вашего набора</h2>
-      <div class="step"><div class="no">01</div><div><b>Отвечаете на вопросы</b><p>Не анкета из тридцати пунктов: следующий вопрос зависит от предыдущего ответа. Про цель, тренировки, сон и еду — то, что реально влияет на подбор.</p></div></div>
+      <div class="step"><div class="no">01</div><div><b>Отвечаете на вопросы</b><p>Вопросы идут по одному, и следующий зависит от предыдущего ответа. Про цель, тренировки, сон и еду — то, что реально влияет на подбор.</p></div></div>
       <div class="step"><div class="no">02</div><div><b>Считаем ваши цифры</b><p>Сколько белка нужно при вашем весе и нагрузке, сколько выходит с обычной едой и какая между этим разница. Всё на экране, с пояснением каждой цифры.</p></div></div>
       <div class="step"><div class="no">03</div><div><b>Собираем набор</b><p>Продукты из каталога Prime Kraft, которые закрывают эту разницу, с планом приёма по времени суток и объяснением, зачем здесь каждая банка.</p></div></div>
     </div>
@@ -827,20 +854,20 @@ function stepNext(skipInsight){
 }
 async function aiNext(){
   renderAiLoading('Подбираю следующий вопрос…');
-  const available=Object.keys(QBANK).filter(id=>!asked.includes(id)).map(id=>({id,desc:DESC[id]||id}));
+  const available=Object.keys(QBANK).filter(id=>!asked.includes(id)&&isRelevant(id,P)).map(id=>({id,desc:DESC[id]||id}));
   try{
     const r=await fetch(AI_ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:'next',answers:P,available,asked})});
     if(!r.ok)return localNext();
     const d=await r.json();
     if(d&&d.done)return ensureFinish();
-    if(d&&d.nextId&&QBANK[d.nextId]&&!asked.includes(d.nextId))return renderQById(d.nextId);
+    if(d&&d.nextId&&QBANK[d.nextId]&&!asked.includes(d.nextId)&&isRelevant(d.nextId,P))return renderQById(d.nextId);
     return localNext();
   }catch(e){return localNext();}
 }
 function localNext(){
   let queue=BASE.slice();
   for(const id of Object.keys(P)){const F=followups(id,P[id]);let at=queue.indexOf(id)+1;for(const f of F){if(!queue.includes(f)){queue.splice(at,0,f);at++;}}}
-  const next=queue.find(id=>!asked.includes(id)&&(!QBANK[id].show||QBANK[id].show(P)));
+  const next=queue.find(id=>!asked.includes(id)&&isRelevant(id,P)&&(!QBANK[id].show||QBANK[id].show(P)));
   if(next)renderQById(next);else ensureFinish();
 }
 function ensureFinish(){if(!asked.includes('body'))return renderQById('body');if(!asked.includes('health'))return renderQById('health');finish();}
@@ -886,9 +913,11 @@ function mathData(P){
   let food=Math.round(perMeal*q/5)*5;
   food=Math.min(food,Math.round(norm*0.85/5)*5);
   const gap=Math.max(0,norm-food);
+  const share=Math.round(food/norm*100);
   const port=Math.max(1,Math.min(4,Math.round(gap/25)));
   const water=Math.min(4,(P.weight*0.03+((P.freq==='5'||P.freq==='3_4')?0.5:0))).toFixed(1).replace('.',',');
   const meal={'12':'один-два раза в день','3':'три раза в день','45':'четыре-пять раз в день'}[P.meals]||'как получается';
+  const dietWord={high:'много белковой еды',mid:'белковая еда есть, но не в каждый приём',low:'белковой еды мало'}[P.diet_protein]||'обычный рацион';
   const age={u25:22,'25_35':30,'35_45':40,o45:50}[P.age]||30;
   const h=P.height||(P.sex==='f'?165:178);
   const bmr=10*P.weight+6.25*h-5*age+(P.sex==='f'?-161:5);
@@ -897,7 +926,7 @@ function mathData(P){
   const kcal=Math.round(bmr*act*gk/10)*10;
   const fat=Math.round(P.weight*(P.goal==='slim'?0.9:1.0));
   const carb=Math.max(60,Math.round((kcal-norm*4-fat*9)/4));
-  return {norm,food,gap,port,water,meal,kcal,fat,carb};
+  return {norm,food,gap,share,port,water,meal,dietWord,kcal,fat,carb};
 }
 function renderMath(){
   document.body.classList.remove('quiz');
@@ -914,7 +943,7 @@ function renderMath(){
         <div class="kb"><span class="kbv">${d.fat} г</span><span class="kbl">жиры</span></div>
         <div class="kb"><span class="kbv">${d.carb} г</span><span class="kbl">углеводы</span></div>
       </div>
-      <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Столько белка получается с обычной едой, если есть ${d.meal}.</div></div>
+      <div class="calcrow"><div class="big">≈ ${d.food} г</div><div class="cap">Столько белка даёт обычная еда — мясо, рыба, яйца, творог: у вас ${d.dietWord}, едите ${d.meal}. Это примерно ${d.share}% нормы.</div></div>
       <div class="calcrow gap"><div class="big">${d.gap} г</div><div class="cap">Не хватает каждый день. Это ${d.port} ${d.port===1?'порция':d.port<5?'порции':'порций'} протеина — или недобор, который тормозит результат.</div></div>
       <div class="foot2">${P.goal==='slim'?'Продукты в наборе почти без жиров и сахара — белок добираете, а в калории укладываетесь. ':''}Ещё ориентир: ${d.water} л воды в день.</div>
       <button class="btn btn-accent" onclick="renderResult()">Показать набор →</button>
@@ -949,7 +978,7 @@ function matchBlock(P){
   const G={slim:'снижение веса',mass:'набор массы',strength:'сила и выносливость',health:'поддержание формы'}[P.goal];
   if(G)R.push([`Цель: <b>${G}</b>`, P.goal==='mass'?'Основой сделали гейнер — он калорийнее протеина':P.goal==='slim'?'Основа — протеин без лишних калорий, плюс поддержка жиросжигания':'Основа подобрана под нагрузку, а не «на всякий случай»']);
   if(P.weight)R.push([`Вес: <b>${P.weight} кг</b>${P.freq?', тренировки: <b>'+({'0':'нет','1_2':'1–2 в неделю','3_4':'3–4 в неделю','5':'5 и больше'}[P.freq])+'</b>':''}`, `Норма белка — ${d.norm} г в день, отсюда и объём порций`]);
-  if(P.meals)R.push([`Приёмов пищи: <b>${({'12':'1–2','3':'3','45':'4–5'}[P.meals])}</b>`, `С едой выходит около ${d.food} г — не хватает ${d.gap} г, это ${d.port} ${d.port===1?'порция':'порции'} в день`]);
+  if(P.meals)R.push([`Приёмов пищи: <b>${({'12':'1–2','3':'3','45':'4–5'}[P.meals])}</b>${P.diet_protein?', белковой еды <b>'+({low:'мало',mid:'средне',high:'много'}[P.diet_protein])+'</b>':''}`, `Еда закрывает около ${d.share}% нормы — это ${d.food} г. Остальные ${d.gap} г добираем порциями: ${d.port} ${d.port===1?'порция':'порции'} в день`]);
   if(P.sleep==='hard'||P.sleep==='tired')R.push(['Со сном <b>непросто</b>','Добавили магний B6 на вечер — он работает на восстановление']);
   if(P.stress==='high')R.push(['Стресс <b>высокий</b>','Усилили поддержку нервной системы, стимуляторы не ставим']);
   if(P.sweet==='yes')R.push(['Тянет <b>на сладкое</b>','Положили замену вместо срыва и добавку для контроля аппетита']);
@@ -1130,12 +1159,15 @@ function renderResult(){
   }).join('');
   root.innerHTML=`<div class="screen">
     <div class="card">
-      <div class="rsteps"><div class="rstep on">Ваш набор</div><div class="rstep">Корзина</div><div class="rstep">Оформление</div></div>
       <div class="rhead">
         <h1>${P.name?P.name+', ваш':'Ваш'} <em>персональный комплекс</em> готов</h1>
         <p>Собран из ${picks.length} продуктов Prime Kraft под вашу цель, нагрузку и режим. Ниже — расчёт, план приёма и обоснование по каждому продукту.</p>
       </div>
       <div class="analysis" id="analysisbox"><div class="asec"><h4>Что мы поняли</h4><p>${analysisText(P).replace(/<[^>]+>/g,'')}</p></div></div>
+    <button class="consult-open" onclick="openConsult()">
+      <span class="rh"><i>?</i></span>
+      <span><b>Получить дополнительную консультацию</b><span>Спросите про набор — ответим по каталогу Prime Kraft</span></span>
+    </button>
       ${matchBlock(P)}
       ${econBlock(picks,sum)}
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
@@ -1143,15 +1175,12 @@ function renderResult(){
       ${cards}
       <div id="planbox"></div>
       <div class="total"><span>Набор из ${picks.length} продуктов</span><span class="sum">${sum} ₽</span></div>
-      <a class="btn btn-accent" style="text-decoration:none;text-align:center" href="https://primekraft.ru/catalog/" target="_blank">Купить весь набор →</a>
+      <a class="btn btn-accent" style="text-decoration:none;text-align:center" href="https://primekraft.ru/catalog/" target="_blank" rel="noopener">Перейти в каталог →</a>
+      <div class="qnum" style="margin-top:8px;text-align:center;font-weight:400">Откроется каталог Prime Kraft. Каждый продукт из набора можно открыть отдельно кнопкой «Сайт» на его карточке.</div>
       <div style="margin-top:16px"><div class="qnum" style="margin-bottom:8px">Быстрая корректировка:</div><div id="chatlog"></div>
         <div class="chat-presets"><button class="chip" onclick="chat('cheap')">Дешевле</button><button class="chip" onclick="chat('noStim')">Без стимуляторов</button><button class="chip" onclick="chat('recovery')">Больше на восстановление</button></div></div>
     </div>
     ${(()=>{try{return cmpBlock(picks)}catch(e){return ''}})()}
-    <button class="consult-open" onclick="openConsult()">
-      <span class="rh"><i>?</i></span>
-      <span><b>Получить дополнительную консультацию</b><span>Спросите про набор — ответим по каталогу Prime Kraft</span></span>
-    </button>
     <div class="sent" id="sentbox">${sentInner()}</div>
     ${consultHtml()}
     <div class="disc">Не является медицинским назначением. Подбор продуктов под вашу цель. При заболеваниях проконсультируйтесь со специалистом.</div>
@@ -1173,7 +1202,8 @@ async function enrichWithAI(profile,picks){
       window.__analysisPlain=d.sections.map(x=>`${x.title}: ${x.text}`).join('\n\n');
     } else if(d.analysis&&ab){ ab.innerHTML=`<div class="asec"><p>${String(d.analysis).replace(/[<>]/g,'')}</p></div>`; window.__analysisPlain=d.analysis; }
     if(d.whys){const ws=document.querySelectorAll('.prod .why');picks.forEach((x,i)=>{const w=d.whys[x.id]||d.whys[itemOf(x.id).n];if(ws[i]&&w)ws[i].textContent=w;});}
-    if(pb){if(Array.isArray(d.plan)&&d.plan.length){pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row"><b>${p.when||''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
+    if(pb){if(Array.isArray(d.plan)&&d.plan.length){const dayLab={train:'в день тренировки',rest:'в день отдыха'};
+      pb.innerHTML='<div class="plan"><div class="plan-h">Как принимать</div>'+d.plan.map(p=>`<div class="plan-row" data-when="${p.when||''}"><b>${p.when||''}${p.day&&dayLab[p.day]?`<i style="display:block;font-weight:400;font-style:normal;font-size:11px;color:#a8790a;margin-top:2px">${dayLab[p.day]}</i>`:''}</b><span>${p.items||''}</span></div>`).join('')+'</div>';}else pb.innerHTML='';}
   }catch(e){if(pb)pb.innerHTML='';}
 }
 function removeItem(origId){removed[origId]=1;renderResult();}
