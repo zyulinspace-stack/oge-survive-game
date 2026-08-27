@@ -75,13 +75,20 @@ async function findOnWb(name, dbg) {
     const ours = products
       .filter(p => BRAND.test(p.brand || ''))
       .map(p => {
-        const stock = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
+        const bySizes = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
+        const stock = (typeof p.totalQuantity === 'number' && p.totalQuantity > 0) ? p.totalQuantity : bySizes;
         return { id: p.id, name: p.name, stock, sc: score(name, p.name) };
       })
       .filter(p => p.stock > 0 && p.sc >= 0.4)
       .sort((a, b) => b.sc - a.sc || b.stock - a.stock);
 
     if (dbg) dbg.ours = ours.slice(0, 3);
+    if (dbg) dbg.brandAll = products.filter(p => BRAND.test(p.brand || '')).slice(0, 5).map(p => ({
+      n: String(p.name).slice(0, 40),
+      q: p.totalQuantity,
+      sizesQ: (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).length), 0),
+      sc: Math.round(score(name, p.name) * 100)
+    }));
     if (!ours.length) { if (dbg) dbg.stage = 'no-match'; return put(key, null); }
     return put(key, `https://www.wildberries.ru/catalog/${ours[0].id}/detail.aspx`);
   } catch (e) { if (dbg) dbg.stage = 'error:' + e.message; return put(key, null); }
