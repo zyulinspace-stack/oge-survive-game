@@ -1121,10 +1121,19 @@ async function askConsult(preset){
 const MP={}; // заполняется из marketplace.json: {"<id товара>":{"wb":"https://...","ozon":"https://..."}}
 async function loadMP(){try{const r=await fetch('marketplace.json');if(!r.ok)return;const j=await r.json();for(const k in j){if(k.charAt(0)!=='_')MP[k]=j[k];}}catch(e){}}
 let MPLIVE={};              // проверенные ссылки: только товары в наличии
+let MPMODE='';              // '' — ещё не проверяли | 'verified' — проверка прошла | 'blocked' — Ozon не пустил
+const ozonSearchUrl=it=>'https://www.ozon.ru/search/?text='+encodeURIComponent('Prime Kraft '+String(it.n||'').replace(/со\s+вкусом[^,]*/gi,''));
 function mpLinks(it){
   const l=MPLIVE[String(it.id||'')]||{};
-  const ozon=l.ozon||('https://www.ozon.ru/search/?text='+encodeURIComponent('Prime Kraft '+String(it.n||'').replace(/со\s+вкусом[^,]*/gi,'')));
-  return `<a href="${ozon}" target="_blank" rel="noopener">Ozon</a>`+(l.wb?`<a href="${l.wb}" target="_blank" rel="noopener">WB</a>`:'');
+  const a=(href,label)=>`<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
+  let out='';
+  // Ozon: проверенная ссылка на карточку; если проверка не прошла (Ozon закрылся) — поиск по бренду;
+  // если проверка прошла и товара нет — кнопки нет вовсе.
+  if(l.ozon)out+=a(l.ozon,'Ozon');
+  else if(MPMODE!=='verified')out+=a(ozonSearchUrl(it),'Ozon');
+  // WB: только проверенная ссылка на карточку в наличии.
+  if(l.wb)out+=a(l.wb,'WB');
+  return out;
 }
 async function checkMarketplaces(picks){
   const items=picks.map(x=>{const it=itemOf(x.id);const m=MP[String(it.id||'')]||MP[String(it.n||'')]||{};
@@ -1133,7 +1142,10 @@ async function checkMarketplaces(picks){
   try{
     const r=await fetch('/api/mp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
     const d=await r.json();
-    if(d&&d.links&&Object.keys(d.links).length){MPLIVE=d.links;renderResult();}
+    if(!d||d.error)return;
+    MPLIVE=(d.links&&typeof d.links==='object')?d.links:{};
+    MPMODE=d.ozonMode==='blocked'?'blocked':'verified';
+    renderResult();
   }catch(e){}
 }
 function cmpWhy(x){
