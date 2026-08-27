@@ -52,10 +52,14 @@ const WB_ENDPOINTS = [
   'https://search.wb.ru/exactmatch/ru/common/v4/search'
 ];
 
-async function wbSearch(query, dbg) {
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+// Один запрос к конкретной версии поиска WB. 429 (нас притормаживают) — одна повторная попытка.
+async function wbFetch(base, query, dbg) {
+  const ver = base.split('/common/')[1];
   const qs = `appType=1&curr=rub&dest=-1257786&spp=30&suppressSpellcheck=false&resultset=catalog&sort=popular&limit=30&query=${encodeURIComponent(query)}`;
-  for (const base of WB_ENDPOINTS) {
-    const ver = base.split('/common/')[1];
+  const note = t => { if (dbg) dbg.tried = (dbg.tried || []).concat(ver + ':' + t); };
+  for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const r = await fetch(`${base}?${qs}`, {
         headers: {
@@ -67,18 +71,27 @@ async function wbSearch(query, dbg) {
         }
       });
       const raw = await r.text();
-      let j = null; try { j = JSON.parse(raw); } catch (e) {
-        if (dbg) dbg.tried = (dbg.tried || []).concat(ver + ':' + r.status + ':not-json:' + raw.slice(0, 40));
-        continue;
-      }
+      if (r.status === 429) { note('429' + (attempt ? ':retry' : '')); await sleep(400 + attempt * 500); continue; }
+      let j = null; try { j = JSON.parse(raw); } catch (e) { note(r.status + ':not-json'); return []; }
       const products = (j && j.data && j.data.products) || (j && j.products) || [];
-      if (dbg) dbg.tried = (dbg.tried || []).concat(ver + ':' + r.status + ':' + products.length);
-      if (products.length) return products;
-    } catch (e) {
-      if (dbg) dbg.tried = (dbg.tried || []).concat(ver + ':err:' + String(e.message || e).slice(0, 40));
-    }
+      note(r.status + ':' + products.length);
+      return products;
+    } catch (e) { note('err:' + String(e.message || e).slice(0, 30)); return []; }
   }
   return [];
+}
+
+// Перебираем версии поиска, пока не найдём выдачу, где ЕСТЬ товары нашего бренда.
+// Раньше брали первую непустую выдачу — и на мусорном ответе (один чужой товар) поиск обрывался.
+async function wbSearch(query, dbg) {
+  let best = [];
+  for (const base of WB_ENDPOINTS) {
+    const products = await wbFetch(base, query, dbg);
+    if (products.some(p => BRAND.test(p.brand || ''))) return products;
+    if (products.length > best.length) best = products;
+  }
+  if (dbg && best.length) dbg.noBrandAnywhere = true;
+  return best;
 }
 
 async function findOnWb(name, dbg) {
@@ -241,6 +254,15 @@ async function findOnOzon(item, dbg) {
 
 /* ---------------- HANDLER ---------------- */
 
+// Не больше N запросов одновременно — иначе WB отвечает 429 всем сразу.
+async function mapLimit(arr, limit, fn) {
+  let i = 0;
+  const workers = Array.from({ length: Math.min(limit, arr.length) }, async () => {
+    while (i < arr.length) { const idx = i++; await fn(arr[idx]); }
+  });
+  await Promise.all(workers);
+}
+
 const DEFAULT_PROBE = [
   { id: 'creatine', name: 'Креатин моногидрат, 200 г' },
   { id: 'whey', name: 'Сывороточный протеин Whey, 900 г' },
@@ -279,7 +301,7 @@ export default async function handler(req, res) {
     const debug = b.debug ? {} : null;
     let ozonMode = 'verified';
 
-    await Promise.all(items.map(async it => {
+    await mapLimit(items, 2, async it => {
       const id = String(it.id || ''); if (!id) return;
       const r = {};
       const dbg = debug ? (debug[id] = {}) : null;
@@ -292,7 +314,7 @@ export default async function handler(req, res) {
       if (oz.link) r.ozon = oz.link;
 
       if (Object.keys(r).length) links[id] = r;
-    }));
+    });
 
     return res.status(200).json({ ok: true, links, ozonMode, debug, ozonReady: ozonKeysSet() });
   } catch (e) {
