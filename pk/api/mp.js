@@ -52,12 +52,33 @@ const WB_ENDPOINTS = [
   'https://search.wb.ru/exactmatch/ru/common/v4/search'
 ];
 
+// WB иногда отдаёт 200 с телом, которое строгий JSON.parse не берёт (управляющие символы,
+// обрезанный хвост). Пытаемся вытащить хотя бы массив товаров, прежде чем сдаться.
+function parseLoose(raw) {
+  if (!raw || raw.charAt(0) !== '{') return null;
+  try { return JSON.parse(raw); } catch (e) {}
+  try { return JSON.parse(raw.replace(/[\u0000-\u001f]+/g, ' ')); } catch (e) {}
+  const i = raw.indexOf('"products"');
+  if (i > 0) {
+    const start = raw.indexOf('[', i);
+    if (start > 0) {
+      let depth = 0;
+      for (let k = start; k < raw.length; k++) {
+        const c = raw[k];
+        if (c === '[') depth++;
+        else if (c === ']') { depth--; if (!depth) { try { return { data: { products: JSON.parse(raw.slice(start, k + 1)) } }; } catch (e) { return null; } } }
+      }
+    }
+  }
+  return null;
+}
+
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 // Один запрос к конкретной версии поиска WB. 429 (нас притормаживают) — одна повторная попытка.
 async function wbFetch(base, query, dbg) {
   const ver = base.split('/common/')[1];
-  const qs = `appType=1&curr=rub&dest=-1257786&spp=30&suppressSpellcheck=false&resultset=catalog&sort=popular&limit=30&query=${encodeURIComponent(query)}`;
+  const qs = `appType=1&curr=rub&dest=-1257786&spp=30&suppressSpellcheck=true&resultset=catalog&sort=popular&limit=30&query=${encodeURIComponent(query)}`;
   const note = t => { if (dbg) dbg.tried = (dbg.tried || []).concat(ver + ':' + t); };
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
@@ -71,8 +92,9 @@ async function wbFetch(base, query, dbg) {
         }
       });
       const raw = await r.text();
-      if (r.status === 429) { note('429' + (attempt ? ':retry' : '')); await sleep(400 + attempt * 500); continue; }
-      let j = null; try { j = JSON.parse(raw); } catch (e) { note(r.status + ':not-json'); return []; }
+      if (r.status === 429) { note('429' + (attempt ? ':retry' : '')); await sleep(700 + attempt * 800); continue; }
+      const j = parseLoose(raw);
+      if (!j) { note(r.status + ':not-json'); return []; }
       const products = (j && j.data && j.data.products) || (j && j.products) || [];
       note(r.status + ':' + products.length);
       return products;
@@ -99,8 +121,12 @@ async function findOnWb(name, dbg) {
   const hit = dbg ? null : cached(key); if (hit !== null) return hit;
   try {
     const clean = cleanName(name);
+    const short = keyWords(name).slice(0, 3).join(' ');
+    const ourBrand = ps => ps.some(p => BRAND.test(p.brand || ''));
     let products = await wbSearch('Prime Kraft ' + clean.slice(0, 60), dbg);
-    if (!products.length) products = await wbSearch('Primekraft ' + clean.slice(0, 50), dbg);
+    // Второй заход — тем же брендом, но коротким названием. Написание «Primekraft» одним словом
+    // WB не знает и подменяет запрос своим словарём: в выдаче оказывается чужой бренд.
+    if (!ourBrand(products) && short) products = await wbSearch('Prime Kraft ' + short, dbg);
     if (dbg) { dbg.found = products.length; dbg.brands = [...new Set(products.map(p => p.brand))].slice(0, 8); }
     if (!products.length) { if (dbg) dbg.stage = 'empty'; return put(key, null); }
 
