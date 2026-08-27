@@ -366,6 +366,13 @@ body.quiz .wrap{position:relative;z-index:2}
 
 
 /* ==== КОНСУЛЬТАНТ ==== */
+.consult-box{background:var(--surface);border:1.5px solid var(--ink);border-radius:8px;padding:16px;margin:6px 0 0}
+.ch-top{display:flex;gap:13px;align-items:flex-start;margin-bottom:12px}
+.ch-top b{display:block;font-size:15.5px;margin-bottom:3px}
+.ch-top span{font-size:12.5px;color:var(--muted);line-height:1.4}
+.ch-ex{display:flex;flex-wrap:wrap;gap:7px}
+.ch-ex button{background:var(--surface2);border:1px solid var(--border);border-radius:100px;padding:8px 13px;font:inherit;font-size:12.5px;color:#4b5563;cursor:pointer;transition:.15s}
+.ch-ex button:hover{border-color:var(--yellow);background:#fffdf0}
 .consult-open{width:100%;margin:6px 0 0;background:var(--surface);border:1.5px solid var(--ink);border-radius:8px;padding:15px 16px;text-align:left;cursor:pointer;font-family:inherit;display:flex;gap:13px;align-items:center;transition:.15s}
 .consult-open:hover{background:var(--surface2)}
 .consult-open .rh{flex:0 0 34px;height:34px;background:var(--yellow);transform:rotate(45deg);display:grid;place-items:center}
@@ -792,20 +799,19 @@ const MS_AT={3:0,7:1,12:2};
 let msShown={};
 let msUsed=[];
 function msLine(n){
-  const nm=P.name?P.name+', ':'';
   const G={mass:'набор массы',slim:'снижение веса',strength:'сила и выносливость',health:'форма'}[P.goal];
   const opts={
-    3:[ G?nm+'цель ясна — '+G+'. Дальше уточним режим и восстановление':nm+'основа набора ясна. Дальше — про режим и восстановление',
-        nm+'первое понятно. Дальше пара вопросов про нагрузку' ],
-    6:[ (P.sleep==='hard'||P.sleep==='tired')?nm+'видим: со сном непросто — это меняет набор':null,
-        (P.freq==='5'||P.freq==='3_4')?nm+'нагрузка серьёзная — учтём её в расчёте':null,
-        (P.meals==='12')?nm+'едите редко — значит белок придётся добирать порциями':null,
-        nm+'половина позади. Дальше — про еду и самочувствие' ],
-    9:[ nm+'почти всё. Осталось уточнить детали и посчитать вашу норму',
-        nm+'финальные вопросы — дальше сразу цифры и набор' ]
-  }[n]||[nm+'идём дальше'];
+    3:[ G?'Цель ясна — '+G+'. Дальше уточним режим и восстановление':'Основа набора ясна. Дальше — про режим и восстановление',
+        'Первое понятно. Дальше пара вопросов про нагрузку' ],
+    6:[ (P.sleep==='hard'||P.sleep==='tired')?'Видим: со сном непросто — это меняет набор':null,
+        (P.freq==='5'||P.freq==='3_4')?'Нагрузка серьёзная — учтём её в расчёте':null,
+        (P.meals==='12')?'Едите редко — значит белок придётся добирать порциями':null,
+        'Половина позади. Дальше — про еду и самочувствие' ],
+    9:[ 'Почти всё. Осталось уточнить детали и посчитать вашу норму',
+        'Финальные вопросы — дальше сразу цифры и набор' ]
+  }[n]||['Идём дальше'];
   for(const t of opts){ if(t&&!msUsed.includes(t)){ msUsed.push(t); return t; } }
-  return nm+'идём дальше — осталось немного';
+  return 'Идём дальше — осталось немного';
 }
 function renderMilestone(n){
   document.body.classList.remove('quiz');
@@ -835,7 +841,7 @@ function renderInsight(){
     <div class="shot"></div><div class="veil"></div><span class="rhomb" style="top:26px;right:-14px"></span>
     <div class="inner">
       <div class="kicker">Уже кое-что видно</div>
-      <h2>${cap(hi()||'')}${hi()?'у вас':'У вас'} ${d.facts}</h2>
+      <h2>${cap(d.facts)}</h2>
       <p>${d.body}</p>
       <button class="btn btn-accent" onclick="stepNext(true)">Понятно, дальше →</button>
     </div>
@@ -936,7 +942,7 @@ function renderMath(){
     <img class="shaker" src="shaker.png" alt="" onerror="this.remove()">
     <div class="inner">
       <div class="kicker">Считаем по вашим ответам</div>
-      <h2>${hi()?cap(hi())+'вот':'Вот'} ваши цифры</h2>
+      <h2>Вот ваши цифры</h2>
       <div class="kbju">
         <div class="kb"><span class="kbv">${d.kcal}</span><span class="kbl">ккал в день</span></div>
         <div class="kb"><span class="kbv">${d.norm} г</span><span class="kbl">белки</span></div>
@@ -1003,7 +1009,7 @@ function renderGate(){
     <div class="shot" style="background-image:url('${MS_IMG[2]}')"></div><div class="veil"></div>
     <div class="in">
       <div class="kicker">Осталось меньше половины</div>
-      <h2>${nm?cap(nm)+'куда':'Куда'} прислать готовый подбор?</h2>
+      <h2>Куда прислать готовый подбор?</h2>
       <p class="sub">Когда закончим, пришлём на почту состав, расчёт и план приёма — чтобы не потерять и можно было вернуться в любой момент.</p>
       <div class="whyq" id="why_mail" style="margin-top:10px"><button onclick="document.getElementById('why_mail').classList.toggle('open')">Почему мы спрашиваем?</button><div class="body">Вы уже ответили на девять вопросов. Страница закроется — и подбор пропадёт, а на почте он останется навсегда: с ценами, дозировками и планом приёма. Рекламу без вашего согласия не шлём.</div></div>
       <input class="mailfield" id="gmail" type="email" inputmode="email" autocomplete="email" placeholder="name@mail.ru">
@@ -1048,9 +1054,10 @@ function sentInner(){
     ${leadSent?'<button class="again" onclick="sendLead(leadEmail)">Отправить ещё раз</button>':''}</div>`;
 }
 
-function openConsult(){
+function openConsult(q){
   document.getElementById('cmodal').classList.add('on');
   document.body.style.overflow='hidden';
+  if(q){setTimeout(()=>askConsult(q),200);return;}
   const inp=document.getElementById('cinp'); if(inp)setTimeout(()=>inp.focus(),250);
 }
 function closeConsult(){
@@ -1064,7 +1071,7 @@ function consultHtml(){
     <div class="cwin">
       <div class="chead"><div><b>Консультант Prime Kraft</b><small>отвечает только по каталогу Prime Kraft</small></div><button class="x" onclick="closeConsult()">Закрыть</button></div>
       <div class="cbody" id="cbody">
-        <div class="msg2 ai">${nm}спрашивайте про набор: чем заменить продукт, как принимать, что добавить под вашу задачу. Советую только то, что есть в каталоге — если чего-то нет, так и скажу.</div>
+        <div class="msg2 ai">Спрашивайте про набор: чем заменить продукт, как принимать, что добавить под вашу задачу. Советую только то, что есть в каталоге — если чего-то нет, так и скажу.</div>
       </div>
       <div class="cpresets">
         <button onclick="askConsult('Чем заменить протеин, если не подходит?')">Чем заменить протеин</button>
@@ -1106,6 +1113,25 @@ async function askConsult(preset){
   }
   body.scrollTop=body.scrollHeight;
 }
+// прямые ссылки на маркетплейсы: только из проверенной таблицы MP (артикул -> ссылка)
+const MP={}; // заполняется из marketplace.json: {"<id товара>":{"wb":"https://...","ozon":"https://..."}}
+async function loadMP(){try{const r=await fetch('marketplace.json');if(!r.ok)return;const j=await r.json();for(const k in j){if(k.charAt(0)!=='_')MP[k]=j[k];}}catch(e){}}
+let MPLIVE={};              // проверенные ссылки: только товары в наличии
+function mpLinks(it){
+  const l=MPLIVE[String(it.id||'')];
+  if(!l)return '';
+  return (l.ozon?`<a href="${l.ozon}" target="_blank" rel="noopener">Ozon</a>`:'')+(l.wb?`<a href="${l.wb}" target="_blank" rel="noopener">WB</a>`:'');
+}
+async function checkMarketplaces(picks){
+  const items=picks.map(x=>{const it=itemOf(x.id);const m=MP[String(it.id||'')]||MP[String(it.n||'')];
+    return m?Object.assign({id:String(it.id||'')},m):null;}).filter(Boolean);
+  if(!items.length)return;
+  try{
+    const r=await fetch('/api/mp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
+    const d=await r.json();
+    if(d&&d.links&&Object.keys(d.links).length){MPLIVE=d.links;renderResult();}
+  }catch(e){}
+}
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
@@ -1136,6 +1162,7 @@ function currentPicks(){return recommend(P,tweaks).map(x=>({origId:x.id,id:swaps
 function renderResult(){
   document.body.classList.remove('quiz');
   if(leadEmail&&!leadSent&&!window.__leadFired){window.__leadFired=1;setTimeout(()=>sendLead(leadEmail),1200);}
+  if(!window.__mpFired){window.__mpFired=1;setTimeout(()=>checkMarketplaces(currentPicks()),600);}
   const picks=currentPicks();const sum=picks.reduce((a,x)=>a+itemOf(x.id).price,0);
   const tags=capturedTags(P).map(t=>`<span class="tag">${t}</span>`).join('');
   const cards=picks.map(x=>{
@@ -1150,8 +1177,8 @@ function renderResult(){
         <div class="why">${loading?'<span class="mini">Подбираем замену…</span>':why}</div>
         ${flavorLine(x.id,P)}
         ${(()=>{const d=doseOf(x.id,it);return d?`<div class="dose">${d.perDay} ${d.unit} в день · упаковки хватит примерно на ${d.days} дн.</div>`:'';})()}
-        ${it.available===false?'<div class="flav" style="color:#c0392b">Сейчас нет на сайте — берите на Ozon/WB</div>':''}<div class="price">${it.price} ₽</div>
-        <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank">Сайт</a><a href="https://www.ozon.ru/search/?text=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">Ozon</a><a href="https://www.wildberries.ru/catalog/0/search.aspx?search=Prime+Kraft+${encodeURIComponent(it.n)}" target="_blank">WB</a></div>
+        ${it.available===false?'<div class="flav" style="color:#c0392b">Сейчас нет на сайте</div>':''}<div class="price">${it.price} ₽</div>
+        <div class="buys"><a class="site" href="${/^https?:/.test(it.url)?it.url:IMG+it.url}" target="_blank" rel="noopener">Открыть на сайте</a>${mpLinks(it)}</div>
         <button class="repl" onclick="replaceItem('${x.origId}')">Заменить продукт</button>
       </div>
       <button class="rm" title="Убрать из набора" onclick="removeItem('${x.origId}')">Убрать</button>
@@ -1164,10 +1191,16 @@ function renderResult(){
         <p>Собран из ${picks.length} продуктов Prime Kraft под вашу цель, нагрузку и режим. Ниже — расчёт, план приёма и обоснование по каждому продукту.</p>
       </div>
       <div class="analysis" id="analysisbox"><div class="asec"><h4>Что мы поняли</h4><p>${analysisText(P).replace(/<[^>]+>/g,'')}</p></div></div>
-    <button class="consult-open" onclick="openConsult()">
-      <span class="rh"><i>?</i></span>
-      <span><b>Получить дополнительную консультацию</b><span>Спросите про набор — ответим по каталогу Prime Kraft</span></span>
-    </button>
+    <div class="consult-box">
+      <div class="ch-top"><span class="rh"><i>?</i></span><div><b>Остались вопросы по набору?</b><span>Спросите консультанта — он видит ваш подбор и отвечает по каталогу Prime Kraft</span></div></div>
+      <div class="ch-ex">
+        <button onclick="openConsult('Чем заменить протеин?')">Чем заменить протеин?</button>
+        <button onclick="openConsult('Можно ли пить всё это вместе?')">Можно ли пить вместе?</button>
+        <button onclick="openConsult('Что убрать, если хочу дешевле?')">Что убрать, если дорого?</button>
+        <button onclick="openConsult('На сколько хватит этого набора?')">На сколько хватит?</button>
+      </div>
+      <button class="btn btn-primary" style="margin-top:12px" onclick="openConsult()">Задать свой вопрос</button>
+    </div>
       ${matchBlock(P)}
       ${econBlock(picks,sum)}
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
@@ -1276,7 +1309,7 @@ async function loadCatalog(){
     }
   }catch(e){}
 }
-loadCatalog();
+loadCatalog();loadMP();
 start();
 </script>
 </body>
