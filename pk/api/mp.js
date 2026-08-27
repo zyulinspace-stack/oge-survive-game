@@ -31,20 +31,46 @@ function score(query, candidate) {
   return a.size ? hit / a.size : 0;
 }
 
+const WB_ENDPOINTS = [
+  'https://search.wb.ru/exactmatch/ru/common/v14/search',
+  'https://search.wb.ru/exactmatch/ru/common/v13/search',
+  'https://search.wb.ru/exactmatch/ru/common/v9/search',
+  'https://search.wb.ru/exactmatch/ru/common/v5/search',
+  'https://search.wb.ru/exactmatch/ru/common/v4/search'
+];
+
+async function wbSearch(query, dbg) {
+  const qs = `appType=1&curr=rub&dest=-1257786&spp=30&suppressSpellcheck=false&resultset=catalog&sort=popular&limit=30&query=${encodeURIComponent(query)}`;
+  for (const base of WB_ENDPOINTS) {
+    try {
+      const r = await fetch(`${base}?${qs}`, {
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+          'Accept': 'application/json, text/plain, */*',
+          'Accept-Language': 'ru-RU,ru;q=0.9',
+          'Origin': 'https://www.wildberries.ru',
+          'Referer': 'https://www.wildberries.ru/'
+        }
+      });
+      const raw = await r.text();
+      let j = null; try { j = JSON.parse(raw); } catch (e) { continue; }
+      const products = (j && j.data && j.data.products) || (j && j.products) || [];
+      if (dbg) { dbg.tried = (dbg.tried || []).concat(base.split('/common/')[1] + ':' + r.status + ':' + products.length); }
+      if (products.length) return products;
+    } catch (e) { /* пробуем следующий */ }
+  }
+  return [];
+}
+
 async function findOnWb(name, dbg) {
   const key = 'wbq:' + name;
   const hit = dbg ? null : cached(key); if (hit !== null) return hit;
   try {
-    const q = encodeURIComponent('Prime Kraft ' + String(name).replace(/со\s+вкусом[^,]*/gi, '').slice(0, 60));
-    const url = `https://search.wb.ru/exactmatch/ru/common/v13/search?appType=1&curr=rub&dest=-1257786&query=${q}&resultset=catalog&limit=20`;
-    const r = await fetch(url, { headers: { 'User-Agent': 'Mozilla/5.0', 'Accept': 'application/json' } });
-    if (dbg) dbg.httpStatus = r.status;
-    if (!r.ok) { if (dbg) dbg.stage = 'http-error'; return put(key, null); }
-    const raw = await r.text();
-    if (dbg) { dbg.bodyLen = raw.length; dbg.bodyHead = raw.slice(0, 160); }
-    let j = null; try { j = JSON.parse(raw); } catch (e) { if (dbg) dbg.stage = 'not-json'; return put(key, null); }
-    const products = (j && j.data && j.data.products) || j.products || [];
-    if (dbg) { dbg.found = products.length; dbg.brands = [...new Set(products.map(p => p.brand))].slice(0, 6); }
+    const clean = String(name).replace(/со\s+вкусом[^,]*/gi, '').replace(/["«»""]/g, ' ').trim();
+    let products = await wbSearch('Prime Kraft ' + clean.slice(0, 60), dbg);
+    if (!products.length) products = await wbSearch('Primekraft ' + clean.slice(0, 50), dbg);
+    if (dbg) { dbg.found = products.length; dbg.brands = [...new Set(products.map(p => p.brand))].slice(0, 8); }
+    if (!products.length) { if (dbg) dbg.stage = 'empty'; return put(key, null); }
 
     const ours = products
       .filter(p => BRAND.test(p.brand || ''))
@@ -52,13 +78,13 @@ async function findOnWb(name, dbg) {
         const stock = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
         return { id: p.id, name: p.name, stock, sc: score(name, p.name) };
       })
-      .filter(p => p.stock > 0 && p.sc >= 0.5)         // наш бренд, в наличии, похож по названию
+      .filter(p => p.stock > 0 && p.sc >= 0.4)
       .sort((a, b) => b.sc - a.sc || b.stock - a.stock);
 
     if (dbg) dbg.ours = ours.slice(0, 3);
-    if (!ours.length) { if (dbg) dbg.stage = dbg.found ? 'no-match' : 'empty'; return put(key, null); }
+    if (!ours.length) { if (dbg) dbg.stage = 'no-match'; return put(key, null); }
     return put(key, `https://www.wildberries.ru/catalog/${ours[0].id}/detail.aspx`);
-  } catch (e) { return put(key, null); }
+  } catch (e) { if (dbg) dbg.stage = 'error:' + e.message; return put(key, null); }
 }
 
 // Ozon: только при наличии ключей Seller API
