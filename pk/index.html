@@ -1121,33 +1121,99 @@ async function askConsult(preset){
 const MP={}; // заполняется из marketplace.json: {"<id товара>":{"wb":"https://...","ozon":"https://..."}}
 async function loadMP(){try{const r=await fetch('marketplace.json');if(!r.ok)return;const j=await r.json();for(const k in j){if(k.charAt(0)!=='_')MP[k]=j[k];}}catch(e){}}
 let MPLIVE={};              // проверенные ссылки: только товары в наличии
-let MPMODE='';              // '' — ещё не проверяли | 'verified' — проверка прошла | 'blocked' — Ozon не пустил
-const ozonSearchUrl=it=>'https://www.ozon.ru/search/?text='+encodeURIComponent('Prime Kraft '+String(it.n||'').replace(/со\s+вкусом[^,]*/gi,''));
+let MPMODE='';              // '' — ещё не проверяли | 'verified' — проверка прошла
+/* ---------- Проверка наличия на WB прямо из браузера ----------
+   Запросы с адреса дата-центра Wildberries режет лимитом (429), поэтому серверная проверка
+   работала через раз. Из браузера пользователя адрес обычный — лимита нет.
+   Сервер остаётся запасным путём и единственным способом проверить Ozon. */
+const MPBRAND=/prime\s*kraft|primekraft|праймкрафт|прайм\s*крафт/i;
+const WB_VERSIONS=['v14','v13','v9','v5','v4'];
+function mpWords(n){
+  return String(n||'').toLowerCase().replace(/["«»""]/g,' ').replace(/со\s+вкусом[^,]*/g,' ')
+    .replace(/[^a-zа-я0-9\s]/gi,' ').split(/\s+/)
+    .filter(w=>w.length>2&&!['для','без','при','гр'].includes(w)).slice(0,6);
+}
+function mpScore(q,c){const a=new Set(mpWords(q)),b=mpWords(c);let h=0;b.forEach(w=>{if(a.has(w))h++;});return a.size?h/a.size:0;}
+function wbPick(products,name){
+  return products.filter(p=>MPBRAND.test(p.brand||''))
+    .map(p=>{
+      const bySizes=(p.sizes||[]).reduce((a,s)=>a+((s.stocks||[]).reduce((b,x)=>b+(x.qty||0),0)),0);
+      const stock=(typeof p.totalQuantity==='number'&&p.totalQuantity>0)?p.totalQuantity:bySizes;
+      return {id:p.id,stock,sc:mpScore(name,p.name)};
+    })
+    .filter(p=>p.stock>0&&p.sc>=0.4)
+    .sort((a,b)=>b.sc-a.sc||b.stock-a.stock)[0]||null;
+}
+// null — проверили, товара нет; строка — ссылка; undefined — проверить не смогли (браузер не пустил)
+async function wbFindClient(name){
+  const clean=String(name||'').replace(/со\s+вкусом[^,]*/gi,'').replace(/["«»""]/g,' ').trim();
+  const short=mpWords(name).slice(0,3).join(' ');
+  const queries=[clean?('Prime Kraft '+clean.slice(0,60)):'',short?('Prime Kraft '+short):''].filter(Boolean);
+  let reachable=false;
+  for(const q of queries){
+    for(const v of WB_VERSIONS){
+      const u='https://search.wb.ru/exactmatch/ru/common/'+v+'/search?appType=1&curr=rub&dest=-1257786&spp=30'
+             +'&suppressSpellcheck=true&resultset=catalog&sort=popular&limit=30&query='+encodeURIComponent(q);
+      let j=null;
+      try{
+        const r=await fetch(u,{headers:{'Accept':'application/json'}});
+        reachable=true;
+        if(!r.ok)continue;
+        j=await r.json().catch(()=>null);
+      }catch(e){ if(!reachable)return undefined; continue; }   // первый же отказ сети — путь закрыт
+      if(!j)continue;
+      const ps=(j.data&&j.data.products)||j.products||[];
+      if(!ps.length)continue;
+      if(!ps.some(p=>MPBRAND.test(p.brand||'')))continue;      // мусорная выдача — пробуем следующую версию
+      const best=wbPick(ps,name);
+      if(best)return 'https://www.wildberries.ru/catalog/'+best.id+'/detail.aspx';
+      return null;                                             // наш бренд есть, но в наличии нет
+    }
+  }
+  return reachable?null:undefined;
+}
 function mpLinks(it){
   const l=MPLIVE[String(it.id||'')]||{};
   const a=(href,label)=>`<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
-  let out='';
-  // Ozon: проверенная ссылка на карточку; если проверка не прошла (Ozon закрылся) — поиск по бренду;
-  // если проверка прошла и товара нет — кнопки нет вовсе.
-  if(l.ozon)out+=a(l.ozon,'Ozon');
-  else if(MPMODE!=='verified')out+=a(ozonSearchUrl(it),'Ozon');
-  // WB: только проверенная ссылка на карточку в наличии.
-  if(l.wb)out+=a(l.wb,'WB');
-  return out;
+  // Кнопка есть только тогда, когда товар проверен и он в наличии. Без проверки кнопки нет:
+  // ссылка на поиск уводила на чужие товары, если нашего в наличии не оказывалось.
+  return (l.ozon?a(l.ozon,'Ozon'):'')+(l.wb?a(l.wb,'WB'):'');
 }
 async function checkMarketplaces(picks){
   const items=picks.map(x=>{const it=itemOf(x.id);const m=MP[String(it.id||'')]||MP[String(it.n||'')]||{};
     return Object.assign({id:String(it.id||x.id),name:it.n},m);});
   if(!items.length)return;
+
+  // 1) сначала из браузера — быстро и без лимитов
+  const got={};let clientWorked=false;
+  for(const it of items){
+    let r;
+    try{r=await wbFindClient(it.name);}catch(e){r=undefined;}
+    if(r===undefined)break;                 // WB из браузера недоступен — идём на сервер
+    clientWorked=true;
+    if(r)got[it.id]={wb:r};
+  }
+  if(clientWorked){MPLIVE=got;MPMODE='verified';renderResult();}
+
+  // 2) сервер: запасной путь для WB и единственный для Ozon
   try{
     const r=await fetch('/api/mp',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({items})});
     const d=await r.json();
     if(!d||d.error)return;
-    MPLIVE=(d.links&&typeof d.links==='object')?d.links:{};
-    MPMODE=d.ozonMode==='blocked'?'blocked':'verified';
+    const srv=(d.links&&typeof d.links==='object')?d.links:{};
+    const merged={};
+    items.forEach(it=>{
+      const a=MPLIVE[it.id]||{},b=srv[it.id]||{};
+      const one={};
+      if(a.wb||b.wb)one.wb=a.wb||b.wb;      // ссылка из браузера приоритетнее — она свежее
+      if(b.ozon)one.ozon=b.ozon;            // Ozon только с сервера
+      if(one.wb||one.ozon)merged[it.id]=one;
+    });
+    MPLIVE=merged;MPMODE='verified';
     renderResult();
   }catch(e){}
 }
+
 function cmpWhy(x){
   const d=mathData(P);
   if(x.reason==='anchor'&&d)return 'чтобы добирать те самые '+d.gap+' г белка';
