@@ -1144,13 +1144,18 @@ function wbPick(products,name){
     .filter(p=>p.stock>0&&p.sc>=0.4)
     .sort((a,b)=>b.sc-a.sc||b.stock-a.stock)[0]||null;
 }
+const MPDEBUG=/[?&]mpdebug=1/.test(location.search);
+const MPLOG=[];
+const mplog=(...a)=>{if(MPDEBUG)MPLOG.push(a.map(x=>typeof x==='string'?x:JSON.stringify(x)).join(' '));};
 // null — проверили, товара нет; строка — ссылка; undefined — проверить не смогли (браузер не пустил)
 async function wbFindClient(name){
   const clean=String(name||'').replace(/со\s+вкусом[^,]*/gi,'').replace(/["«»""]/g,' ').trim();
   const short=mpWords(name).slice(0,3).join(' ');
   const queries=[clean?('Prime Kraft '+clean.slice(0,60)):'',short?('Prime Kraft '+short):''].filter(Boolean);
   let reachable=false;
+  mplog('ТОВАР:',name);
   for(const q of queries){
+    mplog(' запрос:',q);
     for(const v of WB_VERSIONS){
       const u='https://search.wb.ru/exactmatch/ru/common/'+v+'/search?appType=1&curr=rub&dest=-1257786&spp=30'
              +'&suppressSpellcheck=true&resultset=catalog&sort=popular&limit=30&query='+encodeURIComponent(q);
@@ -1158,16 +1163,18 @@ async function wbFindClient(name){
       try{
         const r=await fetch(u,{headers:{'Accept':'application/json'}});
         reachable=true;
-        if(!r.ok)continue;
+        if(!r.ok){mplog(' ',v,'HTTP',r.status);continue;}
         j=await r.json().catch(()=>null);
-      }catch(e){ if(!reachable)return undefined; continue; }   // первый же отказ сети — путь закрыт
-      if(!j)continue;
+      }catch(e){ mplog(' ',v,'ОТКАЗ:',String(e&&e.message||e)); if(!reachable)return undefined; continue; }
+      if(!j){mplog(' ',v,'не JSON');continue;}
       const ps=(j.data&&j.data.products)||j.products||[];
+      mplog(' ',v,'товаров:',ps.length,'бренды:',[...new Set(ps.map(x=>x.brand))].slice(0,4).join('/'));
       if(!ps.length)continue;
       if(!ps.some(p=>MPBRAND.test(p.brand||'')))continue;      // мусорная выдача — пробуем следующую версию
       const best=wbPick(ps,name);
       if(best)return 'https://www.wildberries.ru/catalog/'+best.id+'/detail.aspx';
-      return null;                                             // наш бренд есть, но в наличии нет
+      mplog(' ',v,'наш бренд есть, но в наличии нет');
+      return null;
     }
   }
   return reachable?null:undefined;
@@ -1193,6 +1200,7 @@ async function checkMarketplaces(picks){
     clientWorked=true;
     if(r)got[it.id]={wb:r};
   }
+  mplog('--- из браузера получилось:',clientWorked?'да':'НЕТ','| ссылок:',Object.keys(got).length);
   if(clientWorked){MPLIVE=got;MPMODE='verified';renderResult();}
 
   // 2) сервер: запасной путь для WB и единственный для Ozon
@@ -1209,9 +1217,19 @@ async function checkMarketplaces(picks){
       if(b.ozon)one.ozon=b.ozon;            // Ozon только с сервера
       if(one.wb||one.ozon)merged[it.id]=one;
     });
+    mplog('--- сервер вернул ссылок:',Object.keys(srv).length,'| итого:',Object.keys(merged).length);
     MPLIVE=merged;MPMODE='verified';
     renderResult();
-  }catch(e){}
+  }catch(e){mplog('--- сервер: ошибка',String(e&&e.message||e));}
+  if(MPDEBUG)showMpDebug();
+}
+function showMpDebug(){
+  let box=document.getElementById('mpdbg');
+  if(!box){box=document.createElement('pre');box.id='mpdbg';
+    box.style.cssText='position:fixed;left:8px;right:8px;bottom:8px;max-height:45vh;overflow:auto;z-index:9999;background:#111;color:#7CFC98;font:11px/1.45 ui-monospace,Menlo,monospace;padding:10px 12px;border-radius:10px;white-space:pre-wrap;border:1px solid #333';
+    box.onclick=()=>box.remove();
+    document.body.appendChild(box);}
+  box.textContent='ДИАГНОСТИКА МАРКЕТПЛЕЙСОВ (нажмите, чтобы закрыть)\n\n'+MPLOG.join('\n');
 }
 
 function cmpWhy(x){
