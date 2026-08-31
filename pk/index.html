@@ -611,7 +611,7 @@ function artHtml(it){const ltr=String(it.n||'?').trim().charAt(0).toUpperCase();
 /* ---------- FLOW ---------- */
 const root=document.getElementById('root');
 let P={},asked=[],tweaks={},removed={},swaps={},swapWhy={},replacing=null;
-let leadSent=false, leadEmail='';
+let leadSent=false, leadEmail='', newsOpt=false;
 let FEED=[], chatHist=[];
 const loadMsgs=['Анализируем ваши ответы…','Считаем норму белка…','Сопоставляем с каталогом Prime Kraft…','Составляем персональный комплекс и план…'];
 
@@ -1019,7 +1019,8 @@ function renderGate(){
       <input class="mailfield" id="gmail" type="email" inputmode="email" autocomplete="email" placeholder="name@mail.ru">
       <div class="err" id="gerr">Проверьте адрес — кажется, в нём опечатка</div>
       <button class="btn btn-accent" onclick="submitGate()">Продолжить →</button>
-      <label class="consent2"><input type="checkbox" id="gcons" checked><span>Согласен на обработку данных и получение письма с подбором. Отписаться можно в один клик.</span></label>
+      <label class="consent2"><input type="checkbox" id="gcons"><span>Согласен на обработку персональных данных для получения письма с подбором — оператор ООО «ПРАЙМ-КРАФТ», <a href="https://primekraft.ru/company/privacy_policy/" target="_blank" rel="noopener" style="color:inherit;text-decoration:underline">политика конфиденциальности</a>.</span></label>
+      <label class="consent2"><input type="checkbox" id="gnews"><span>Хочу получать новости и акции Prime Kraft. Отписаться можно в один клик.</span></label>
     </div>
   </div>`;
   const el=document.getElementById('gmail');
@@ -1032,6 +1033,7 @@ function submitGate(){
   if(!/^[^@\s]+@[^@\s]+\.[a-zA-Z]{2,}$/.test(v)){err.classList.add('on');el.focus();return;}
   if(!cons){err.textContent='Нужно согласие, чтобы отправить письмо';err.classList.add('on');return;}
   err.classList.remove('on');
+  newsOpt=!!(document.getElementById('gnews')||{}).checked;
   leadEmail=v;
   stepNext(true);
 }
@@ -1043,7 +1045,7 @@ async function sendLead(email){
         dose:dz?`${dz.perDay} ${dz.unit} в день, упаковки хватит примерно на ${dz.days} дн.`:''};});
     const analysis=(window.__analysisPlain||((document.getElementById('analysisbox')||{}).innerText||'')).trim();
     const r=await fetch('/api/lead',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({email,name:P.name||'',profile:P,items,math:d,analysis})});
+      body:JSON.stringify({email,name:P.name||'',profile:P,items,math:d,analysis,news:newsOpt})});
     const j=await r.json();
     leadSent=!!(j&&j.ok);
   }catch(e){leadSent=false;}
