@@ -78,9 +78,7 @@ export default async function handler(req, res) {
 
     const out = { subscribed: false, sent: false };
 
-    // Подписка в рассылочный список — только при явной галочке «хочу новости и акции».
-    // Письмо с подбором ниже уходит всегда — это ответ на запрос человека, не рассылка.
-    if (listId && b.news === true) {
+    if (listId) {
       await call('subscribe', {
         list_ids: listId,
         'fields[email]': email,
