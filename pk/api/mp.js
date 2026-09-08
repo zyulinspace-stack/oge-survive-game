@@ -101,13 +101,19 @@ async function wbOwnStock(dbg) {
   const token = wbToken();
   if (!token) return null;
   try {
-    const r = await fetch('https://statistics-api.wildberries.ru/api/v2/supplier/stocks?dateFrom=2019-06-20', {
-      headers: { 'Authorization': token }
-    });
-    if (dbg) dbg.push('stocks:' + r.status);
-    if (!r.ok) { if (dbg) dbg.push('stocks-body:' + (await r.text()).slice(0, 150)); return wbStockCache ? wbStockCache.byNm : null; }
-    const rows = await r.json().catch(() => null);
-    if (!Array.isArray(rows)) return wbStockCache ? wbStockCache.byNm : null;
+    let rows = null;
+    for (const ver of ['v1', 'v2']) {
+      const r = await fetch(`https://statistics-api.wildberries.ru/api/${ver}/supplier/stocks?dateFrom=2019-06-20`, {
+        headers: { 'Authorization': token }
+      });
+      if (dbg) dbg.push('stocks-' + ver + ':' + r.status);
+      if (!r.ok) { if (dbg) dbg.push('stocks-body:' + (await r.text()).slice(0, 120)); continue; }
+      const j = await r.json().catch(() => null);
+      if (Array.isArray(j)) { rows = j; break; }
+      if (j && Array.isArray(j.stocks)) { rows = j.stocks; break; }
+    }
+    if (!rows) return wbStockCache ? wbStockCache.byNm : null;
+    if (dbg) dbg.push('stocks-rows:' + rows.length);
     const byNm = new Map();
     for (const row of rows) {
       const nm = row.nmId; const q = Number(row.quantity) || 0;
@@ -129,7 +135,7 @@ async function wbOfficial(name, dbg) {
     const sc = score(name, c.name);
     if (sc > bestSc) { bestSc = sc; best = c; }
   }
-  if (dbg) dbg.push('best:' + (best ? best.nmID + ' sc=' + Math.round(bestSc * 100) : 'none'));
+  if (dbg) dbg.push('best:' + (best ? best.nmID + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
   if (!best || bestSc < 0.4) return {};
   const qty = stock.get(best.nmID) || 0;
   if (dbg) dbg.push('qty:' + qty);
@@ -301,8 +307,10 @@ async function ozonStockByOffer(offerId, dbg) {
     if (dbg) dbg.push('stocks:' + r.status);
     if (!r.ok) return 0;
     const j = await r.json().catch(() => null);
-    const items = (j && j.result && j.result.items) || [];
-    return items.reduce((a, it) => a + ((it.stocks || []).reduce((b, s) => b + (s.present || 0) - (s.reserved || 0), 0)), 0);
+    const items = (j && j.result && j.result.items) || (j && j.items) || [];
+    const qty = items.reduce((a, it) => a + ((it.stocks || []).reduce((b, s) => b + (Number(s.present) || 0) - (Number(s.reserved) || 0), 0)), 0);
+    if (dbg && qty <= 0) dbg.push('stocks-raw:' + JSON.stringify(j).slice(0, 220));
+    return qty;
   } catch (e) { if (dbg) dbg.push('stocks-err:' + String(e.message || e).slice(0, 60)); return 0; }
 }
 
@@ -322,7 +330,7 @@ async function ozonOfficial(item, dbg) {
     const sc = score(item.name || '', it.name);
     if (sc > bestSc) { bestSc = sc; best = it; }
   }
-  if (dbg) dbg.push('best:' + (best ? best.offer_id + ' sc=' + Math.round(bestSc * 100) : 'none'));
+  if (dbg) dbg.push('best:' + (best ? best.offer_id + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
   if (!best || bestSc < 0.4) return {};
   const qty = await ozonStockByOffer(best.offer_id, dbg);
   if (dbg) dbg.push('qty:' + qty);
