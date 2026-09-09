@@ -94,53 +94,53 @@ async function wbOwnCards(dbg) {
   return cards;
 }
 
-// Остатки по всем своим nmId — кэшируем ~5 минут (у метода лимит 1 запрос/минуту у WB).
-let wbStockCache = null; // { t, byNm: Map(nmID -> qty) }
-async function wbOwnStock(dbg) {
-  if (wbStockCache && Date.now() - wbStockCache.t < 5 * 60 * 1000) return wbStockCache.byNm;
-  const token = wbToken();
-  if (!token) return null;
-  try {
-    let rows = null;
-    for (const ver of ['v1', 'v2']) {
-      const r = await fetch(`https://statistics-api.wildberries.ru/api/${ver}/supplier/stocks?dateFrom=2019-06-20`, {
-        headers: { 'Authorization': token }
-      });
-      if (dbg) dbg.push('stocks-' + ver + ':' + r.status);
-      if (!r.ok) { if (dbg) dbg.push('stocks-body:' + (await r.text()).slice(0, 120)); continue; }
-      const j = await r.json().catch(() => null);
-      if (Array.isArray(j)) { rows = j; break; }
-      if (j && Array.isArray(j.stocks)) { rows = j.stocks; break; }
-    }
-    if (!rows) return wbStockCache ? wbStockCache.byNm : null;
-    if (dbg) dbg.push('stocks-rows:' + rows.length);
-    const byNm = new Map();
-    for (const row of rows) {
-      const nm = row.nmId; const q = Number(row.quantity) || 0;
-      byNm.set(nm, (byNm.get(nm) || 0) + q);
-    }
-    wbStockCache = { t: Date.now(), byNm };
-    return byNm;
-  } catch (e) { if (dbg) dbg.push('stocks-err:' + String(e.message || e).slice(0, 60)); return wbStockCache ? wbStockCache.byNm : null; }
+// Остатки. Метод Statistics API /supplier/stocks WB закрыл (deprecated), а замена —
+// отчёт warehouse_remains — требует категорию токена «Аналитика». Поэтому остаток
+// по конкретным нашим артикулам спрашиваем у публичной карточки WB: один запрос на пачку
+// nmID, кэш 5 минут. Артикулы при этом — из официального Content API, то есть точно наши.
+const wbQtyCache = new Map(); // nmID -> { t, qty }
+async function wbStockByNm(nmIds, dbg) {
+  const out = new Map();
+  const need = [];
+  for (const nm of nmIds) {
+    const c = wbQtyCache.get(nm);
+    if (c && Date.now() - c.t < 5 * 60 * 1000) out.set(nm, c.qty); else need.push(nm);
+  }
+  for (let i = 0; i < need.length; i += 50) {
+    const chunk = need.slice(i, i + 50);
+    try {
+      const u = 'https://card.wb.ru/cards/v2/detail?appType=1&curr=rub&dest=-1257786&spp=30&nm=' + chunk.join(';');
+      const r = await fetch(u, { headers: { 'User-Agent': UA, 'Accept': 'application/json', 'Accept-Language': 'ru-RU,ru;q=0.9', 'Origin': 'https://www.wildberries.ru', 'Referer': 'https://www.wildberries.ru/' } });
+      const raw = await r.text();
+      if (dbg) dbg.push('card:' + r.status + ':' + raw.length);
+      const j = parseLoose(raw);
+      const products = (j && j.data && j.data.products) || (j && j.products) || [];
+      for (const p of products) {
+        const bySizes = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
+        const qty = (typeof p.totalQuantity === 'number' && p.totalQuantity > 0) ? p.totalQuantity : bySizes;
+        wbQtyCache.set(p.id, { t: Date.now(), qty });
+        out.set(p.id, qty);
+      }
+      for (const nm of chunk) if (!out.has(nm)) { wbQtyCache.set(nm, { t: Date.now(), qty: 0 }); out.set(nm, 0); }
+    } catch (e) { if (dbg) dbg.push('card-err:' + String(e.message || e).slice(0, 60)); return null; }
+  }
+  return out;
 }
 
 // null — нет токена/не удалось; {link} — нашли и есть в наличии; {} — проверили, нет в наличии.
 async function wbOfficial(name, dbg) {
   const cards = await wbOwnCards(dbg);
   if (!cards) return null;
-  const stock = await wbOwnStock(dbg);
+  // Все подходящие по названию карточки (вкусы/фасовки), лучшие — первыми.
+  const cands = cards.map(c => ({ c, sc: score(name, c.name) })).filter(x => x.sc >= 0.4).sort((a, b) => b.sc - a.sc).slice(0, 12);
+  if (dbg) dbg.push('cands:' + cands.length + (cands[0] ? ' best=' + cands[0].c.nmID + ' sc=' + Math.round(cands[0].sc * 100) + ' «' + String(cands[0].c.name).slice(0, 50) + '»' : ''));
+  if (!cands.length) return {};
+  const stock = await wbStockByNm(cands.map(x => x.c.nmID), dbg);
   if (!stock) return null;
-  let best = null, bestSc = 0;
-  for (const c of cards) {
-    const sc = score(name, c.name);
-    if (sc > bestSc) { bestSc = sc; best = c; }
-  }
-  if (dbg) dbg.push('best:' + (best ? best.nmID + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
-  if (!best || bestSc < 0.4) return {};
-  const qty = stock.get(best.nmID) || 0;
-  if (dbg) dbg.push('qty:' + qty);
-  if (qty <= 0) return {};
-  return { link: 'https://www.wildberries.ru/catalog/' + best.nmID + '/detail.aspx' };
+  const hit = cands.find(x => (stock.get(x.c.nmID) || 0) > 0);
+  if (dbg) dbg.push(hit ? 'in-stock:' + hit.c.nmID + ' qty=' + stock.get(hit.c.nmID) : 'none-in-stock');
+  if (!hit) return {};
+  return { link: 'https://www.wildberries.ru/catalog/' + hit.c.nmID + '/detail.aspx' };
 }
 
 /* ---------------- WB — запасной путь: публичный поиск ---------------- */
