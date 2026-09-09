@@ -113,8 +113,10 @@ async function wbStockByNm(nmIds, dbg) {
       const r = await fetch(u, { headers: { 'User-Agent': UA, 'Accept': 'application/json', 'Accept-Language': 'ru-RU,ru;q=0.9', 'Origin': 'https://www.wildberries.ru', 'Referer': 'https://www.wildberries.ru/' } });
       const raw = await r.text();
       if (dbg) dbg.push('card:' + r.status + ':' + raw.length);
+      if (r.status !== 200) return null;                       // нас не пустили — остаток НЕИЗВЕСТЕН
       const j = parseLoose(raw);
       const products = (j && j.data && j.data.products) || (j && j.products) || [];
+      if (!products.length) return null;
       for (const p of products) {
         const bySizes = (p.sizes || []).reduce((a, s) => a + ((s.stocks || []).reduce((b, x) => b + (x.qty || 0), 0)), 0);
         const qty = (typeof p.totalQuantity === 'number' && p.totalQuantity > 0) ? p.totalQuantity : bySizes;
@@ -127,16 +129,70 @@ async function wbStockByNm(nmIds, dbg) {
   return out;
 }
 
+// Официальные остатки: Analytics API, отчёт «Остатки на складах». Асинхронный: создать задачу,
+// дождаться, скачать. Нужна категория токена «Аналитика» — без неё будет 401/403, и мы
+// просто идём дальше. Кэш 10 минут (лимит WB: 1 запрос/мин).
+let wbRemainsCache = null; // { t, byNm: Map }
+let wbRemainsDenied = 0;   // время последнего отказа по правам — не долбим каждые 5 секунд
+async function wbRemains(dbg) {
+  if (wbRemainsCache && Date.now() - wbRemainsCache.t < 10 * 60 * 1000) return wbRemainsCache.byNm;
+  if (wbRemainsDenied && Date.now() - wbRemainsDenied < 30 * 60 * 1000) { if (dbg) dbg.push('remains:skip(no-scope)'); return null; }
+  const token = wbToken(); if (!token) return null;
+  const H = { 'Authorization': token, 'Content-Type': 'application/json' };
+  const base = 'https://seller-analytics-api.wildberries.ru/api/v1/warehouse_remains';
+  try {
+    const r = await fetch(base + '?groupByNm=true&groupByBarcode=false&groupBySize=false', { headers: H });
+    if (dbg) dbg.push('remains-create:' + r.status);
+    if (r.status === 401 || r.status === 403) { wbRemainsDenied = Date.now(); return null; }
+    if (!r.ok) return wbRemainsCache ? wbRemainsCache.byNm : null;
+    const j = await r.json().catch(() => null);
+    const taskId = j && ((j.data && j.data.taskId) || j.taskId);
+    if (!taskId) { if (dbg) dbg.push('remains:no-task'); return null; }
+    let ready = false;
+    for (let i = 0; i < 6; i++) {
+      await sleep(1500);
+      const st = await fetch(`${base}/tasks/${taskId}/status`, { headers: H });
+      const sj = await st.json().catch(() => null);
+      const status = String((sj && ((sj.data && sj.data.status) || sj.status)) || '').toLowerCase();
+      if (dbg && i === 0) dbg.push('remains-status:' + st.status + ':' + status);
+      if (status === 'done' || status === 'success' || status === 'ready') { ready = true; break; }
+      if (status === 'error' || status === 'failed' || status === 'canceled') break;
+    }
+    if (!ready) { if (dbg) dbg.push('remains:not-ready'); return wbRemainsCache ? wbRemainsCache.byNm : null; }
+    const d = await fetch(`${base}/tasks/${taskId}/download`, { headers: H });
+    if (dbg) dbg.push('remains-download:' + d.status);
+    if (!d.ok) return wbRemainsCache ? wbRemainsCache.byNm : null;
+    const rows = await d.json().catch(() => null);
+    const list = Array.isArray(rows) ? rows : (rows && rows.data) || [];
+    const byNm = new Map();
+    for (const row of list) {
+      const nm = row.nmId || row.nmID; if (!nm) continue;
+      let q = Number(row.quantityWarehousesFull);
+      if (!Number.isFinite(q)) q = (row.warehouses || []).reduce((a, w) => a + (Number(w.quantity) || 0), 0);
+      byNm.set(nm, (byNm.get(nm) || 0) + (q || 0));
+    }
+    if (dbg) dbg.push('remains-rows:' + list.length);
+    wbRemainsCache = { t: Date.now(), byNm };
+    return byNm;
+  } catch (e) { if (dbg) dbg.push('remains-err:' + String(e.message || e).slice(0, 60)); return wbRemainsCache ? wbRemainsCache.byNm : null; }
+}
+
 // null — нет токена/не удалось; {link} — нашли и есть в наличии; {} — проверили, нет в наличии.
 async function wbOfficial(name, dbg) {
   const cards = await wbOwnCards(dbg);
   if (!cards) return null;
   // Все подходящие по названию карточки (вкусы/фасовки), лучшие — первыми.
-  const cands = cards.map(c => ({ c, sc: score(name, c.name) })).filter(x => x.sc >= 0.4).sort((a, b) => b.sc - a.sc).slice(0, 12);
+  const BUNDLE = /набор|комплект|\+|бандл|bundle|\bx\s*\d|\d\s*шт/i;
+  const wantBundle = BUNDLE.test(name);
+  const cands = cards
+    .map(c => ({ c, sc: score(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
+    .filter(x => x.sc >= 0.4).sort((a, b) => b.sc - a.sc).slice(0, 12);
   if (dbg) dbg.push('cands:' + cands.length + (cands[0] ? ' best=' + cands[0].c.nmID + ' sc=' + Math.round(cands[0].sc * 100) + ' «' + String(cands[0].c.name).slice(0, 50) + '»' : ''));
   if (!cands.length) return {};
-  const stock = await wbStockByNm(cands.map(x => x.c.nmID), dbg);
-  if (!stock) return null;
+  let stock = await wbRemains(dbg);
+  if (stock) { if (dbg) dbg.push('stock-src:analytics'); }
+  else { stock = await wbStockByNm(cands.map(x => x.c.nmID), dbg); if (stock && dbg) dbg.push('stock-src:card'); }
+  if (!stock) return null;   // остаток узнать не удалось — пусть решает запасной путь
   const hit = cands.find(x => (stock.get(x.c.nmID) || 0) > 0);
   if (dbg) dbg.push(hit ? 'in-stock:' + hit.c.nmID + ' qty=' + stock.get(hit.c.nmID) : 'none-in-stock');
   if (!hit) return {};
