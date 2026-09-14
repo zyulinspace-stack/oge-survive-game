@@ -108,7 +108,7 @@ function sizeNums(name) {
 }
 // Производные формы (шипучие, жевательные, коктейли, наборы стиков) идут после базовой,
 // если пользователь не просил именно их.
-const DERIV = /шипуч|жеват|мармелад|стик|саше|пробник|коктейл|shake|functional|мини|порци/i;
+const DERIV = /шипуч|жеват|мармелад|стик|саше|пробник|коктейл|shake|functional/i;
 function derivPenalty(query, candidate) {
   let p = (!DERIV.test(query) && DERIV.test(candidate)) ? 0.2 : 0;
   if (!/plantago|плантаго/i.test(query) && /plantago|плантаго/i.test(candidate)) p += 0.1; // другая линейка
