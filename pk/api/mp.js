@@ -64,6 +64,7 @@ const TYPE_RULES = [
   ['zma',        /(^|[^a-z])zma([^a-z]|$)|зма|цинк|zinc/],
   ['magnesium',  /магни|magnesium/],
   ['ltheanine',  /теанин|theanine/],
+  ['omega369',   /(омега|omega)[\s-]*3[\s-]*6[\s-]*9|3-6-9/],
   ['omega3',     /омега|omega|рыбий жир|fish oil/],
   ['vitc',       /(витамин|vitamin)\s*[cс]([^а-яёa-z]|$)|аскорбин|ascorb/],
   ['bcaa',       /bcaa|всаа/],
@@ -109,7 +110,9 @@ function sizeNums(name) {
 // если пользователь не просил именно их.
 const DERIV = /шипуч|жеват|мармелад|стик|саше|пробник|коктейл|shake|functional|мини|порци/i;
 function derivPenalty(query, candidate) {
-  return (!DERIV.test(query) && DERIV.test(candidate)) ? 0.2 : 0;
+  let p = (!DERIV.test(query) && DERIV.test(candidate)) ? 0.2 : 0;
+  if (!/plantago|плантаго/i.test(query) && /plantago|плантаго/i.test(candidate)) p += 0.1; // другая линейка
+  return p;
 }
 function sizeBonus(query, candidate) {
   const q = sizeNums(query); if (!q.size) return 0;
@@ -269,7 +272,7 @@ async function wbOfficial(name, dbg) {
   else { stock = await wbStockByNm(cands.map(x => x.c.nmID), dbg); if (stock && dbg) dbg.push('stock-src:card'); }
   if (!stock) return null;   // остаток узнать не удалось — пусть решает запасной путь
   const hit = cands.find(x => (stock.get(x.c.nmID) || 0) > 0);
-  if (dbg) dbg.push(hit ? 'in-stock:' + hit.c.nmID + ' qty=' + stock.get(hit.c.nmID) : 'none-in-stock');
+  if (dbg) dbg.push(hit ? 'in-stock:' + hit.c.nmID + ' qty=' + stock.get(hit.c.nmID) + ' «' + String(hit.c.name).slice(0, 45) + '»' : 'none-in-stock');
   if (!hit) return {};
   return { link: 'https://www.wildberries.ru/catalog/' + hit.c.nmID + '/detail.aspx' };
 }
