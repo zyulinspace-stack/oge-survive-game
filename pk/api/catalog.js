@@ -25,7 +25,7 @@ function decodeEntities(s) {
 const TYPE_RULES = [
   ['cookie',     n => /печень|cookie/.test(n)],                    // до bar: «PRIMEBAR COOKIE»
   ['plant',      n => /(растительн|plant[\s-]*based)/.test(n) && /(протеин|protein)/.test(n)],
-  ['bar',        n => /батончик|primebar|plantago/.test(n)],
+  ['bar',        n => /батончик|primebar/.test(n)],   // «plantago» убрали: это суббренд витаминов и джемов, а не батончики
   ['casein',     n => /казеин|casein/.test(n)],
   ['whey',       n => /(сыворот|whey|изолят|isolate)/.test(n)],
   ['gainer',     n => /(гейнер|gainer)/.test(n)],

@@ -32,18 +32,62 @@ const BRAND = /prime\s*kraft|primekraft|праймкрафт|прайм\s*кра
 
 /* ---------------- общие текстовые утилиты ---------------- */
 
+const HOMO = { a:'а', c:'с', e:'е', o:'о', p:'р', x:'х', y:'у', k:'к', m:'м', t:'т', b:'в', h:'н' };
+// «Mагний» с латинской M -> «магний»: если в слове есть кириллица, латинские двойники приводим к ней
+const fixMixed = w => /[а-яё]/.test(w) ? w.replace(/[aceopxykmtbh]/g, ch => HOMO[ch]) : w;
 function keyWords(name) {
   return String(name || '')
     .toLowerCase()
     .replace(/["«»""]/g, ' ')
     .replace(/со\s+вкусом[^,]*/g, ' ')
-    .replace(/[^a-zа-я0-9\s]/gi, ' ')
+    .replace(/[^a-zа-яё0-9\s]/gi, ' ')
     .split(/\s+/)
-    .filter(w => w.length > 2 && !['для', 'без', 'при', 'grams', 'гр'].includes(w))
+    .map(fixMixed)
+    .filter(w => (w.length > 2 || /\d/.test(w)) && !/^\d+$/.test(w) && !['для', 'без', 'при', 'grams', 'гр', 'мг', 'банка', 'пакет', 'капсул', 'капсулы', 'таблеток', 'таблетки', 'шт', 'вкусом', 'вкуса', 'primekraft', 'prime', 'kraft', 'праймкрафт'].includes(w))
     .slice(0, 6);
 }
+
+// Тип товара по названию — как в catalog.js. Кандидат обязан быть того же типа:
+// «казеин» не может совпасть с «витамином С» из-за общего «900».
+const TYPE_RULES = [
+  ['cookie',     /печень|cookie/],
+  ['plant',      /(растительн|plant[\s-]*based|веган|vegan)/],
+  ['bar',        /батончик|primebar/],
+  ['casein',     /казеин|casein/],
+  ['whey',       /сыворот|whey|изолят|isolate/],
+  ['gainer',     /гейнер|gainer/],
+  ['creatine',   /креатин|creatine/],
+  ['lcarnitine', /карнитин|carnitine/],
+  ['magnesium',  /магни|magnesium/],
+  ['ltheanine',  /теанин|theanine/],
+  ['omega3',     /омега|omega|рыбий жир|fish oil/],
+  ['vitc',       /(витамин|vitamin)\s*[cс]([^а-яёa-z]|$)|аскорбин|ascorb/],
+  ['bcaa',       /bcaa|всаа/],
+  ['citrulline', /цитруллин|citrullin/],
+  ['preworkout', /pre-?\s*workout|предтрен/],
+  ['isotonic',   /изотоник|isotonic|electrolyt|электролит/],
+  ['chrome',     /хром|chrom/],
+  ['collagen',   /коллаген|collagen/],
+  ['protein',    /протеин|protein/]
+];
+const HOMOGLYPH = { a:'а', c:'с', e:'е', o:'о', p:'р', x:'х', y:'у', k:'к', m:'м', t:'т' };
+function typeOf(name) {
+  const n = String(name || '').toLowerCase();
+  const nCyr = n.replace(/[aceopxykmt]/g, ch => HOMOGLYPH[ch]);
+  for (const [k, re] of TYPE_RULES) if (re.test(n) || re.test(nCyr)) return k;
+  return '';
+}
+// protein — общий тип; сывороточный/казеин/растительный — его подтипы. Совпадение строгое,
+// кроме случая, когда запрос — просто «протеин» без уточнения.
+function sameType(q, c) {
+  const a = typeOf(q), b = typeOf(c);
+  if (!a) return true;
+  if (a === b) return true;
+  if (a === 'protein' && ['whey', 'casein', 'plant'].includes(b)) return true;
+  return false;
+}
 function score(query, candidate) {
-  const a = new Set(keyWords(query)), b = keyWords(candidate);
+  const a = new Set(keyWords(query)), b = new Set(keyWords(candidate));
   let hit = 0; b.forEach(w => { if (a.has(w)) hit++; });
   return a.size ? hit / a.size : 0;
 }
@@ -184,9 +228,15 @@ async function wbOfficial(name, dbg) {
   // Все подходящие по названию карточки (вкусы/фасовки), лучшие — первыми.
   const BUNDLE = /набор|комплект|\+|бандл|bundle|\bx\s*\d|\d\s*шт/i;
   const wantBundle = BUNDLE.test(name);
-  const cands = cards
+  const t = typeOf(name);
+  const scored = cards
+    .filter(c => sameType(name, c.name))
     .map(c => ({ c, sc: score(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
-    .filter(x => x.sc >= 0.4).sort((a, b) => b.sc - a.sc).slice(0, 12);
+    .sort((a, b) => b.sc - a.sc);
+  let cands = scored.filter(x => x.sc >= 0.4).slice(0, 12);
+  // тип совпал строго (не общий «protein») — этого достаточно, даже если слова разошлись
+  if (!cands.length && t && t !== 'protein') cands = scored.slice(0, 12);
+  if (dbg) dbg.push('type:' + (t || '?'));
   if (dbg) dbg.push('cands:' + cands.length + (cands[0] ? ' best=' + cands[0].c.nmID + ' sc=' + Math.round(cands[0].sc * 100) + ' «' + String(cands[0].c.name).slice(0, 50) + '»' : ''));
   if (!cands.length) return {};
   let stock = await wbRemains(dbg);
@@ -380,14 +430,19 @@ async function ozonOfficial(item, dbg) {
   }
   const list = await ozonOwnList(dbg);
   if (!list) return null;
-  let best = null, bestSc = 0;
+  const t = typeOf(item.name || '');
+  const BUNDLE_OZ = /набор|комплект|\+|бандл|bundle|\bx\s*\d|\d\s*шт/i;
+  const wantBundle = BUNDLE_OZ.test(item.name || '');
+  let best = null, bestSc = -1;
   for (const it of list) {
     if (!it.name) continue;
-    const sc = score(item.name || '', it.name);
+    if (!sameType(item.name || '', it.name)) continue;
+    const sc = score(item.name || '', it.name) - ((!wantBundle && BUNDLE_OZ.test(it.name)) ? 0.25 : 0);
     if (sc > bestSc) { bestSc = sc; best = it; }
   }
-  if (dbg) dbg.push('best:' + (best ? best.offer_id + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
-  if (!best || bestSc < 0.4) return {};
+  if (dbg) dbg.push('type:' + (t || '?') + ' best:' + (best ? best.offer_id + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
+  if (!best) return {};
+  if (bestSc < 0.4 && !(t && t !== 'protein')) return {};
   const qty = await ozonStockByOffer(best.offer_id, dbg);
   if (dbg) dbg.push('qty:' + qty);
   if (qty <= 0) return {};
