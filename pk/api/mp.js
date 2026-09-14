@@ -35,6 +35,9 @@ const BRAND = /prime\s*kraft|primekraft|праймкрафт|прайм\s*кра
 const HOMO = { a:'а', c:'с', e:'е', o:'о', p:'р', x:'х', y:'у', k:'к', m:'м', t:'т', b:'в', h:'н' };
 // «Mагний» с латинской M -> «магний»: если в слове есть кириллица, латинские двойники приводим к ней
 const fixMixed = w => /[а-яё]/.test(w) ? w.replace(/[aceopxykmtbh]/g, ch => HOMO[ch]) : w;
+const CYR2LAT = { а:'a', в:'b', с:'c', д:'d', е:'e', о:'o', р:'p', х:'x', у:'y', к:'k', м:'m', т:'t', н:'h' };
+// «В6» кириллицей и «B6» латиницей — одно и то же: токены с цифрой приводим к латинице
+const fixDigitTok = w => /\d/.test(w) ? w.replace(/[авсдеорхукмтн]/g, ch => CYR2LAT[ch]) : w;
 function keyWords(name) {
   return String(name || '')
     .toLowerCase()
@@ -42,7 +45,7 @@ function keyWords(name) {
     .replace(/со\s+вкусом[^,]*/g, ' ')
     .replace(/[^a-zа-яё0-9\s]/gi, ' ')
     .split(/\s+/)
-    .map(fixMixed)
+    .map(fixMixed).map(fixDigitTok)
     .filter(w => (w.length > 2 || /\d/.test(w)) && !/^\d+$/.test(w) && !['для', 'без', 'при', 'grams', 'гр', 'мг', 'банка', 'пакет', 'капсул', 'капсулы', 'таблеток', 'таблетки', 'шт', 'вкусом', 'вкуса', 'primekraft', 'prime', 'kraft', 'праймкрафт'].includes(w))
     .slice(0, 6);
 }
@@ -58,6 +61,7 @@ const TYPE_RULES = [
   ['gainer',     /гейнер|gainer/],
   ['creatine',   /креатин|creatine/],
   ['lcarnitine', /карнитин|carnitine/],
+  ['zma',        /(^|[^a-z])zma([^a-z]|$)|зма|цинк|zinc/],
   ['magnesium',  /магни|magnesium/],
   ['ltheanine',  /теанин|theanine/],
   ['omega3',     /омега|omega|рыбий жир|fish oil/],
@@ -100,6 +104,12 @@ function sizeNums(name) {
   let m; const n = String(name || '').toLowerCase();
   while ((m = re.exec(n))) out.add(m[1].replace(',', '.'));
   return out;
+}
+// Производные формы (шипучие, жевательные, коктейли, наборы стиков) идут после базовой,
+// если пользователь не просил именно их.
+const DERIV = /шипуч|жеват|мармелад|стик|саше|пробник|коктейл|shake|functional|мини|порци/i;
+function derivPenalty(query, candidate) {
+  return (!DERIV.test(query) && DERIV.test(candidate)) ? 0.2 : 0;
 }
 function sizeBonus(query, candidate) {
   const q = sizeNums(query); if (!q.size) return 0;
@@ -246,7 +256,7 @@ async function wbOfficial(name, dbg) {
   const t = typeOf(name);
   const scored = cards
     .filter(c => sameType(name, c.name))
-    .map(c => ({ c, sc: score(name, c.name) + sizeBonus(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
+    .map(c => ({ c, sc: score(name, c.name) + sizeBonus(name, c.name) - derivPenalty(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
     .sort((a, b) => b.sc - a.sc);
   let cands = scored.filter(x => x.sc >= 0.4).slice(0, 12);
   // тип совпал строго (не общий «protein») — этого достаточно, даже если слова разошлись
@@ -457,7 +467,7 @@ async function ozonOfficial(item, dbg) {
   const wantBundle = BUNDLE_OZ.test(name);
   const scored = list
     .filter(it => it.name && sameType(name, it.name))
-    .map(it => ({ it, sc: score(name, it.name) + sizeBonus(name, it.name) - ((!wantBundle && BUNDLE_OZ.test(it.name)) ? 0.25 : 0) }))
+    .map(it => ({ it, sc: score(name, it.name) + sizeBonus(name, it.name) - derivPenalty(name, it.name) - ((!wantBundle && BUNDLE_OZ.test(it.name)) ? 0.25 : 0) }))
     .sort((a, b) => b.sc - a.sc);
   let cands = scored.filter(x => x.sc >= 0.4).slice(0, 8);
   if (!cands.length && t && t !== 'protein') cands = scored.slice(0, 8);
