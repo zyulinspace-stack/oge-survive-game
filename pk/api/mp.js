@@ -92,6 +92,21 @@ function score(query, candidate) {
   return a.size ? hit / a.size : 0;
 }
 const cleanName = n => String(n || '').replace(/со\s+вкусом[^,]*/gi, '').replace(/["«»""]/g, ' ').trim();
+// Фасовка: числа перед единицей измерения. Совпала — небольшой бонус, чтобы среди одинаковых
+// по словам «гейнер 1000 г» и «гейнер 3000 г» первым шёл нужный.
+function sizeNums(name) {
+  const out = new Set();
+  const re = /(\d+(?:[.,]\d+)?)\s*(кг|г|гр|мл|л|капс|капсул|таб|таблет|шт|mg|мг|g|ml)(?![а-яёa-z])/gi;
+  let m; const n = String(name || '').toLowerCase();
+  while ((m = re.exec(n))) out.add(m[1].replace(',', '.'));
+  return out;
+}
+function sizeBonus(query, candidate) {
+  const q = sizeNums(query); if (!q.size) return 0;
+  const c = sizeNums(candidate);
+  for (const v of q) if (c.has(v)) return 0.15;
+  return 0;
+}
 
 // Не больше N запросов одновременно — иначе внешние поисковики отвечают всем 429 разом.
 async function mapLimit(arr, limit, fn) {
@@ -226,12 +241,12 @@ async function wbOfficial(name, dbg) {
   const cards = await wbOwnCards(dbg);
   if (!cards) return null;
   // Все подходящие по названию карточки (вкусы/фасовки), лучшие — первыми.
-  const BUNDLE = /набор|комплект|\+|бандл|bundle|\bx\s*\d|\d\s*шт/i;
+  const BUNDLE = /(^|[^а-яё])набор([^а-яё]|$)|комплект|\+|бандл|bundle|(^|[^a-z])x\s*\d|\d\s*шт/i;
   const wantBundle = BUNDLE.test(name);
   const t = typeOf(name);
   const scored = cards
     .filter(c => sameType(name, c.name))
-    .map(c => ({ c, sc: score(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
+    .map(c => ({ c, sc: score(name, c.name) + sizeBonus(name, c.name) - ((!wantBundle && BUNDLE.test(c.name)) ? 0.25 : 0) }))
     .sort((a, b) => b.sc - a.sc);
   let cands = scored.filter(x => x.sc >= 0.4).slice(0, 12);
   // тип совпал строго (не общий «protein») — этого достаточно, даже если слова разошлись
@@ -403,50 +418,57 @@ async function ozonFillNames(items, listVer, dbg) {
   }
 }
 
-async function ozonStockByOffer(offerId, dbg) {
-  if (!offerId) return 0;
+// Остатки сразу по пачке offer_id одним запросом -> Map(offer_id -> qty)
+async function ozonStockByOffers(offerIds, dbg) {
+  const out = new Map();
+  const ids = offerIds.filter(Boolean).map(String);
+  if (!ids.length) return out;
   try {
     const r = await fetch('https://api-seller.ozon.ru/v4/product/info/stocks', {
       method: 'POST', headers: ozonHeaders(),
-      body: JSON.stringify({ filter: { offer_id: [String(offerId)], visibility: 'ALL' }, limit: 10 })
+      body: JSON.stringify({ filter: { offer_id: ids, visibility: 'ALL' }, limit: 100 })
     });
     if (dbg) dbg.push('stocks:' + r.status);
-    if (!r.ok) return 0;
+    if (!r.ok) return null;
     const j = await r.json().catch(() => null);
     const items = (j && j.result && j.result.items) || (j && j.items) || [];
-    const qty = items.reduce((a, it) => a + ((it.stocks || []).reduce((b, s) => b + (Number(s.present) || 0) - (Number(s.reserved) || 0), 0)), 0);
-    if (dbg && qty <= 0) dbg.push('stocks-raw:' + JSON.stringify(j).slice(0, 220));
-    return qty;
-  } catch (e) { if (dbg) dbg.push('stocks-err:' + String(e.message || e).slice(0, 60)); return 0; }
+    for (const it of items) {
+      const qty = (it.stocks || []).reduce((b, st) => b + (Number(st.present) || 0) - (Number(st.reserved) || 0), 0);
+      out.set(String(it.offer_id), qty);
+    }
+    for (const id of ids) if (!out.has(id)) out.set(id, 0);
+    if (dbg) dbg.push('qty:' + ids.map(id => id + '=' + out.get(id)).join(','));
+    return out;
+  } catch (e) { if (dbg) dbg.push('stocks-err:' + String(e.message || e).slice(0, 60)); return null; }
 }
 
 // null — нет ключей/не удалось; {link} — нашли и в наличии; {} — проверили, нет в наличии.
 async function ozonOfficial(item, dbg) {
-  // если для товара в marketplace.json уже прописан offer_id — используем сразу, без поиска по имени
   if (item.ozonOffer) {
-    const qty = await ozonStockByOffer(item.ozonOffer, dbg);
-    if (dbg) dbg.push('by-offer qty:' + qty);
-    return qty > 0 ? { link: 'https://www.ozon.ru/product/' + item.ozonOffer + '/' } : {};
+    const st = await ozonStockByOffers([item.ozonOffer], dbg);
+    if (!st) return null;
+    return (st.get(String(item.ozonOffer)) || 0) > 0 ? { link: 'https://www.ozon.ru/product/' + item.ozonOffer + '/' } : {};
   }
   const list = await ozonOwnList(dbg);
   if (!list) return null;
-  const t = typeOf(item.name || '');
-  const BUNDLE_OZ = /набор|комплект|\+|бандл|bundle|\bx\s*\d|\d\s*шт/i;
-  const wantBundle = BUNDLE_OZ.test(item.name || '');
-  let best = null, bestSc = -1;
-  for (const it of list) {
-    if (!it.name) continue;
-    if (!sameType(item.name || '', it.name)) continue;
-    const sc = score(item.name || '', it.name) - ((!wantBundle && BUNDLE_OZ.test(it.name)) ? 0.25 : 0);
-    if (sc > bestSc) { bestSc = sc; best = it; }
-  }
-  if (dbg) dbg.push('type:' + (t || '?') + ' best:' + (best ? best.offer_id + ' sc=' + Math.round(bestSc * 100) + ' «' + String(best.name).slice(0, 50) + '»' : 'none'));
-  if (!best) return {};
-  if (bestSc < 0.4 && !(t && t !== 'protein')) return {};
-  const qty = await ozonStockByOffer(best.offer_id, dbg);
-  if (dbg) dbg.push('qty:' + qty);
-  if (qty <= 0) return {};
-  return { link: 'https://www.ozon.ru/product/' + (best.product_id || best.offer_id) + '/' };
+  const name = item.name || '';
+  const t = typeOf(name);
+  const BUNDLE_OZ = /(^|[^а-яё])набор([^а-яё]|$)|комплект|\+|бандл|bundle|(^|[^a-z])x\s*\d|\d\s*шт/i;
+  const wantBundle = BUNDLE_OZ.test(name);
+  const scored = list
+    .filter(it => it.name && sameType(name, it.name))
+    .map(it => ({ it, sc: score(name, it.name) + sizeBonus(name, it.name) - ((!wantBundle && BUNDLE_OZ.test(it.name)) ? 0.25 : 0) }))
+    .sort((a, b) => b.sc - a.sc);
+  let cands = scored.filter(x => x.sc >= 0.4).slice(0, 8);
+  if (!cands.length && t && t !== 'protein') cands = scored.slice(0, 8);
+  if (dbg) dbg.push('type:' + (t || '?') + ' cands:' + cands.length + (cands[0] ? ' best=' + cands[0].it.offer_id + ' sc=' + Math.round(cands[0].sc * 100) + ' «' + String(cands[0].it.name).slice(0, 50) + '»' : ''));
+  if (!cands.length) return {};
+  const st = await ozonStockByOffers(cands.map(x => x.it.offer_id), dbg);
+  if (!st) return null;
+  const hit = cands.find(x => (st.get(String(x.it.offer_id)) || 0) > 0);
+  if (dbg) dbg.push(hit ? 'in-stock:' + hit.it.offer_id + ' «' + String(hit.it.name).slice(0, 40) + '»' : 'none-in-stock');
+  if (!hit) return {};
+  return { link: 'https://www.ozon.ru/product/' + (hit.it.product_id || hit.it.offer_id) + '/' };
 }
 
 /* ---------------- Ozon — запасной путь: разбор публичного поиска ---------------- */
