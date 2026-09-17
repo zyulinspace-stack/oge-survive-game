@@ -55,6 +55,17 @@ function buildLetter({ name, items, plan, analysis, math }) {
         ${nums}
         <table width="100%" cellpadding="0" cellspacing="0">${rows}</table>
         ${planRows ? `<h2 style="font:900 15px Arial,sans-serif;color:#141414;margin:22px 0 10px">Как принимать</h2>${planRows}` : ''}
+        <h2 style="font:900 15px Arial,sans-serif;color:#141414;margin:22px 0 10px">Промокод на первый заказ</h2>
+        <table width="100%" cellpadding="0" cellspacing="0" style="background:#fffdf0;border:1px solid #f2e6a8;border-radius:6px">
+          <tr><td style="padding:12px 14px;font:400 13px/1.5 Arial,sans-serif;color:#333">
+            <strong style="font:900 13px Arial,sans-serif;color:#141414">Ozon</strong> — минус 10%, код
+            <span style="font:900 13px Courier,monospace;background:#ffcd00;color:#141414;padding:3px 8px;border-radius:4px;letter-spacing:1px">OZONBOT</span>
+          </td></tr>
+          <tr><td style="padding:0 14px 12px;font:400 13px/1.5 Arial,sans-serif;color:#333">
+            <strong style="font:900 13px Arial,sans-serif;color:#141414">Wildberries</strong> — минус 10%, код
+            <span style="font:900 13px Courier,monospace;background:#ffcd00;color:#141414;padding:3px 8px;border-radius:4px;letter-spacing:1px">WBBOT10</span>
+          </td></tr>
+        </table>
         <p style="margin:24px 0 0"><a href="https://primekraft.ru/catalog/" style="display:inline-block;background:#ffcd00;color:#141414;font:900 15px Arial,sans-serif;text-decoration:none;padding:14px 26px;border-radius:6px">Открыть каталог</a></p>
         <p style="font:400 11px/1.5 Arial,sans-serif;color:#9aa0a8;margin:22px 0 0">Не является медицинским назначением. При заболеваниях проконсультируйтесь со специалистом.</p>
       </td></tr>

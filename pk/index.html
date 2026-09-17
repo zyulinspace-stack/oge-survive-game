@@ -81,6 +81,14 @@ p.lead{color:var(--muted);font-size:15px;line-height:1.5;margin:0 0 18px}
 .prod .flav{color:var(--muted);font-size:11.5px;margin:0 0 8px}
 .prod .flav b{color:var(--text)}
 .prod .price{font-weight:900;font-size:15px}
+.promo{background:#fffdf0;border:1px solid #f2e6a8;border-radius:12px;padding:13px 15px;margin:6px 0 14px}
+.promo-h{font-weight:900;font-size:12px;text-transform:uppercase;letter-spacing:.6px;color:#7a5c00;margin-bottom:9px}
+.promo-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid #f0e5a0;font-size:13px}
+.promo-row:first-of-type{border-top:0}
+.promo-row b{flex:0 0 54px;color:#111}
+.promo-code{margin-left:auto;font:900 13px/1 ui-monospace,Menlo,monospace;letter-spacing:.5px;background:var(--accent);color:var(--ink);border:0;padding:8px 12px;border-radius:7px;cursor:pointer}
+.promo-code:active{transform:translateY(1px)}
+.promo-note{font-size:11px;color:#8a8f97;margin-top:9px;line-height:1.45}
 .buys{display:flex;gap:6px;margin-top:9px;flex-wrap:wrap}
 .buys a{flex:1;min-width:70px;text-align:center;text-decoration:none;font-size:12px;font-weight:800;padding:9px 6px;border-radius:9px;border:1.5px solid var(--border);color:var(--text);background:var(--surface)}
 .buys a.site{background:var(--accent);color:var(--ink);border-color:var(--accent)}
@@ -1179,6 +1187,32 @@ async function wbFindClient(name){
   }
   return reachable?null:undefined;
 }
+// Промокоды на первый заказ. Показываем код только той площадки, ссылка на которую
+// реально есть в наборе — иначе это обещание без кнопки.
+const PROMO={ozon:{code:'OZONBOT',label:'Ozon'},wb:{code:'WBBOT10',label:'WB'}};
+function promoBlock(picks){
+  const has={ozon:false,wb:false};
+  picks.forEach(x=>{const l=MPLIVE[String(itemOf(x.id).id||'')]||{};if(l.ozon)has.ozon=true;if(l.wb)has.wb=true;});
+  const rows=Object.keys(PROMO).filter(k=>has[k]).map(k=>{
+    const p=PROMO[k];
+    return `<div class="promo-row"><b>${p.label}</b><span>−10% на первый заказ</span>
+      <button class="promo-code" onclick="copyPromo(this,'${p.code}')">${p.code}</button></div>`;
+  }).join('');
+  if(!rows)return '';
+  return `<div class="promo"><div class="promo-h">Промокод на первый заказ</div>${rows}
+    <div class="promo-note">Нажмите на код — он скопируется. Вставьте его в корзине на маркетплейсе.</div></div>`;
+}
+function copyPromo(btn,code){
+  const done=()=>{const t=btn.textContent;btn.textContent='Скопировано';setTimeout(()=>{btn.textContent=t;},1500);};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(code).then(done,()=>fallback());return;}
+  }catch(e){}
+  fallback();
+  function fallback(){
+    try{const ta=document.createElement('textarea');ta.value=code;ta.style.cssText='position:fixed;opacity:0';
+      document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();done();}catch(e){}
+  }
+}
 function mpLinks(it){
   const l=MPLIVE[String(it.id||'')]||{};
   const a=(href,label)=>`<a href="${href}" target="_blank" rel="noopener">${label}</a>`;
@@ -1306,6 +1340,7 @@ function renderResult(){
       <div class="qnum" style="margin-bottom:6px">Что мы учли:</div>
       <div class="captured">${tags}</div>
       ${cards}
+      ${promoBlock(picks)}
       <div id="planbox"></div>
       <div class="total"><span>Набор из ${picks.length} продуктов</span><span class="sum">${sum} ₽</span></div>
       <a class="btn btn-accent" style="text-decoration:none;text-align:center" href="https://primekraft.ru/catalog/" target="_blank" rel="noopener">Перейти в каталог →</a>
